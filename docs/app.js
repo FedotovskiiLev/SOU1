@@ -57,3 +57,7 @@ function syncWeather(){for(const key of ['rain','thunder','wind'])$(key+'-enable
 for(const key of ['rain','thunder','wind'])$(key+'-enabled').addEventListener('change',e=>{if(!e.target.checked&&parameters[key]>0)weatherLast[key]=parameters[key];parameters[key]=e.target.checked?weatherLast[key]:0;if(key==='rain')parameters.rainType=e.target.checked?Number($('rain-type').value):0;updateKnobs();sendParameters();persist();syncWeather()});
 $('rain-type').addEventListener('change',()=>{parameters.rainType=Number($('rain-type').value);if(parameters.rain===0)parameters.rain=weatherLast.rain;updateKnobs();sendParameters();persist();syncWeather()});
 syncWeather();
+
+// Deterministic decorative ASCII stars; no random flashes or audio dependency.
+const starField=$('stars');let starSeed=72017;const starRandom=()=>{starSeed=(Math.imul(starSeed,1664525)+1013904223)>>>0;return starSeed/4294967296};
+for(let i=0;i<72;i++){const star=document.createElement('span');star.textContent=i%9===0?'+':i%4===0?'*':'.';star.style.left=(starRandom()*100)+'%';star.style.top=(starRandom()*100)+'%';star.style.opacity=String(.12+starRandom()*.22);star.style.animationDelay=(-starRandom()*12)+'s';star.style.animationDuration=(7+starRandom()*9)+'s';starField.append(star)}
