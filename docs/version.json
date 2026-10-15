@@ -1,8 +1,8 @@
 {
   "version": "0.1.0-preview",
   "apk": "downloads/SOU1-0.1.0-preview.apk",
-  "apk_sha256": "7c24a815e010c8df5f1d9c6befbb33f3a91844692e61c5273830314e57b1ac4d",
-  "apk_source_commit": "f7a3171da3de8d377ccac0b7cd840effdd89980b",
-  "build_url": "https://github.com/FedotovskiiLev/SOU1/actions/runs/38797334250",
+  "apk_sha256": "7f6e2144182e423f65c9523f4b407eec66a621224ccca19c889debce7f68af9e",
+  "apk_source_commit": "cdfd0a94ad7035451252894b5b34d1597870c838",
+  "build_url": "https://github.com/FedotovskiiLev/SOU1/actions/runs/38813525092",
   "device_install_tested": false
 }
