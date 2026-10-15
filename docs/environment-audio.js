@@ -18,6 +18,17 @@ export class EnvironmentAudio {
     this.windPole = 1 - Math.exp(-2 * Math.PI * 280 / sampleRate);
     this.thunderPole = 1 - Math.exp(-2 * Math.PI * 95 / sampleRate);
     this.dcPole = 1 - Math.exp(-2 * Math.PI * 12 / sampleRate);
+    this.noiseScale = Math.sqrt(sampleRate / 48000);
+    this.airPole = 1 - Math.exp(-2 * Math.PI * 1800 / sampleRate);
+    this.dropDamp = Math.exp(-1 / (sampleRate * .004));
+    this.dropDrive = new Float64Array(24);
+    this.dropFast = Math.exp(-1 / (sampleRate * .0015));
+    this.dropSlow = Math.exp(-1 / (sampleRate * .018));
+    this.dropA = new Float64Array(24); this.dropB = new Float64Array(24);
+    this.dropPan = new Float64Array(24); this.dropTone = new Float64Array(24);
+    this.dropY = new Float64Array(24); this.dropZ = new Float64Array(24);
+    this.rollDelay = new Float64Array(7); this.rollDuration = new Float64Array(7);
+    this.rollGain = new Float64Array(7);
     this.reset();
   }
   setParameters(update) {
@@ -40,6 +51,11 @@ export class EnvironmentAudio {
     this.light = this.steady = this.heavy = this.wind = this.thunder = 0;
     this.rainL = this.rainR = this.windL = this.windR = this.windDcL = this.windDcR = 0;
     this.rumbleL = this.rumbleR = this.rumbleDcL = this.rumbleDcR = 0;
+    this.dropDrive.fill(0); this.dropA.fill(0); this.dropB.fill(0); this.dropPan.fill(0);
+    this.dropTone.fill(0); this.dropY.fill(0); this.dropZ.fill(0);
+    this.rollDelay.fill(0); this.rollDuration.fill(0); this.rollGain.fill(0);
+    this.dropIndex = 0; this.airL = this.airR = this.crackL = this.crackR = 0;
+    this.rainFineL = this.rainFineR = 0;
     this.gust = .5; this.gustTarget = .5; this.gustCountdown = 0;
     this.thunderCountdown = Math.floor(this.sampleRate * 1.5);
     this.rollAge = this.rollLength = 0;
@@ -56,41 +72,81 @@ export class EnvironmentAudio {
     this.wind = smooth(this.wind, on ? p.wind : 0, c);
     this.thunder = smooth(this.thunder, on ? p.thunder : 0, c);
     if (!on && this.isSilent()) { this.outputL = this.outputR = 0; return; }
-    // Rain changes spectral weight and density, crossfading instead of switching.
+    // Fine patter plus bounded, individually panned damped drop resonances.
     const rl = this.rainRandom() * 2 - 1, rr = this.rainRandom() * 2 - 1;
     this.rainL += this.rainPole * (rl - this.rainL);
     this.rainR += this.rainPole * (rr - this.rainR);
-    const bright = .055 * this.light + .085 * this.steady + .09 * this.heavy;
-    const body = .025 * this.light + .07 * this.steady + .16 * this.heavy;
-    let left = bright * (rl - this.rainL) + body * this.rainL;
-    let right = bright * (rr - this.rainR) + body * this.rainR;
+    this.rainFineL += this.airPole * (rl - this.rainFineL);
+    this.rainFineR += this.airPole * (rr - this.rainFineR);
+    const rainGain = this.light + this.steady + this.heavy;
+    const density = rainGain > 0 ? (16 * this.light + 85 * this.steady + 240 * this.heavy) / rainGain : 16;
+    if (this.rainRandom() < density / this.sampleRate) {
+      const k = this.dropIndex; this.dropIndex = (k + 1) % 24;
+      this.dropA[k] = this.dropB[k] = .45 + .55 * this.rainRandom();
+      this.dropPan[k] = this.rainRandom();
+      const angle = 2 * Math.PI * (650 + 2300 * this.rainRandom()) / this.sampleRate;
+      this.dropTone[k] = 2 * this.dropDamp * Math.cos(angle);
+      this.dropDrive[k] = 3 * (1 - this.dropDamp) * Math.sin(angle);
+      // Resonance starts at zero, then receives a short noise excitation.
+      this.dropY[k] = this.dropZ[k] = 0;
+    }
+    let dropsL = 0, dropsR = 0;
+    for (let k = 0; k < 24; k++) {
+      this.dropA[k] *= this.dropFast; this.dropB[k] *= this.dropSlow;
+      const env = this.dropB[k] - this.dropA[k];
+      const y = this.dropTone[k] * this.dropY[k] - this.dropDamp * this.dropDamp * this.dropZ[k] + this.dropDrive[k] * env * (k % 2 === 0 ? rl : rr);
+      this.dropZ[k] = this.dropY[k]; this.dropY[k] = y;
+      const drop = .6 * env * (k % 2 === 0 ? this.rainFineL : this.rainFineR) + y;
+      dropsL += drop * (1 - this.dropPan[k]); dropsR += drop * this.dropPan[k];
+    }
+    const fine = .009 * this.light + .025 * this.steady + .055 * this.heavy;
+    const body = .008 * this.light + .025 * this.steady + .07 * this.heavy;
+    let left = this.noiseScale * (fine * (this.rainFineL - this.rainL) + body * this.rainL + .13 * rainGain * dropsL);
+    let right = this.noiseScale * (fine * (this.rainFineR - this.rainR) + body * this.rainR + .13 * rainGain * dropsR);
+    // Broad filtered air, not a sine-wave howl; slow asymmetric gusts.
     if (--this.gustCountdown <= 0) {
-      this.gustTarget = .25 + .75 * this.windRandom();
+      this.gustTarget = .3 + .7 * this.windRandom();
       this.gustCountdown = Math.floor(this.sampleRate * (1.5 + this.windRandom() * 4));
     }
     this.gust += (this.gustTarget - this.gust) / this.sampleRate;
-    this.windL += this.windPole * (this.windRandom() * 2 - 1 - this.windL);
-    this.windR += this.windPole * (this.windRandom() * 2 - 1 - this.windR);
+    const wl = this.windRandom() * 2 - 1, wr = this.windRandom() * 2 - 1;
+    this.windL += this.windPole * (wl - this.windL);
+    this.windR += this.windPole * (wr - this.windR);
+    this.airL += this.airPole * (wl - this.airL); this.airR += this.airPole * (wr - this.airR);
     this.windDcL += this.dcPole * (this.windL - this.windDcL);
     this.windDcR += this.dcPole * (this.windR - this.windDcR);
-    const wg = this.wind * this.gust * .38;
-    left += wg * (this.windL - this.windDcL); right += wg * (this.windR - this.windDcR);
-    // The independent clock runs even with rain off. Soft 3–7 second rolls,
-    // separated by 6–15 seconds, never an impulsive lightning crack.
+    const wg = this.wind * this.gust * this.noiseScale;
+    left += wg * (1.05 * (this.windL - this.windDcL) + .10 * this.gust * (this.airL - this.windL));
+    right += wg * (1.05 * (this.windR - this.windDcR) + .10 * this.gust * (this.airR - this.windR));
+    // A softened initial crack followed by seven delayed, overlapping rolls.
+    // Independent RNG and clock: rain/wind controls never schedule thunder.
     if (this.rollAge >= this.rollLength && --this.thunderCountdown <= 0) {
-      this.rollAge = 0; this.rollLength = Math.floor(this.sampleRate * (3 + 4 * this.thunderRandom()));
+      this.rollAge = 0; this.rollLength = Math.floor(this.sampleRate * 8);
       this.thunderCountdown = Math.floor(this.sampleRate * (6 + 9 * this.thunderRandom()));
+      for (let k = 0; k < 7; k++) {
+        this.rollDelay[k] = k === 0 ? 0 : k * .65 + this.thunderRandom() * .4;
+        this.rollDuration[k] = 1.4 + this.thunderRandom() * 1.8;
+        this.rollGain[k] = (1 - k * .10) * (.65 + .35 * this.thunderRandom());
+      }
     }
-    const tn = this.thunderRandom() * 2 - 1;
+    const tn = this.thunderRandom() * 2 - 1, tr = .8 * tn + .2 * (this.thunderRandom() * 2 - 1);
     this.rumbleL += this.thunderPole * (tn - this.rumbleL);
-    this.rumbleR += this.thunderPole * (.8 * tn + .2 * (this.thunderRandom() * 2 - 1) - this.rumbleR);
+    this.rumbleR += this.thunderPole * (tr - this.rumbleR);
+    this.crackL += this.rainPole * (tn - this.crackL); this.crackR += this.rainPole * (tr - this.crackR);
     this.rumbleDcL += this.dcPole * (this.rumbleL - this.rumbleDcL);
     this.rumbleDcR += this.dcPole * (this.rumbleR - this.rumbleDcR);
     if (this.rollAge < this.rollLength) {
-      const phase = this.rollAge++ / this.rollLength;
-      const envelope = 16 * phase * phase * (1 - phase) * (1 - phase);
-      const tg = this.thunder * envelope * .65;
-      left += tg * (this.rumbleL - this.rumbleDcL); right += tg * (this.rumbleR - this.rumbleDcR);
+      const age = this.rollAge++ / this.sampleRate;
+      let envelope = 0;
+      for (let k = 0; k < 7; k++) {
+        const x = (age - this.rollDelay[k]) / this.rollDuration[k];
+        if (x > 0 && x < 1) envelope += this.rollGain[k] * 16 * x * (1 - x) * (1 - x) * (1 - x);
+      }
+      const x = age / .32;
+      const crack = x < 1 ? 16 * x * (1 - x) * (1 - x) * (1 - x) : 0;
+      const tg = this.thunder * this.noiseScale;
+      left += tg * (1.8 * envelope * (this.rumbleL - this.rumbleDcL) + .19 * crack * (this.crackL - this.rumbleL));
+      right += tg * (1.8 * envelope * (this.rumbleR - this.rumbleDcR) + .19 * crack * (this.crackR - this.rumbleR));
     }
     this.outputL = left === 0 ? 0 : .45 * Math.tanh(left / .45); this.outputR = right === 0 ? 0 : .45 * Math.tanh(right / .45);
   }

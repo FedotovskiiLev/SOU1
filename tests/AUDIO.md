@@ -26,37 +26,93 @@ block, and values smooth over a 1.5-second time constant. Call `getParameters()`
 read the latest target, not instantaneous smoothed values. Control setters do not
 allocate on the rendering thread. Do not render one engine concurrently.
 
-## Sound and resource budget
+## Composition and instrument contract
 
-The sample-clock score emits pitched note-on events with instrument, velocity,
-finite duration (sample-exact note-off), and pan. Five original additive synths
-use distinct spectra and envelopes: sustained pad, decaying pluck, inharmonic bell,
-slow detuned texture, and short round pulse. Thirty-two preallocated voices bound
-polyphony; excess notes are dropped rather than stealing an audible voice.
-Independent melody, pad, texture and harmony clocks keep beds overlapping while
-motifs include deliberate rests. Stable related voicings are [50,57,62,64],
-[53,57,60,64], and [55,57,62,65]. Pad fundamentals stay above MIDI 49.
+The score emits scalar note-on events: sample frame, instrument, MIDI-numbered
+pitch, gate duration in frames, velocity (0..1), and equal-power pan (0..1).
+These are internal musical events, not a MIDI file/device protocol. At the exact
+gate frame a voice receives note-off, followed by its bounded release envelope.
+Control mute, polyphony reduction and reseed can end a gate early. JS optional
+onNoteOn/onNoteOff diagnostic callbacks expose accepted voice IDs and frames;
+score-only noteOn traces also include gates for notes the voice limit may reject.
 
-Normalized layer defaults are pad=.65, pluck=.55, bell=.35, texture=.20, pulse=.15.
-Evolution defaults to 0: exactly three harmony choices, one per hour in a three-
-hour session. Evolution 1 develops harmony approximately every 24 seconds with
-shorter melodic phrases. Intermediate values continuously change these times.
-Melody entrance after three seconds makes the score audible during startup.
-Intensity changes musical gain, brightness changes pad partial balance, motion
-changes oscillator drift, and timbre changes pluck decay. These are synthesis
-controls, not calibrated safe-listening levels.
+Controls shared by web and Android:
+- ambient=1, counterpoint=0, rhythmic=0, arpeggio=0: independent style weights 0..1
+- density=.5: event cadence; complexity=.5: motif/form detail; swing=0: groove offset
+- composition: legacy migration only; any supplied style weight overrides it
+- bpm: integer 30..180, default 72
+- polyphony: 8, 16, 24 or 32 melodic voices, default 16
+- melodyEnabled: boolean, default true; mutes pluck and bell voices
+- drumsEnabled: boolean, default false; independent of melody and weather
+- kick=.65, snare=.4, hihat=.3, toms=.35, cymbal=.2: normalized drum gains
 
-Weather is original procedural synthesis, mixed before the shared macro bus.
-RainType=0 (off), 1 (light), 2 (steady), or 3 (heavy); rain, thunder and wind are
-independent normalized gains, initially zero. The final combined mix passes a
-12 Hz DC blocker and saturating limiter with peak strictly below .85.
-The oscillator lookup table is shared and immutable (about 32 KiB); delay memory
-is fixed, proportional to sample rate. Rendering allocates no objects and has no
-growing queues, history, external assets, network access, or blocking operations.
+The eighth-note grid has eight ticks per 4/4 bar and eight bars per phrase.
+Seed selects tonic transposition, one of four diatonic progressions, eight motif
+families, eight rhythmic masks, response phase and one of six arpeggio orders.
+A/A/B/A/B/C/B/cadence phrase sections transform these materials. Phrase
+rotation/inversion develops the upper motif; strong beats land on chord tones,
+while weak beats may pass through scale tones. Register constraints and octave
+adjustments limit upper melodic leaps and keep bass motion near its prior register.
+These are explicit composition rules, not a claim of formal fugue or species
+counterpoint correctness or a copy of any artist's composition.
 
-Equal seed, sample rate and controls reproduce output. Constant controls are also
-independent of render block size. A control change is applied at the next block,
-so control timing differences intentionally change output.
+Style contributions can be freely combined. Presets are ordinary snapshots of
+these exposed controls; no preset name or hidden genre switch enters synthesis.
+All four weights zero produces no musical note events (independent drums/weather
+can still run). Density controls a deterministic event gate, complexity controls
+motif families, inversion, form and fills, and swing alternates long/short eighths
+by up to 0.22 beat while retaining complete beat duration.
+
+1. Ambient weight: overlapping pads with sparse melodic accents. At evolution=0,
+   three related harmonies each last one hour. Pad voicings refresh every four bars
+   while harmony stays fixed. With other style weights present, their blend also determines
+   harmonic cadence and pad articulation. Pure ambient evolution interpolates logarithmically from one-hour
+   harmony spans to four-bar spans at 1. The base harmonies are [50,57,62,64],
+   [53,57,60,64], [55,57,62,65], transposed by seed.
+2. Counterpoint weight: continuous upper eighth notes, lower half-rate replies,
+   bass support, and eight-bar development with phrase-end articulation.
+3. Rhythmic weight: syncopated lead rests and recurrent bass pulses.
+4. Arpeggio weight: rotating chord-tone order and octave displacement.
+
+Instrument indices 0..4 are pad, pluck, bell, texture and bass pulse. Their layer
+controls default to .65, .55, .35, .20, .15. Melody mute leaves pad, texture and bass
+available. Layered detuned fundamentals, restrained upper partials, smooth attacks,
+releases and per-voice low-pass filtering reduce sharp synthetic transients.
+Intensity changes gain, brightness changes partials/filtering, motion changes drift,
+and timbre changes pluck decay. Drum gain changes smooth over 50ms; structural
+controls affect new grid events while mute fades current voices. These are not
+calibrated safe-listening controls.
+
+Instrument indices 5..9 are kick, snare, hi-hat, toms, cymbal. Separate twelve-voice
+storage keeps drums outside the selected melodic limit. Kick uses a decaying pitch
+sweep, snare uses tone/noise, hat uses a fast noisy transient, toms use pitched
+resonance, and cymbal uses a longer noisy tail. Drum timing is bar-aware with
+phrase-end tom fills and phrase-opening cymbals. All sound is synthesized.
+
+Melodic storage is fixed at 32 voices; only the chosen 8/16/24/32-voice budget admits
+new notes. Overflow is dropped rather than abruptly stealing an audible voice.
+Reducing the cap releases out-of-range voices over at most 80ms; hence during this
+transition the old cap can briefly remain active. Mute also uses an 80ms maximum
+release. No growing event queue or external assets are used.
+
+Weather remains independent procedural synthesis. RainType 0..3 and rain/thunder/
+wind gains mix before the shared macro bus. The final combined mix passes a 12Hz
+DC blocker and saturating limiter with peak strictly below .85. Delay memory is
+fixed and proportional to sample rate. The JS score does bounded event-time work;
+continuous oscillator, envelope, filtering and macro processing reuse voice state.
+Equal seed, rate, controls and control timing reproduce output. Constant controls
+are independent of render block size. Java/JS event scheduling is compared in tests;
+PCM is not promised byte-identical across runtimes.
+
+## Live seed switching
+
+Call engine.reseed(seed), AndroidBridge.reseed(seed), or post
+{type:'reseed',seed} to the worklet. The audio thread fades the complete output down
+in 80ms, replaces the musical score and voices, and fades back in over 80ms. Latest
+pending seed wins. The existing AudioTrack/worklet, parameter targets, play state
+and Android session timer survive. Weather and macro state continue across the
+switch. Reseeding while stopped remains silent; startup uses the new seed. This is
+a bounded fade, not overlapping engines or an immediate full-volume reset.
 
 ## Verification
 
@@ -84,6 +140,7 @@ The UI must resume AudioContext from a user gesture. Port messages are:
 
 - `{type: 'start'}`
 - `{type: 'stop'}`
+- `{type: 'reseed', seed}`
 - `{type: 'parameters', parameters: {intensity, brightness, motion, timbre}}`
 
 After stop has faded completely, the processor posts `{type: 'silent'}` once.
@@ -91,8 +148,8 @@ The processor stays alive so start can resume without rebuilding it. The UI may
 suspend AudioContext after receiving silence. If the user already restarted,
 ignore any stale silence message. Do not suspend immediately after stop, since
 that would interrupt its fade. Parameter updates allocate one bounded snapshot
-per message; rendering allocates nothing per sample or block. Only a silence
-transition posts a message.
+per message; score event-time work is bounded and voice DSP reuses state. Only a
+silence transition posts a message.
 
 Run `node tests/audio-engine.test.mjs` for JS numerical tests and a real-adapter
 host-shim contract test. JVM and JS use the same low-32-bit seed, LCG, score and event scheduling.
@@ -137,3 +194,20 @@ The extended Java Parameters constructor appends pad, pluck, bell, texture, puls
 evolution, rainType (integer), rain, thunder, wind after the original eight fields.
 Old constructors retain the new slow-mode defaults. Native bridge JSON uses these
 same field names; private preferences restore controls and volume, never playback.
+
+## Expanded composition tests
+
+Run node tests/composition.test.mjs for the parameter-aware three-hour endpoint,
+four distinct two-minute score traces, seed determinism/variation, diatonic pitches,
+BPM-dependent density, melody mute, all five drum instruments, finite PCM, bounded
+8+12 voices, exact accepted note gate frames, and live/stopped reseed. The legacy
+numeric-evolution EventScore overload remains for older score inspection and its
+existing Java/JS parity test; production engines use the Parameters/object overload.
+Java retains the legacy constructor appending composition, bpm, polyphony, melodyEnabled,
+drumsEnabled, kick, snare, hihat, toms, cymbal after the prior eighteen arguments.
+The newest overload additionally appends ambient, counterpoint, rhythmic, arpeggio,
+density, complexity, swing. New bridge snapshots persist all seven knobs.
+Run node tests/composition-parity.test.mjs for 20 new-score cross-runtime traces.
+Knob tests additionally cover zero weights, mixtures, density, complexity, swing,
+and identical manual/preset knob values producing identical PCM.
+No physical-device or critical listening qualification is implied by these tests.

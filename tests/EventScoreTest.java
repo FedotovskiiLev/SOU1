@@ -22,7 +22,7 @@ public final class EventScoreTest {
   Sink a=new Sink(),b=new Sink(),c=new Sink();slow.advanceTo(10800L*8000-1,0,a);fast.advanceTo(600*8000-1,1,b);
   for(long t=0;t<10800L*8000;t+=71*8000)chunked.advanceTo(t,0,c);chunked.advanceTo(10800L*8000-1,0,c);
   require(slow.chordChanges==2,"three-hour slow harmony");require(fast.chordChanges>=20,"developing harmony");require(a.hash==c.hash&&a.count==c.count,"chunk independence");a.verify();b.verify();c.verify();
-  AmbientEngine e=new AmbientEngine(8000,91);e.setParameters(new Parameters(.5,.45,.35,.5,0,1,.5,1,1,1,1,1,1,1,3,1,1,1));float[] x=new float[16000];e.start();double energy=0;
+  AmbientEngine e=new AmbientEngine(8000,91);e.setParameters(new Parameters(.5,.45,.35,.5,0,1,.5,1,1,1,1,1,1,1,3,1,1,1,0,72,16,true,false,.65,.4,.3,.35,.2,1,0,0,0,1,.5,0));float[] x=new float[16000];e.start();double energy=0;
   for(int t=0;t<180;t++){e.render(x,0,8000);for(float v:x){require(Float.isFinite(v)&&Math.abs(v)<.85,"finite bounded mix");energy+=v*v;}}
   require(energy>10,"audible mix");require(e.getNoteOnCount()>150&&e.getNoteOffCount()>140,"note on/off");require(e.getDroppedNotes()==0,"no voice exhaustion");
   e.stop();for(int t=0;t<3;t++)e.render(x,0,8000);require(e.isSilent(),"stop");for(float v:x)require(v==0,"exact silence");long frame=e.getFrame();e.render(x,0,8000);require(e.getFrame()==frame,"clock pauses");e.start();e.render(x,0,8000);require(!e.isSilent(),"restart");e.reset();require(e.isSilent()&&e.getFrame()==0&&e.getNoteOnCount()==0,"reset");e.render(x,0,8000);for(float v:x)require(v==0,"reset silence");e.start();e.render(x,0,8000);require(!e.isSilent(),"reset restart");

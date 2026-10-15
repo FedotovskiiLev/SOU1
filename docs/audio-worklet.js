@@ -10,6 +10,7 @@ class Sou1AmbientProcessor extends AudioWorkletProcessor {
       if (!data || typeof data !== 'object') return;
       switch (data.type) {
         case 'start': this.engine.start(); this.silenceReported = false; break;
+        case 'reseed': this.engine.reseed(data.seed); break;
         case 'stop': this.engine.stop(); this.silenceReported = false; break;
         case 'parameters':
           if (data.parameters && typeof data.parameters === 'object') this.engine.setParameters(data.parameters);

@@ -19,10 +19,10 @@ public final class MainActivity extends Activity {
     @SuppressLint("SetJavaScriptEnabled")
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().setStatusBarColor(Color.rgb(16,21,18));
-        getWindow().setNavigationBarColor(Color.rgb(16,21,18));
+        getWindow().setStatusBarColor(Color.BLACK);
+        getWindow().setNavigationBarColor(Color.BLACK);
         web = new WebView(this);
-        web.setBackgroundColor(Color.rgb(16,21,18));
+        web.setBackgroundColor(Color.BLACK);
         web.getSettings().setJavaScriptEnabled(true);
         web.getSettings().setDomStorageEnabled(true);
         web.getSettings().setAllowFileAccess(false);
@@ -63,7 +63,8 @@ public final class MainActivity extends Activity {
         JSONObject json=new JSONObject(data);
         Intent intent=new Intent(this,PlaybackService.class).setAction(action);
         for(String key:new String[]{"intensity","brightness","motion","timbre","warmth","strength","width","wash",
-                "pad","pluck","bell","texture","pulse","evolution","rain","thunder","wind","volume"}) {
+                "pad","pluck","bell","texture","pulse","evolution","rain","thunder","wind","volume",
+                "kick","snare","hihat","toms","cymbal","ambient","counterpoint","rhythmic","arpeggio","density","complexity","swing"}) {
             if (!json.has(key)) continue;
             double value=json.optDouble(key,Double.NaN);
             if(!Double.isFinite(value)) continue;
@@ -73,6 +74,17 @@ public final class MainActivity extends Activity {
             double rainType=json.optDouble("rainType",Double.NaN);
             if(Double.isFinite(rainType)) intent.putExtra(PlaybackService.EXTRA_RAIN_TYPE,(int)Math.max(0,Math.min(3,Math.round(rainType))));
         }
+        if (json.has("composition")) {
+            double value=json.optDouble("composition",Double.NaN);
+            if(Double.isFinite(value)) intent.putExtra(PlaybackService.EXTRA_COMPOSITION,(int)Math.max(0,Math.min(3,Math.round(value))));
+        }
+        if (json.has("bpm")) {
+            double value=json.optDouble("bpm",Double.NaN);
+            if(Double.isFinite(value)) intent.putExtra(PlaybackService.EXTRA_BPM,(double)Math.max(30,Math.min(180,Math.round(value))));
+        }
+        if (json.has("polyphony")) intent.putExtra(PlaybackService.EXTRA_POLYPHONY,json.optInt("polyphony",16));
+        if (json.has("melodyEnabled")) intent.putExtra(PlaybackService.EXTRA_MELODY_ENABLED,json.optBoolean("melodyEnabled",true));
+        if (json.has("drumsEnabled")) intent.putExtra(PlaybackService.EXTRA_DRUMS_ENABLED,json.optBoolean("drumsEnabled",false));
         intent.putExtra(PlaybackService.EXTRA_SEED,json.optLong("seed",1));
         return intent;
     }
@@ -83,6 +95,13 @@ public final class MainActivity extends Activity {
         }
         @JavascriptInterface public void update(String data) {
             try { startService(command(PlaybackService.ACTION_UPDATE,data)); } catch(RuntimeException|JSONException ignored) { }
+        }
+        @JavascriptInterface public boolean reseed(long seed) {
+            try {
+                startService(new Intent(MainActivity.this,PlaybackService.class)
+                        .setAction(PlaybackService.ACTION_RESEED).putExtra(PlaybackService.EXTRA_SEED,seed));
+                return true;
+            } catch(RuntimeException unavailable) { return false; }
         }
         @JavascriptInterface public void stop() {
             startService(new Intent(MainActivity.this,PlaybackService.class).setAction(PlaybackService.ACTION_STOP));

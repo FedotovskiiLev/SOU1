@@ -9,12 +9,17 @@ An original ambient instrument for focus, study and quiet work. ASCII interface,
 
 ## Controls
 
-- Composition: activity, brightness, movement and harmonics; independent pad, pluck, bell, texture and pulse layers.
-- Development: very slow three-chord longform at zero, progressively faster phrase and harmonic changes toward one. MIDI-like note events are synthesized internally; no external MIDI hardware is required.
+- Exposed phrase controls blend long-form sustained ambient, simplified tonal counterpoint, rhythmic sequences and evolving arpeggios. Density, variation, swing and harmonic development are independently adjustable. “Eno-inspired” and “Bach-inspired” are original generative presets, not recordings, copied compositions or claims of recreating those artists.
+- Tempo: 30–180 BPM. Melodic polyphony: 8, 16, 24 or 32 voices; a separate bounded drum pool handles percussion.
+- Melody voices and drums have independent enable switches. Pads, plucks, bells, texture and bass/pulse have independent levels. Drum controls cover kick, snare, hi-hat, toms and cymbal.
+- “New melody” changes the seed during playback without resetting the session timer. Music changes through a short fade; weather remains independently controlled.
+- The slow pad endpoint retains three harmonies over three hours. Development raises the pace of harmonic changes. Other phrase settings use progression, motif and rhythmic development. Notes are internal MIDI-like events, not external MIDI device output or a Standard MIDI File export.
 - Effects: original warmth, presence, stereo width and diffuse reverb. The four-macro reference is [TOSKA by Noon Instruments](https://www.nooninstruments.com/toska); this is not its engine or sample library.
-- Environment: light/steady/heavy rain, independent thunder, wind. Separate toggles and levels, off by default.
-- Master volume, session timer, seed, EN/RU preferences. Weather is mixed through the final headroom stage.
-- ASCII and the play-button outline react to actual generated output. Reduced-motion preference suppresses deformation.
+- Environment: light/steady/heavy rain with discrete impacts, independent multi-roll thunder and gusting wind. All sample-free; realism and listening quality require subjective evaluation.
+- EN/RU, output level and timer. The mobile layout separates Composition, Voices, Effects and Environment. Native Android hides APK/PWA-install links; the website retains them.
+- ASCII and the play-button outline react to actual output. Reduced-motion preference suppresses deformation.
+
+Presets are complete snapshots of exposed musical, effect and weather controls. They do not select hidden artist modes; master output, seed and session timer remain independent.
 
 ## Development status
 
@@ -30,7 +35,7 @@ Use JDK17+, Gradle9.6.0, Android platform36/build-tools36.0.0 and AGP9.4.0. With
 
 `gradle :app:assembleDebug :app:lintDebug`
 
-The read-only GitHub Actions workflow verifies its hosted toolchain, runs tests/lint and produces `SOU1-preview-apk`. Debug builds are development-signed; they are not Play Store releases. No signing credentials are stored here.
+The read-only GitHub Actions workflow verifies its hosted toolchain, runs tests/lint and produces `SOU1-preview-apk`. Debug builds are development-signed; they are not Play Store releases. Hosted builds currently use different debug signing certificates, so a newly downloaded preview cannot normally update-install over an earlier preview. Uninstalling removes app-local settings. Use the PWA if preserving those settings is important. No signing credentials are stored here.
 
 Run `sh tests/run.sh` for Java DSP tests, `sh tests/run-environment.sh` for weather tests and `node tests/ui-contract.test.mjs` for UI data-flow contracts. The script can use the JDK compiler module when a standalone `javac` launcher is absent.
 

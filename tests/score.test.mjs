@@ -18,7 +18,7 @@ for(const data of [slow,fast]){
 }
 // Chunk-independent event clock, including 3-hour texture mode.
 const chunked=new EventScore(8000,91),events=[];for(let t=0;t<10800*8000;t+=8000*71)chunked.advanceTo(t,0,{noteOn(...e){events.push(e);}});chunked.advanceTo(10800*8000-1,0,{noteOn(...e){events.push(e);}});assert.deepEqual(events,slow.events);
-const a=new AmbientEngine(8000,91),l=new Float32Array(8000),r=new Float32Array(8000);a.setParameters({evolution:1,rainType:3,rain:1,thunder:1,wind:1,pad:1,pluck:1,bell:1,texture:1,pulse:1,wash:1,strength:1});a.start();
+const a=new AmbientEngine(8000,91),l=new Float32Array(8000),r=new Float32Array(8000);a.setParameters({evolution:1,density:1,rainType:3,rain:1,thunder:1,wind:1,pad:1,pluck:1,bell:1,texture:1,pulse:1,wash:1,strength:1});a.start();
 let energy=0;for(let t=0;t<180;t++){a.render(l,r);for(let i=0;i<l.length;i++){assert(Number.isFinite(l[i])&&Math.abs(l[i])<.85);assert(Number.isFinite(r[i])&&Math.abs(r[i])<.85);energy+=l[i]**2+r[i]**2;}}
 assert(energy>10);assert(a.noteOnCount>150);assert(a.noteOffCount>140);assert.equal(a.droppedNotes,0);
 a.stop();for(let t=0;t<3;t++)a.render(l,r);assert(a.isSilent());assert(l.every(v=>v===0));const frozen=a.frame;a.render(l,r);assert.equal(a.frame,frozen);a.start();a.render(l,r);assert(l.some(v=>v!==0));a.reset();assert(a.isSilent());assert.equal(a.frame,0);assert.equal(a.noteOnCount,0);assert(a.voices.every(v=>!v.active));a.render(l,r);assert(l.every(v=>v===0));a.start();a.render(l,r);assert(l.some(v=>v!==0));
