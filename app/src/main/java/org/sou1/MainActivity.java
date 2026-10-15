@@ -76,7 +76,6 @@ public final class MainActivity extends Activity {
             catch(RuntimeException|JSONException failure){ return false; }
         }
         @JavascriptInterface public void update(String data) {
-            if(!PlaybackService.isPlaying()) return;
             try { startService(command(PlaybackService.ACTION_UPDATE,data)); } catch(RuntimeException|JSONException ignored) { }
         }
         @JavascriptInterface public void stop() {

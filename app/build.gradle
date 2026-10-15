@@ -15,6 +15,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    sourceSets { main { assets.srcDirs = ['../docs'] } }
+    sourceSets { main { assets.srcDirs = ["$buildDir/generated/webAssets"] } }
     lint { abortOnError true }
 }
+
+// Do not bundle downloadable APKs inside the APK itself.
+ tasks.register('syncWebAssets', Sync) {
+    from('../docs')
+    exclude('downloads/**')
+    into(layout.buildDirectory.dir('generated/webAssets'))
+ }
+ tasks.named('preBuild').configure { dependsOn('syncWebAssets') }
