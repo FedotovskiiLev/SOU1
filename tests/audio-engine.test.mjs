@@ -2,10 +2,53 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const source = await readFile(new URL('../docs/audio-engine.js', import.meta.url), 'utf8');
-const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
-const {AmbientEngine} = await import(moduleUrl);
+const weather = await readFile(new URL('../docs/environment-audio.js', import.meta.url), 'utf8');
+const weatherUrl = `data:text/javascript;base64,${Buffer.from(weather).toString('base64')}`;
+const moduleUrl = `data:text/javascript;base64,${Buffer.from(source.replace("'./environment-audio.js'", JSON.stringify(weatherUrl))).toString('base64')}`;
+const {AmbientEngine, MacroBus} = await import(moduleUrl);
+const neutral = {warmth: 0, strength: 0, width: .5, wash: 0};
+for (const rate of [8000, 48000, 192000]) {
+  const dry = new MacroBus(rate);
+  dry.process(.123, -.234, neutral);
+  assert.equal(dry.left, .123); assert.equal(dry.right, -.234);
+  const mono = new MacroBus(rate), wide = new MacroBus(rate);
+  for (let i = 0; i < rate; i++) {
+    mono.process(.2, -.1, {...neutral, width: 0});
+    wide.process(.2, -.1, {...neutral, width: 1});
+  }
+  assert(Math.abs(mono.left - mono.right) < 1e-8);
+  assert(Math.abs(wide.left - .175) < 1e-8 && Math.abs(wide.right + .125) < 1e-8);
+  const wash = new MacroBus(rate), target = {...neutral, wash: 1};
+  for (let i = 0; i < rate; i++) wash.process(0, 0, target);
+  let early = 0, late = 0, stereo = 0;
+  for (let i = 0; i < rate * 5; i++) {
+    wash.process(i === 0 ? 1 : 0, 0, target);
+    assert(Number.isFinite(wash.left) && Number.isFinite(wash.right));
+    if (i > rate * .02 && i < rate) early += wash.left ** 2 + wash.right ** 2;
+    if (i > rate * 4) late += wash.left ** 2 + wash.right ** 2;
+    stereo += Math.abs(wash.left - wash.right);
+  }
+  assert(early > 1e-5 && late < early * 1e-8 && stereo > .1);
+}
+const transition = new MacroBus(8000);
+for(let i=0;i<8000;i++) transition.process(.1,-.05,neutral);
+const before = transition.left;
+transition.process(.1,-.05,{warmth:1,strength:1,width:0,wash:1});
+assert(Math.abs(transition.left-before)<.001, '50ms macro transition boundary');
+for (const macro of ['warmth', 'strength']) {
+  const bus = new MacroBus(8000), target = {...neutral, [macro]: 1};
+  let error = 0;
+  for (let i = 0; i < 8000; i++) {
+    const x = .1 * Math.sin(i * 1.7);
+    bus.process(x, x, target);
+    if (i > 4000) error += Math.abs(bus.left - x);
+  }
+  assert(error > 1, macro + ' has an audible numerical effect');
+}
 const buffer = n => new Float32Array(n);
 const a = new AmbientEngine(8000, 0), b = new AmbientEngine(8000, 0), c = new AmbientEngine(8000, 1);
+a.setParameters({warmth:1,strength:1,width:1,wash:1});
+b.setParameters({warmth:1,strength:1,width:1,wash:1});
 a.start(); b.start(); c.start();
 let l = buffer(8000), r = buffer(8000), bl = buffer(8000), br = buffer(8000);
 a.render(l, r);
@@ -36,6 +79,7 @@ for (const rate of [8000, 44100, 48000, 96000, 192000]) {
   let peak = 0, power = 0, mean = 0, delta = 0, lastL = 0, lastR = 0, rendered = 0;
   while (rendered < frames) {
     if (rendered % (128 * 71) === 0) engine.setParameters({
+      warmth: (rendered / 128) % 2, strength: 1, width: (rendered / 128) % 2, wash: 1,
       intensity: (rendered / 128) % 2, brightness: 1, motion: 1, timbre: (rendered / 128) % 2
     });
     engine.render(l, r);

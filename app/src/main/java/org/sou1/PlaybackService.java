@@ -20,22 +20,88 @@ public final class PlaybackService extends Service {
     public static final String EXTRA_MOTION = "motion";
     public static final String EXTRA_SEED = "seed";
     public static final String EXTRA_TIMBRE = "timbre";
+    public static final String EXTRA_WARMTH = "warmth";
+    public static final String EXTRA_STRENGTH = "strength";
+    public static final String EXTRA_WIDTH = "width";
+    public static final String EXTRA_WASH = "wash";
+    public static final String EXTRA_PAD = "pad";
+    public static final String EXTRA_PLUCK = "pluck";
+    public static final String EXTRA_BELL = "bell";
+    public static final String EXTRA_TEXTURE = "texture";
+    public static final String EXTRA_PULSE = "pulse";
+    public static final String EXTRA_EVOLUTION = "evolution";
+    public static final String EXTRA_RAIN_TYPE = "rainType";
+    public static final String EXTRA_RAIN = "rain";
+    public static final String EXTRA_THUNDER = "thunder";
+    public static final String EXTRA_WIND = "wind";
     public static final String EXTRA_VOLUME = "volume";
     private static final String CHANNEL = "sou1_playback";
+    private static final String PREFERENCES = "sou1_audio";
+    private static final String PREFERENCE_CONTROLS = "controls";
     private static volatile boolean playing;
     private static volatile String statusJson = "{\"playing\":false}";
     private long sessionStartedAt, sessionSeed, timerDeadline;
     private int timerMinutes;
     public static String getStatus() { return statusJson; }
+    private org.json.JSONObject controlSnapshot() throws org.json.JSONException {
+        return new org.json.JSONObject().put("volume", volume)
+                .put("intensity", parameters.intensity).put("brightness", parameters.brightness)
+                .put("motion", parameters.motion).put("timbre", parameters.timbre)
+                .put("warmth", parameters.warmth).put("strength", parameters.strength)
+                .put("width", parameters.width).put("wash", parameters.wash)
+                .put("pad", parameters.pad).put("pluck", parameters.pluck).put("bell", parameters.bell)
+                .put("texture", parameters.texture).put("pulse", parameters.pulse).put("evolution", parameters.evolution)
+                .put("rainType", parameters.rainType).put("rain", parameters.rain)
+                .put("thunder", parameters.thunder).put("wind", parameters.wind);
+    }
     private void publishStatus() {
         try {
-            org.json.JSONObject value = new org.json.JSONObject();
+            org.json.JSONObject value = controlSnapshot();
             value.put("playing", playing).put("startedAt", sessionStartedAt).put("seed", sessionSeed)
-                    .put("timerMinutes", timerMinutes).put("deadline", timerDeadline).put("volume", volume)
-                    .put("intensity", parameters.intensity).put("brightness", parameters.brightness)
-                    .put("motion", parameters.motion).put("timbre", parameters.timbre);
+                    .put("timerMinutes", timerMinutes).put("deadline", timerDeadline);
             statusJson = value.toString();
         } catch (org.json.JSONException impossible) { statusJson = "{\"playing\":false}"; }
+    }
+    private void restoreControls() {
+        try {
+            org.json.JSONObject saved = new org.json.JSONObject(
+                    getSharedPreferences(PREFERENCES, MODE_PRIVATE).getString(PREFERENCE_CONTROLS, "{}"));
+            parameters = new AmbientEngine.Parameters(
+                    saved.optDouble(EXTRA_INTENSITY, parameters.intensity),
+                    saved.optDouble(EXTRA_BRIGHTNESS, parameters.brightness),
+                    saved.optDouble(EXTRA_MOTION, parameters.motion),
+                    saved.optDouble(EXTRA_TIMBRE, parameters.timbre),
+                    saved.optDouble(EXTRA_WARMTH, parameters.warmth),
+                    saved.optDouble(EXTRA_STRENGTH, parameters.strength),
+                    saved.optDouble(EXTRA_WIDTH, parameters.width),
+                    saved.optDouble(EXTRA_WASH, parameters.wash),
+                    saved.optDouble(EXTRA_PAD, parameters.pad),
+                    saved.optDouble(EXTRA_PLUCK, parameters.pluck),
+                    saved.optDouble(EXTRA_BELL, parameters.bell),
+                    saved.optDouble(EXTRA_TEXTURE, parameters.texture),
+                    saved.optDouble(EXTRA_PULSE, parameters.pulse),
+                    saved.optDouble(EXTRA_EVOLUTION, parameters.evolution),
+                    saved.optInt(EXTRA_RAIN_TYPE, parameters.rainType),
+                    saved.optDouble(EXTRA_RAIN, parameters.rain),
+                    saved.optDouble(EXTRA_THUNDER, parameters.thunder),
+                    saved.optDouble(EXTRA_WIND, parameters.wind));
+            double savedVolume = saved.optDouble(EXTRA_VOLUME, volume);
+            if (Double.isFinite(savedVolume)) volume = Math.max(0, Math.min(1, savedVolume));
+        } catch (org.json.JSONException | ClassCastException invalidPreferences) {
+            Log.w("SOU1", "Ignoring invalid saved audio controls", invalidPreferences);
+        }
+    }
+    private void saveControls() {
+        try {
+            getSharedPreferences(PREFERENCES, MODE_PRIVATE).edit()
+                    .putString(PREFERENCE_CONTROLS, controlSnapshot().toString()).apply();
+        } catch (org.json.JSONException impossible) {
+            Log.w("SOU1", "Audio controls could not be saved", impossible);
+        }
+    }
+    private static double control(Intent intent, String key, double fallback) {
+        double value = intent.getDoubleExtra(key, fallback);
+        return Double.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
     }
     private static final Object TELEMETRY_LOCK = new Object();
     private static final float[] waveform = new float[64];
@@ -71,6 +137,8 @@ public final class PlaybackService extends Service {
 
     @Override public void onCreate() {
         super.onCreate();
+        restoreControls();
+        publishStatus();
         audioManager = getSystemService(AudioManager.class);
         getSystemService(NotificationManager.class).createNotificationChannel(
                 new NotificationChannel(CHANNEL, "Ambient playback", NotificationManager.IMPORTANCE_LOW));
@@ -116,12 +184,27 @@ public final class PlaybackService extends Service {
         }
         if (ACTION_STOP.equals(action)) { stopPlayback(); return START_NOT_STICKY; }
         parameters = new AmbientEngine.Parameters(
-                intent.getDoubleExtra(EXTRA_INTENSITY, parameters.intensity),
-                intent.getDoubleExtra(EXTRA_BRIGHTNESS, parameters.brightness),
-                intent.getDoubleExtra(EXTRA_MOTION, parameters.motion),
-                intent.getDoubleExtra(EXTRA_TIMBRE, parameters.timbre));
+                control(intent, EXTRA_INTENSITY, parameters.intensity),
+                control(intent, EXTRA_BRIGHTNESS, parameters.brightness),
+                control(intent, EXTRA_MOTION, parameters.motion),
+                control(intent, EXTRA_TIMBRE, parameters.timbre),
+                control(intent, EXTRA_WARMTH, parameters.warmth),
+                control(intent, EXTRA_STRENGTH, parameters.strength),
+                control(intent, EXTRA_WIDTH, parameters.width),
+                control(intent, EXTRA_WASH, parameters.wash),
+                control(intent, EXTRA_PAD, parameters.pad),
+                control(intent, EXTRA_PLUCK, parameters.pluck),
+                control(intent, EXTRA_BELL, parameters.bell),
+                control(intent, EXTRA_TEXTURE, parameters.texture),
+                control(intent, EXTRA_PULSE, parameters.pulse),
+                control(intent, EXTRA_EVOLUTION, parameters.evolution),
+                intent.getIntExtra(EXTRA_RAIN_TYPE, parameters.rainType),
+                control(intent, EXTRA_RAIN, parameters.rain),
+                control(intent, EXTRA_THUNDER, parameters.thunder),
+                control(intent, EXTRA_WIND, parameters.wind));
         double requestedVolume = intent.getDoubleExtra(EXTRA_VOLUME, volume);
         if (Double.isFinite(requestedVolume)) volume = Math.max(0, Math.min(1, requestedVolume));
+        saveControls();
         if (current != null) current.engine.setParameters(parameters);
         if (ACTION_PLAY.equals(action)) safeStart(intent.getLongExtra(EXTRA_SEED, System.nanoTime()));
         else if (current == null) stopSelf();

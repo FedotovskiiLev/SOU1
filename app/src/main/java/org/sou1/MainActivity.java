@@ -62,10 +62,16 @@ public final class MainActivity extends Activity {
     private Intent command(String action, String data) throws JSONException {
         JSONObject json=new JSONObject(data);
         Intent intent=new Intent(this,PlaybackService.class).setAction(action);
-        for(String key:new String[]{"intensity","brightness","motion","timbre","volume"}) {
-            double value=json.optDouble(key,.5);
-            if(!Double.isFinite(value)) value=.5;
+        for(String key:new String[]{"intensity","brightness","motion","timbre","warmth","strength","width","wash",
+                "pad","pluck","bell","texture","pulse","evolution","rain","thunder","wind","volume"}) {
+            if (!json.has(key)) continue;
+            double value=json.optDouble(key,Double.NaN);
+            if(!Double.isFinite(value)) continue;
             intent.putExtra(key,Math.max(0,Math.min(1,value)));
+        }
+        if (json.has("rainType")) {
+            double rainType=json.optDouble("rainType",Double.NaN);
+            if(Double.isFinite(rainType)) intent.putExtra(PlaybackService.EXTRA_RAIN_TYPE,(int)Math.max(0,Math.min(3,Math.round(rainType))));
         }
         intent.putExtra(PlaybackService.EXTRA_SEED,json.optLong("seed",1));
         return intent;

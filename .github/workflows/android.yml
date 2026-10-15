@@ -38,6 +38,11 @@ jobs:
         run: sh tests/run.sh
       - name: Verify browser DSP
         run: node tests/audio-engine.test.mjs
+      - name: Verify weather and UI contracts
+        run: |
+          sh tests/run-environment.sh
+          node tests/ui-contract.test.mjs
+          node tests/score.test.mjs
       - name: Compile APK and run Android lint
         run: gradle --no-daemon :app:assembleDebug :app:lintDebug
       - name: Verify APK signing and package
