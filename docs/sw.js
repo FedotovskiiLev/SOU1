@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-const CACHE='sou1-08df7eda6a6aa5f0';const CORE=['./','./index.html','./style.css','./app.js','./audio-engine.js','./audio-worklet.js','./manifest.webmanifest','./icons/icon.svg','./version.json'];
+const CACHE='sou1-62ebc547314338d6';const CORE=['./','./index.html','./style.css','./app.js','./audio-engine.js','./audio-worklet.js','./manifest.webmanifest','./icons/icon.svg','./version.json'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(x=>x.startsWith('sou1-')&&x!==CACHE).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{if(event.request.method!=='GET'||new URL(event.request.url).origin!==location.origin)return;if(new URL(event.request.url).pathname.endsWith('/version.json')){event.respondWith(fetch(event.request).then(async response=>{if(response.ok){const cache=await caches.open(CACHE);await cache.put(event.request,response.clone())}return response}).catch(()=>caches.match(event.request)));return}event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request)));});
