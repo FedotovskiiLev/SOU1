@@ -23,6 +23,20 @@ public final class PlaybackService extends Service {
     public static final String EXTRA_VOLUME = "volume";
     private static final String CHANNEL = "sou1_playback";
     private static volatile boolean playing;
+    private static volatile String statusJson = "{\"playing\":false}";
+    private long sessionStartedAt, sessionSeed, timerDeadline;
+    private int timerMinutes;
+    public static String getStatus() { return statusJson; }
+    private void publishStatus() {
+        try {
+            org.json.JSONObject value = new org.json.JSONObject();
+            value.put("playing", playing).put("startedAt", sessionStartedAt).put("seed", sessionSeed)
+                    .put("timerMinutes", timerMinutes).put("deadline", timerDeadline).put("volume", volume)
+                    .put("intensity", parameters.intensity).put("brightness", parameters.brightness)
+                    .put("motion", parameters.motion).put("timbre", parameters.timbre);
+            statusJson = value.toString();
+        } catch (org.json.JSONException impossible) { statusJson = "{\"playing\":false}"; }
+    }
     private static final Object TELEMETRY_LOCK = new Object();
     private static final float[] waveform = new float[64];
     private static float level;
@@ -93,6 +107,9 @@ public final class PlaybackService extends Service {
         if ("org.sou1.TIMER".equals(action)) {
             main.removeCallbacks(endSession);
             int minutes = intent.getIntExtra("minutes", 0);
+            timerMinutes = minutes > 0 && minutes <= 180 ? minutes : 0;
+            timerDeadline = timerMinutes > 0 ? System.currentTimeMillis() + timerMinutes * 60000L : 0;
+            publishStatus();
             if (minutes > 0 && minutes <= 180 && current != null) main.postDelayed(endSession, minutes * 60000L);
             if (current == null) stopSelf();
             return START_NOT_STICKY;
@@ -108,6 +125,7 @@ public final class PlaybackService extends Service {
         if (current != null) current.engine.setParameters(parameters);
         if (ACTION_PLAY.equals(action)) safeStart(intent.getLongExtra(EXTRA_SEED, System.nanoTime()));
         else if (current == null) stopSelf();
+        publishStatus();
         return START_NOT_STICKY;
     }
 
@@ -131,6 +149,8 @@ public final class PlaybackService extends Service {
         Session session = new Session(seed);
         current = session;
         playing = true;
+        sessionStartedAt = System.currentTimeMillis(); sessionSeed = seed; timerMinutes = 0; timerDeadline = 0;
+        publishStatus();
         mediaSession.setPlaybackState(new PlaybackState.Builder().setActions(
                 PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP)
                 .setState(PlaybackState.STATE_PLAYING, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1f).build());
@@ -142,7 +162,7 @@ public final class PlaybackService extends Service {
         PendingIntent stop = PendingIntent.getService(this, 1,
                 new Intent(this, PlaybackService.class).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE);
         PendingIntent open = PendingIntent.getActivity(this, 2,
-                new Intent(this, MainActivity.class), PendingIntent.FLAG_IMMUTABLE);
+                new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_IMMUTABLE);
         return new Notification.Builder(this, CHANNEL).setSmallIcon(android.R.drawable.ic_media_play)
                 .setContentTitle("SOU1").setContentText("Ambient sound is playing")
                 .setContentIntent(open).setOngoing(true).setOnlyAlertOnce(true)
@@ -157,6 +177,7 @@ public final class PlaybackService extends Service {
         Session old = current;
         current = null;
         playing = false;
+        timerMinutes = 0; timerDeadline = 0; publishStatus();
         if (old != null) old.cancel();
         clearTelemetry();
         if (audioManager != null && focus != null) audioManager.abandonAudioFocusRequest(focus);

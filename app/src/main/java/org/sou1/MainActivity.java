@@ -81,6 +81,7 @@ public final class MainActivity extends Activity {
         @JavascriptInterface public void stop() {
             startService(new Intent(MainActivity.this,PlaybackService.class).setAction(PlaybackService.ACTION_STOP));
         }
+        @JavascriptInterface public String status(){return PlaybackService.getStatus();}
         @JavascriptInterface public boolean isPlaying(){return PlaybackService.isPlaying();}
         @JavascriptInterface public double level(){return PlaybackService.getLevel();}
         @JavascriptInterface public String waveform(){try { return new JSONArray(PlaybackService.getWaveformSnapshot()).toString(); } catch (JSONException ignored) { return "[]"; }}
@@ -88,5 +89,7 @@ public final class MainActivity extends Activity {
             startService(new Intent(MainActivity.this,PlaybackService.class).setAction("org.sou1.TIMER").putExtra("minutes",minutes));
         }
     }
+    @Override public void onResume(){super.onResume();if(web!=null){web.onResume();web.evaluateJavascript("window.dispatchEvent(new Event('sou1-resume'))",null);}}
+    @Override public void onPause(){if(web!=null)web.onPause();super.onPause();}
     @Override public void onDestroy(){if(web!=null){web.removeJavascriptInterface("AndroidBridge");web.destroy();web=null;}super.onDestroy();}
 }
