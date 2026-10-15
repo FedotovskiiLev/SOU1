@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Android debug APK
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Verify preinstalled Java and Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${JAVA_HOME_17_X64:-}"
+          test -x "$JAVA_HOME_17_X64/bin/javac"
+          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_17_X64/bin" >> "$GITHUB_PATH"
+          test -n "${ANDROID_HOME:-}"
+          test -f "$ANDROID_HOME/platforms/android-36/android.jar"
+          test -x "$ANDROID_HOME/build-tools/36.0.0/aapt2"
+          test -f "$ANDROID_HOME/licenses/android-sdk-license"
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '9.6.0'
+          cache-read-only: true
+      - name: Run deterministic JVM synthesis tests
+        run: sh tests/run.sh
+      - name: Compile APK and run Android lint
+        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: SOU1-preview-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
