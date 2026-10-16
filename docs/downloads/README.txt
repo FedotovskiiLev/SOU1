@@ -1,6 +1,6 @@
-SOU1 0.1.0 preview, mobile ASCII layout fix.
-APK source cdfd0a94ad7035451252894b5b34d1597870c838
-Build https://github.com/FedotovskiiLev/SOU1/actions/runs/38813525092
-SHA-256 7f6e2144182e423f65c9523f4b407eec66a621224ccca19c889debce7f68af9e
+SOU1 0.1.0 composer preview.
+Source f246e797c8251b868e63fa5b6cfdd59db0e379ac
+Build https://github.com/FedotovskiiLev/SOU1/actions/runs/38817219839
+SHA-256 b71eb7daa690b0ba79c3dea337ce892ec0b8422025983bc5483698f75ba76005
 
-This is a debug-signed preview, not a production release. Its signing certificate differs from the prior preview. Android cannot normally update-install it over that version. Uninstalling the old preview removes its local settings. Use the updated PWA if you want to avoid removing the old app. Physical Android installation has not been tested.
+Debug-signed preview, not a production release. Certificate differs from the prior preview; Android cannot normally update-install over it. Uninstalling removes local settings. Use the PWA to avoid removing your old app. Physical-device installation and listening acceptance remain untested.
