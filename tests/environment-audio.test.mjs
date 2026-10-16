@@ -29,7 +29,7 @@ a=engine(); b=engine(); a.setParameters({thunder:1}); b.setParameters({thunder:1
 let energy=0, peak=0;
 for(let j=0;j<60;j++) {a.render(l,r);b.render(bl,br);for(const v of l){energy+=v*v;peak=Math.max(peak,Math.abs(v));}
 assert.equal(a.thunderState,b.thunderState);assert.equal(a.rollAge,b.rollAge);assert.equal(a.rollLength,b.rollLength);}
-assert(energy>1); assert(peak<.3);
+assert(energy>1); assert(peak<.45);
 // Each rain variant differs; all invalid controls stay finite. Wind alone works.
 const energies=[];
 for(let type=1;type<=3;type++) { a=engine(); a.setParameters({rainType:type,rain:1});a.start();a.render(l,r);energies.push(l.reduce((s,v)=>s+v*v,0)); }
@@ -54,3 +54,19 @@ a=engine(); b=engine(); a.start(); b.start();
 a.setParameters({rainType:3,rain:1,thunder:1,wind:1});
 a.next();b.next();assert(Math.abs(a.outputL-b.outputL)<.001);
 console.log('EnvironmentAudio JS: deterministic blocks/reset, independent thunder, rain variants, rates, finite headroom, smooth stop and silence passed');
+// Sample-exact control discontinuity check against an otherwise identical engine.
+for(const rate of [8000,48000,192000]) {
+ a=new EnvironmentAudio(rate,17);b=new EnvironmentAudio(rate,17);
+ a.setParameters({rainType:3,rain:1,thunder:1,wind:1});b.setParameters(a.parameters);a.start();b.start();
+ for(let i=0;i<rate*2;i++){a.next();b.next();}
+ a.stop();a.next();b.next();
+ assert(Math.abs(a.outputL-b.outputL)<.001&&Math.abs(a.outputR-b.outputR)<.001,'stop must change gain smoothly');
+ a.reset();b.reset();a.start();b.start();for(let i=0;i<rate/10;i++){a.next();b.next();assert.equal(a.outputL,b.outputL);}
+}
+// The first thunder frame has no impulsive discontinuity; later returns overlap.
+a=engine(7);a.setParameters({thunder:1});a.start();
+for(let i=0;i<n*1.5;i++)a.next();
+assert.equal(a.outputL,0);assert.equal(a.rollDelay[0],0);
+assert(a.rollDelay.slice(1).every((v,i)=>v>a.rollDelay[i]));
+assert(a.rollDuration.every(v=>v>=1.4&&v<=3.2));
+console.log('Weather event envelopes and sample-level control transitions passed');

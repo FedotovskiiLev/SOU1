@@ -15,6 +15,12 @@ public final class EnvironmentAudio {
     }
     private final int sampleRate, seed;
     private final double smoothing, rainPole, windPole, thunderPole, dcPole;
+    private final double noiseScale, airPole, dropFast, dropSlow, dropDamp;
+    private final double[] dropDrive = new double[24];
+    private final double[] dropA = new double[24], dropB = new double[24], dropPan = new double[24], dropTone = new double[24], dropY = new double[24], dropZ = new double[24];
+    private final double[] rollDelay = new double[7], rollDuration = new double[7], rollGain = new double[7];
+    private int dropIndex;
+    private double airL, airR, crackL, crackR, rainFineL, rainFineR;
     private volatile Parameters parameters = new Parameters(0, 0, 0, 0);
     private volatile boolean playing;
     private int rainState, windState, thunderState, gustCountdown, thunderCountdown, rollAge, rollLength;
@@ -30,6 +36,11 @@ public final class EnvironmentAudio {
         windPole = 1 - Math.exp(-2 * Math.PI * 280 / sampleRate);
         thunderPole = 1 - Math.exp(-2 * Math.PI * 95 / sampleRate);
         dcPole = 1 - Math.exp(-2 * Math.PI * 12 / sampleRate);
+        noiseScale = Math.sqrt(sampleRate / 48000.0);
+        airPole = 1 - Math.exp(-2 * Math.PI * 1800 / sampleRate);
+        dropDamp = Math.exp(-1 / (sampleRate * .004));
+        dropFast = Math.exp(-1 / (sampleRate * .0015));
+        dropSlow = Math.exp(-1 / (sampleRate * .018));
         reset();
     }
     private static double clamp(double v, double old) { return Double.isNaN(v) || Double.isInfinite(v) ? old : Math.max(0, Math.min(1, v)); }
@@ -50,6 +61,10 @@ public final class EnvironmentAudio {
         light = steady = heavy = wind = thunder = 0;
         rainL = rainR = windL = windR = windDcL = windDcR = 0;
         rumbleL = rumbleR = rumbleDcL = rumbleDcR = 0;
+        java.util.Arrays.fill(dropDrive, 0); java.util.Arrays.fill(dropA, 0); java.util.Arrays.fill(dropB, 0); java.util.Arrays.fill(dropPan, 0);
+        java.util.Arrays.fill(dropTone, 0); java.util.Arrays.fill(dropY, 0); java.util.Arrays.fill(dropZ, 0);
+        java.util.Arrays.fill(rollDelay, 0); java.util.Arrays.fill(rollDuration, 0); java.util.Arrays.fill(rollGain, 0);
+        dropIndex = 0; airL = airR = crackL = crackR = rainFineL = rainFineR = 0;
         gust = gustTarget = .5; gustCountdown = 0;
         thunderCountdown = (int) (sampleRate * 1.5); rollAge = rollLength = 0;
         outputL = outputR = 0;
@@ -65,41 +80,81 @@ public final class EnvironmentAudio {
     wind = smooth(wind, on ? p.wind : 0, c);
     thunder = smooth(thunder, on ? p.thunder : 0, c);
     if (!on && isSilent()) { outputL = outputR = 0; return; }
-    // Rain changes spectral weight and density, crossfading instead of switching.
+    // Fine patter plus bounded, individually panned damped drop resonances.
     double rl = rainRandom() * 2 - 1, rr = rainRandom() * 2 - 1;
     rainL += rainPole * (rl - rainL);
     rainR += rainPole * (rr - rainR);
-    double bright = .055 * light + .085 * steady + .09 * heavy;
-    double body = .025 * light + .07 * steady + .16 * heavy;
-    double left = bright * (rl - rainL) + body * rainL;
-    double right = bright * (rr - rainR) + body * rainR;
+    rainFineL += airPole * (rl - rainFineL);
+    rainFineR += airPole * (rr - rainFineR);
+    double rainGain = light + steady + heavy;
+    double density = rainGain > 0 ? (16 * light + 85 * steady + 240 * heavy) / rainGain : 16;
+    if (rainRandom() < density / sampleRate) {
+      int k = dropIndex; dropIndex = (k + 1) % 24;
+      dropA[k] = dropB[k] = .45 + .55 * rainRandom();
+      dropPan[k] = rainRandom();
+      double angle = 2 * Math.PI * (650 + 2300 * rainRandom()) / sampleRate;
+      dropTone[k] = 2 * dropDamp * Math.cos(angle);
+      dropDrive[k] = 3 * (1 - dropDamp) * Math.sin(angle);
+      // Resonance starts at zero, then receives a short noise excitation.
+      dropY[k] = dropZ[k] = 0;
+    }
+    double dropsL = 0, dropsR = 0;
+    for (int k = 0; k < 24; k++) {
+      dropA[k] *= dropFast; dropB[k] *= dropSlow;
+      double env = dropB[k] - dropA[k];
+      double y = dropTone[k] * dropY[k] - dropDamp * dropDamp * dropZ[k] + dropDrive[k] * env * (k % 2 == 0 ? rl : rr);
+      dropZ[k] = dropY[k]; dropY[k] = y;
+      double drop = .6 * env * (k % 2 == 0 ? rainFineL : rainFineR) + y;
+      dropsL += drop * (1 - dropPan[k]); dropsR += drop * dropPan[k];
+    }
+    double fine = .009 * light + .025 * steady + .055 * heavy;
+    double body = .008 * light + .025 * steady + .07 * heavy;
+    double left = noiseScale * (fine * (rainFineL - rainL) + body * rainL + .13 * rainGain * dropsL);
+    double right = noiseScale * (fine * (rainFineR - rainR) + body * rainR + .13 * rainGain * dropsR);
+    // Broad filtered air, not a sine-wave howl; slow asymmetric gusts.
     if (--gustCountdown <= 0) {
-      gustTarget = .25 + .75 * windRandom();
+      gustTarget = .3 + .7 * windRandom();
       gustCountdown = (int) (sampleRate * (1.5 + windRandom() * 4));
     }
     gust += (gustTarget - gust) / sampleRate;
-    windL += windPole * (windRandom() * 2 - 1 - windL);
-    windR += windPole * (windRandom() * 2 - 1 - windR);
+    double wl = windRandom() * 2 - 1, wr = windRandom() * 2 - 1;
+    windL += windPole * (wl - windL);
+    windR += windPole * (wr - windR);
+    airL += airPole * (wl - airL); airR += airPole * (wr - airR);
     windDcL += dcPole * (windL - windDcL);
     windDcR += dcPole * (windR - windDcR);
-    double wg = wind * gust * .38;
-    left += wg * (windL - windDcL); right += wg * (windR - windDcR);
-    // The independent clock runs even with rain off. Soft 3–7 second rolls,
-    // separated by 6–15 seconds, never an impulsive lightning crack.
+    double wg = wind * gust * noiseScale;
+    left += wg * (1.05 * (windL - windDcL) + .10 * gust * (airL - windL));
+    right += wg * (1.05 * (windR - windDcR) + .10 * gust * (airR - windR));
+    // A softened initial crack followed by seven delayed, overlapping rolls.
+    // Independent RNG and clock: rain/wind controls never schedule thunder.
     if (rollAge >= rollLength && --thunderCountdown <= 0) {
-      rollAge = 0; rollLength = (int) (sampleRate * (3 + 4 * thunderRandom()));
+      rollAge = 0; rollLength = (int) (sampleRate * 8);
       thunderCountdown = (int) (sampleRate * (6 + 9 * thunderRandom()));
+      for (int k = 0; k < 7; k++) {
+        rollDelay[k] = k == 0 ? 0 : k * .65 + thunderRandom() * .4;
+        rollDuration[k] = 1.4 + thunderRandom() * 1.8;
+        rollGain[k] = (1 - k * .10) * (.65 + .35 * thunderRandom());
+      }
     }
-    double tn = thunderRandom() * 2 - 1;
+    double tn = thunderRandom() * 2 - 1, tr = .8 * tn + .2 * (thunderRandom() * 2 - 1);
     rumbleL += thunderPole * (tn - rumbleL);
-    rumbleR += thunderPole * (.8 * tn + .2 * (thunderRandom() * 2 - 1) - rumbleR);
+    rumbleR += thunderPole * (tr - rumbleR);
+    crackL += rainPole * (tn - crackL); crackR += rainPole * (tr - crackR);
     rumbleDcL += dcPole * (rumbleL - rumbleDcL);
     rumbleDcR += dcPole * (rumbleR - rumbleDcR);
     if (rollAge < rollLength) {
-      double phase = (double) rollAge++ / rollLength;
-      double envelope = 16 * phase * phase * (1 - phase) * (1 - phase);
-      double tg = thunder * envelope * .65;
-      left += tg * (rumbleL - rumbleDcL); right += tg * (rumbleR - rumbleDcR);
+      double age = rollAge++ / (double) sampleRate;
+      double envelope = 0;
+      for (int k = 0; k < 7; k++) {
+        double x = (age - rollDelay[k]) / rollDuration[k];
+        if (x > 0 && x < 1) envelope += rollGain[k] * 16 * x * (1 - x) * (1 - x) * (1 - x);
+      }
+      double x = age / .32;
+      double crack = x < 1 ? 16 * x * (1 - x) * (1 - x) * (1 - x) : 0;
+      double tg = thunder * noiseScale;
+      left += tg * (1.8 * envelope * (rumbleL - rumbleDcL) + .19 * crack * (crackL - rumbleL));
+      right += tg * (1.8 * envelope * (rumbleR - rumbleDcR) + .19 * crack * (crackR - rumbleR));
     }
     outputL = .45 * Math.tanh(left / .45); outputR = .45 * Math.tanh(right / .45);
   }

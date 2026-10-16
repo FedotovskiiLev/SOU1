@@ -15,6 +15,14 @@ public final class PlaybackService extends Service {
     public static final String ACTION_PLAY = "org.sou1.PLAY";
     public static final String ACTION_STOP = "org.sou1.STOP";
     public static final String ACTION_UPDATE = "org.sou1.UPDATE";
+    public static final String ACTION_RESEED = "org.sou1.RESEED";
+    public static final String EXTRA_COMPOSITION = "composition", EXTRA_BPM = "bpm", EXTRA_POLYPHONY = "polyphony";
+    public static final String EXTRA_MELODY_ENABLED = "melodyEnabled", EXTRA_DRUMS_ENABLED = "drumsEnabled";
+    public static final String EXTRA_KICK = "kick", EXTRA_SNARE = "snare", EXTRA_HIHAT = "hihat";
+    public static final String EXTRA_TOMS = "toms", EXTRA_CYMBAL = "cymbal";
+    public static final String EXTRA_AMBIENT = "ambient", EXTRA_COUNTERPOINT = "counterpoint";
+    public static final String EXTRA_RHYTHMIC = "rhythmic", EXTRA_ARPEGGIO = "arpeggio";
+    public static final String EXTRA_DENSITY = "density", EXTRA_COMPLEXITY = "complexity", EXTRA_SWING = "swing";
     public static final String EXTRA_INTENSITY = "intensity";
     public static final String EXTRA_BRIGHTNESS = "brightness";
     public static final String EXTRA_MOTION = "motion";
@@ -52,7 +60,14 @@ public final class PlaybackService extends Service {
                 .put("pad", parameters.pad).put("pluck", parameters.pluck).put("bell", parameters.bell)
                 .put("texture", parameters.texture).put("pulse", parameters.pulse).put("evolution", parameters.evolution)
                 .put("rainType", parameters.rainType).put("rain", parameters.rain)
-                .put("thunder", parameters.thunder).put("wind", parameters.wind);
+                .put("thunder", parameters.thunder).put("wind", parameters.wind)
+                .put("composition", parameters.composition).put("bpm", parameters.bpm).put("polyphony", parameters.polyphony)
+                .put("melodyEnabled", parameters.melodyEnabled).put("drumsEnabled", parameters.drumsEnabled)
+                .put("kick", parameters.kick).put("snare", parameters.snare).put("hihat", parameters.hihat)
+                .put("toms", parameters.toms).put("cymbal", parameters.cymbal)
+                .put("ambient", parameters.ambient).put("counterpoint", parameters.counterpoint)
+                .put("rhythmic", parameters.rhythmic).put("arpeggio", parameters.arpeggio)
+                .put("density", parameters.density).put("complexity", parameters.complexity).put("swing", parameters.swing);
     }
     private void publishStatus() {
         try {
@@ -84,7 +99,21 @@ public final class PlaybackService extends Service {
                     saved.optInt(EXTRA_RAIN_TYPE, parameters.rainType),
                     saved.optDouble(EXTRA_RAIN, parameters.rain),
                     saved.optDouble(EXTRA_THUNDER, parameters.thunder),
-                    saved.optDouble(EXTRA_WIND, parameters.wind));
+                    saved.optDouble(EXTRA_WIND, parameters.wind),
+                    saved.optInt(EXTRA_COMPOSITION, parameters.composition),
+                    saved.optDouble(EXTRA_BPM, parameters.bpm),
+                    saved.optInt(EXTRA_POLYPHONY, parameters.polyphony),
+                    saved.optBoolean(EXTRA_MELODY_ENABLED, parameters.melodyEnabled),
+                    saved.optBoolean(EXTRA_DRUMS_ENABLED, parameters.drumsEnabled),
+                    saved.optDouble(EXTRA_KICK, parameters.kick), saved.optDouble(EXTRA_SNARE, parameters.snare),
+                    saved.optDouble(EXTRA_HIHAT, parameters.hihat), saved.optDouble(EXTRA_TOMS, parameters.toms),
+                    saved.optDouble(EXTRA_CYMBAL, parameters.cymbal),
+                    savedStyle(saved, EXTRA_AMBIENT, 0, parameters.ambient),
+                    savedStyle(saved, EXTRA_COUNTERPOINT, 1, parameters.counterpoint),
+                    savedStyle(saved, EXTRA_RHYTHMIC, 2, parameters.rhythmic),
+                    savedStyle(saved, EXTRA_ARPEGGIO, 3, parameters.arpeggio),
+                    saved.optDouble(EXTRA_DENSITY, parameters.density),
+                    saved.optDouble(EXTRA_COMPLEXITY, parameters.complexity), saved.optDouble(EXTRA_SWING, parameters.swing));
             double savedVolume = saved.optDouble(EXTRA_VOLUME, volume);
             if (Double.isFinite(savedVolume)) volume = Math.max(0, Math.min(1, savedVolume));
         } catch (org.json.JSONException | ClassCastException invalidPreferences) {
@@ -98,6 +127,21 @@ public final class PlaybackService extends Service {
         } catch (org.json.JSONException impossible) {
             Log.w("SOU1", "Audio controls could not be saved", impossible);
         }
+    }
+    /** Legacy enum migrates only when none of the visible style weights were supplied. */
+    private static double savedStyle(org.json.JSONObject saved, String key, int style, double fallback) {
+        boolean hasWeights = saved.has(EXTRA_AMBIENT) || saved.has(EXTRA_COUNTERPOINT)
+                || saved.has(EXTRA_RHYTHMIC) || saved.has(EXTRA_ARPEGGIO);
+        if (!hasWeights && saved.has(EXTRA_COMPOSITION))
+            fallback = AmbientEngine.Parameters.legacyWeight(saved.optInt(EXTRA_COMPOSITION, 0), style);
+        return saved.optDouble(key, fallback);
+    }
+    private static double styleControl(Intent intent, String key, int style, double fallback) {
+        boolean hasWeights = intent.hasExtra(EXTRA_AMBIENT) || intent.hasExtra(EXTRA_COUNTERPOINT)
+                || intent.hasExtra(EXTRA_RHYTHMIC) || intent.hasExtra(EXTRA_ARPEGGIO);
+        if (!hasWeights && intent.hasExtra(EXTRA_COMPOSITION))
+            fallback = AmbientEngine.Parameters.legacyWeight(intent.getIntExtra(EXTRA_COMPOSITION, 0), style);
+        return control(intent, key, fallback);
     }
     private static double control(Intent intent, String key, double fallback) {
         double value = intent.getDoubleExtra(key, fallback);
@@ -183,6 +227,13 @@ public final class PlaybackService extends Service {
             return START_NOT_STICKY;
         }
         if (ACTION_STOP.equals(action)) { stopPlayback(); return START_NOT_STICKY; }
+        if (ACTION_RESEED.equals(action)) {
+            sessionSeed = intent.getLongExtra(EXTRA_SEED, sessionSeed) & 0xffffffffL;
+            if (current != null) current.queueReseed(sessionSeed);
+            else stopSelf();
+            publishStatus();
+            return START_NOT_STICKY;
+        }
         parameters = new AmbientEngine.Parameters(
                 control(intent, EXTRA_INTENSITY, parameters.intensity),
                 control(intent, EXTRA_BRIGHTNESS, parameters.brightness),
@@ -201,7 +252,21 @@ public final class PlaybackService extends Service {
                 intent.getIntExtra(EXTRA_RAIN_TYPE, parameters.rainType),
                 control(intent, EXTRA_RAIN, parameters.rain),
                 control(intent, EXTRA_THUNDER, parameters.thunder),
-                control(intent, EXTRA_WIND, parameters.wind));
+                control(intent, EXTRA_WIND, parameters.wind),
+                intent.getIntExtra(EXTRA_COMPOSITION, parameters.composition),
+                intent.getDoubleExtra(EXTRA_BPM, parameters.bpm),
+                intent.getIntExtra(EXTRA_POLYPHONY, parameters.polyphony),
+                intent.getBooleanExtra(EXTRA_MELODY_ENABLED, parameters.melodyEnabled),
+                intent.getBooleanExtra(EXTRA_DRUMS_ENABLED, parameters.drumsEnabled),
+                control(intent, EXTRA_KICK, parameters.kick), control(intent, EXTRA_SNARE, parameters.snare),
+                control(intent, EXTRA_HIHAT, parameters.hihat), control(intent, EXTRA_TOMS, parameters.toms),
+                control(intent, EXTRA_CYMBAL, parameters.cymbal),
+                styleControl(intent, EXTRA_AMBIENT, 0, parameters.ambient),
+                styleControl(intent, EXTRA_COUNTERPOINT, 1, parameters.counterpoint),
+                styleControl(intent, EXTRA_RHYTHMIC, 2, parameters.rhythmic),
+                styleControl(intent, EXTRA_ARPEGGIO, 3, parameters.arpeggio),
+                control(intent, EXTRA_DENSITY, parameters.density),
+                control(intent, EXTRA_COMPLEXITY, parameters.complexity), control(intent, EXTRA_SWING, parameters.swing));
         double requestedVolume = intent.getDoubleExtra(EXTRA_VOLUME, volume);
         if (Double.isFinite(requestedVolume)) volume = Math.max(0, Math.min(1, requestedVolume));
         saveControls();
@@ -278,6 +343,17 @@ public final class PlaybackService extends Service {
         final Thread thread;
         volatile boolean running = true;
         private AudioTrack track;
+        private final Object reseedLock = new Object();
+        private boolean reseedQueued;
+        private long queuedSeed;
+        void queueReseed(long seed) {
+            synchronized (reseedLock) { queuedSeed = seed; reseedQueued = true; }
+        }
+        private void applyQueuedReseed() {
+            synchronized (reseedLock) {
+                if (reseedQueued) { engine.reseed(queuedSeed); reseedQueued = false; }
+            }
+        }
         Session(long seed) {
             engine = new AmbientEngine(48000, seed);
             engine.setParameters(parameters);
@@ -307,6 +383,7 @@ public final class PlaybackService extends Service {
                 double gain = 0;
                 final double gainStep = 1 - Math.exp(-1.0 / (48000 * .05));
                 while (running) {
+                    applyQueuedReseed();
                     engine.render(buffer, 0, buffer.length / 2);
                     double targetGain = volume;
                     for (int i = 0; i < buffer.length; i += 2) {
