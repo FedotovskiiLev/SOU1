@@ -102,3 +102,10 @@ vm.runInContext("preset='focus'",raceContext);
 elements.get('wind-enabled').listeners.change({target:{checked:true}});
 assert.equal(vm.runInContext('preset',raceContext),'custom');
 console.log('PASS rapid restart ignores stale silence messages/fallback and weather edits mark custom');
+
+vm.runInContext('exportBusy=true;state(false)',context);
+assert.equal(elements.get('new-seed').disabled,true);
+const exportSeed=vm.runInContext('seed',context);elements.get('new-seed').listeners.click();assert.equal(vm.runInContext('seed',context),exportSeed);
+vm.runInContext('state(true)',context);assert.equal(elements.get('new-seed').disabled,true);
+vm.runInContext('exportBusy=false;state(false)',context);assert.equal(elements.get('new-seed').disabled,false);
+console.log('PASS pending MIDI export prevents reseed across playback state changes');
