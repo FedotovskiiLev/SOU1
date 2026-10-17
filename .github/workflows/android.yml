@@ -42,6 +42,7 @@ jobs:
         run: |
           sh tests/run-environment.sh
           node tests/ui-contract.test.mjs
+          node tests/viewer.test.mjs
           node tests/score.test.mjs
           node tests/composition.test.mjs
           node tests/composition-parity.test.mjs
