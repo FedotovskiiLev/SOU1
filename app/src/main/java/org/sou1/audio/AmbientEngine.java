@@ -315,6 +315,39 @@ public final class AmbientEngine {
     private final DrumVoice[] drumVoices = new DrumVoice[12];
     private final EventScore score;
     private final EnvironmentAudio environment;
+    private final NoteHistory noteHistory = new NoteHistory();
+    /** Generated score events, including notes suppressed by voice limits or mix levels. */
+    public String getScoreSnapshot() { return noteHistory.json(sampleRate); }
+    private static final class NoteHistory {
+        private final double[][] events = new double[512][5];
+        private int start, count;
+        private long clock, seed;
+        synchronized void clear(long newSeed) { start = count = 0; clock = 0; seed=newSeed & 0xffffffffL; }
+        synchronized void clock(long frame) { clock = frame; }
+        synchronized void add(long frame, int instrument, int pitch, long duration, double velocity) {
+            int index = (start + count) % events.length;
+            if (count == events.length) start = (start + 1) % events.length; else count++;
+            double[] e = events[index]; e[0]=frame; e[1]=instrument; e[2]=pitch; e[3]=duration; e[4]=velocity;
+            clock = frame;
+        }
+        String json(int rate) {
+            double[][] copy = new double[512][5];
+            int length; long snapshotFrame, snapshotSeed;
+            synchronized(this) {
+                length=count; snapshotFrame=clock; snapshotSeed=seed;
+                for(int i=0;i<length;i++) System.arraycopy(events[(start+i)%events.length],0,copy[i],0,5);
+            }
+            StringBuilder out = new StringBuilder(32768);
+            out.append("{\"seed\":").append(snapshotSeed).append(",\"frame\":").append(snapshotFrame).append(",\"rate\":").append(rate).append(",\"events\":[");
+            for (int i=0;i<length;i++) {
+                if(i>0) out.append(','); out.append('[');
+                double[] e=copy[i];
+                for(int j=0;j<5;j++){ if(j>0)out.append(',');out.append(e[j]); }
+                out.append(']');
+            }
+            return out.append("]}").toString();
+        }
+    }
     private final NoteSink noteSink = this::noteOn;
     private final double[] layerGains = {.65, .55, .35, .20, .15};
     private final double[] drumGains = {.65, .4, .3, .35, .2};
@@ -353,6 +386,7 @@ public final class AmbientEngine {
         this.sampleRate = sampleRate;
         macros = new MacroBus(sampleRate);
         score = new EventScore(sampleRate, seed);
+        noteHistory.clear(seed);
         environment = new EnvironmentAudio(sampleRate, seed);
         smoothing = 1.0 - StrictMath.exp(-1.0 / (sampleRate * 1.5));
         drumSmoothing = 1.0 - StrictMath.exp(-1.0 / (sampleRate * .05));
@@ -388,6 +422,7 @@ public final class AmbientEngine {
         if (fade == 0) { seedGain = 0; applyReseed(); }
     }
     private void applyReseed() {
+        noteHistory.clear(pendingSeed);
         score.reseed(pendingSeed);
         frame = 0;
         for (Voice v : voices) { if (v.active && !v.off) noteOffCount++; v.active = false; }
@@ -406,6 +441,7 @@ public final class AmbientEngine {
         fade = 0;
         frame = 0;
         score.reset();
+        noteHistory.clear(score.seed);
         for (Voice v : voices) v.active = false;
         for (DrumVoice v : drumVoices) v.active = false;
         drumState = (int) score.seed ^ 0x7f4a7c15;
@@ -427,6 +463,7 @@ public final class AmbientEngine {
             stereo[offsetSamples++] = (short) Math.round(outputL * 32767.0);
             stereo[offsetSamples++] = (short) Math.round(outputR * 32767.0);
         }
+        noteHistory.clock(frame);
     }
 
     public void render(float[] stereo, int offsetSamples, int frameCount) {
@@ -439,6 +476,7 @@ public final class AmbientEngine {
             stereo[offsetSamples++] = (float) outputL;
             stereo[offsetSamples++] = (float) outputR;
         }
+        noteHistory.clock(frame);
     }
 
     /** Publish one coherent control/transport snapshot for the entire block. */
@@ -455,6 +493,7 @@ public final class AmbientEngine {
 
     private void noteOn(long at, int instrument, int pitch, long duration,
                         double velocity, double pan) {
+        noteHistory.add(at, instrument, pitch, duration, velocity);
         if (instrument >= 5) { drumOn(instrument - 5, duration, velocity, pan); return; }
         Voice v = null;
         int active = 0;

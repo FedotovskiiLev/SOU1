@@ -66,7 +66,7 @@ for(const rate of [8000,48000,192000]) {
 // The first thunder frame has no impulsive discontinuity; later returns overlap.
 a=engine(7);a.setParameters({thunder:1});a.start();
 for(let i=0;i<n*1.5;i++)a.next();
-assert.equal(a.outputL,0);assert.equal(a.rollDelay[0],0);
+assert.equal(a.outputL,0);assert.equal(a.rollDelay[0],.18);
 assert(a.rollDelay.slice(1).every((v,i)=>v>a.rollDelay[i]));
-assert(a.rollDuration.every(v=>v>=1.4&&v<=3.2));
+assert(a.rollDuration.every(v=>v>=.75&&v<=1.95));
 console.log('Weather event envelopes and sample-level control transitions passed');

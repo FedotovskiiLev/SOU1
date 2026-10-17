@@ -126,14 +126,14 @@ public final class EnvironmentAudio {
     double wg = wind * gust * noiseScale;
     left += wg * (1.05 * (windL - windDcL) + .10 * gust * (airL - windL));
     right += wg * (1.05 * (windR - windDcR) + .10 * gust * (airR - windR));
-    // A softened initial crack followed by seven delayed, overlapping rolls.
+    // A fast lightning crack with two early reflections, then distinct low rolling arrivals.
     // Independent RNG and clock: rain/wind controls never schedule thunder.
     if (rollAge >= rollLength && --thunderCountdown <= 0) {
       rollAge = 0; rollLength = (int) (sampleRate * 8);
       thunderCountdown = (int) (sampleRate * (6 + 9 * thunderRandom()));
       for (int k = 0; k < 7; k++) {
-        rollDelay[k] = k == 0 ? 0 : k * .65 + thunderRandom() * .4;
-        rollDuration[k] = 1.4 + thunderRandom() * 1.8;
+        rollDelay[k] = k == 0 ? .18 : k * .78 + thunderRandom() * .28;
+        rollDuration[k] = .75 + thunderRandom() * 1.2;
         rollGain[k] = (1 - k * .10) * (.65 + .35 * thunderRandom());
       }
     }
@@ -150,11 +150,14 @@ public final class EnvironmentAudio {
         double x = (age - rollDelay[k]) / rollDuration[k];
         if (x > 0 && x < 1) envelope += rollGain[k] * 16 * x * (1 - x) * (1 - x) * (1 - x);
       }
-      double x = age / .32;
-      double crack = x < 1 ? 16 * x * (1 - x) * (1 - x) * (1 - x) : 0;
+      double crack = 0;
+      for (int echo=0; echo<3; echo++) {
+        double t=age-echo*.115;
+        if(t>=0 && t<.7) crack += StrictMath.pow(.42,echo)*(1-StrictMath.exp(-t/.003))*StrictMath.exp(-t/.065);
+      }
       double tg = thunder * noiseScale;
-      left += tg * (1.8 * envelope * (rumbleL - rumbleDcL) + .19 * crack * (crackL - rumbleL));
-      right += tg * (1.8 * envelope * (rumbleR - rumbleDcR) + .19 * crack * (crackR - rumbleR));
+      left += tg * (2.4 * envelope * (rumbleL - rumbleDcL) + .95 * crack * (crackL - rumbleL));
+      right += tg * (2.4 * envelope * (rumbleR - rumbleDcR) + .95 * crack * (crackR - rumbleR));
     }
     outputL = .45 * Math.tanh(left / .45); outputR = .45 * Math.tanh(right / .45);
   }

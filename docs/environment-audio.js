@@ -118,14 +118,14 @@ export class EnvironmentAudio {
     const wg = this.wind * this.gust * this.noiseScale;
     left += wg * (1.05 * (this.windL - this.windDcL) + .10 * this.gust * (this.airL - this.windL));
     right += wg * (1.05 * (this.windR - this.windDcR) + .10 * this.gust * (this.airR - this.windR));
-    // A softened initial crack followed by seven delayed, overlapping rolls.
+    // A fast lightning crack with two early reflections, then distinct low rolling arrivals.
     // Independent RNG and clock: rain/wind controls never schedule thunder.
     if (this.rollAge >= this.rollLength && --this.thunderCountdown <= 0) {
       this.rollAge = 0; this.rollLength = Math.floor(this.sampleRate * 8);
       this.thunderCountdown = Math.floor(this.sampleRate * (6 + 9 * this.thunderRandom()));
       for (let k = 0; k < 7; k++) {
-        this.rollDelay[k] = k === 0 ? 0 : k * .65 + this.thunderRandom() * .4;
-        this.rollDuration[k] = 1.4 + this.thunderRandom() * 1.8;
+        this.rollDelay[k] = k === 0 ? .18 : k * .78 + this.thunderRandom() * .28;
+        this.rollDuration[k] = .75 + this.thunderRandom() * 1.2;
         this.rollGain[k] = (1 - k * .10) * (.65 + .35 * this.thunderRandom());
       }
     }
@@ -142,11 +142,15 @@ export class EnvironmentAudio {
         const x = (age - this.rollDelay[k]) / this.rollDuration[k];
         if (x > 0 && x < 1) envelope += this.rollGain[k] * 16 * x * (1 - x) * (1 - x) * (1 - x);
       }
-      const x = age / .32;
-      const crack = x < 1 ? 16 * x * (1 - x) * (1 - x) * (1 - x) : 0;
+      // Millisecond attack; reflections stay separate from the seconds-long rumble.
+      let crack = 0;
+      for (let echo=0; echo<3; echo++) {
+        const t=age-echo*.115;
+        if(t>=0 && t<.7) crack += Math.pow(.42,echo)*(1-Math.exp(-t/.003))*Math.exp(-t/.065);
+      }
       const tg = this.thunder * this.noiseScale;
-      left += tg * (1.8 * envelope * (this.rumbleL - this.rumbleDcL) + .19 * crack * (this.crackL - this.rumbleL));
-      right += tg * (1.8 * envelope * (this.rumbleR - this.rumbleDcR) + .19 * crack * (this.crackR - this.rumbleR));
+      left += tg * (2.4 * envelope * (this.rumbleL - this.rumbleDcL) + .95 * crack * (this.crackL - this.rumbleL));
+      right += tg * (2.4 * envelope * (this.rumbleR - this.rumbleDcR) + .95 * crack * (this.crackR - this.rumbleR));
     }
     this.outputL = left === 0 ? 0 : .45 * Math.tanh(left / .45); this.outputR = right === 0 ? 0 : .45 * Math.tanh(right / .45);
   }

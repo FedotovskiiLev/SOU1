@@ -106,6 +106,8 @@ public final class MainActivity extends Activity {
         @JavascriptInterface public void stop() {
             startService(new Intent(MainActivity.this,PlaybackService.class).setAction(PlaybackService.ACTION_STOP));
         }
+        @JavascriptInterface public void clearScore(){startService(new Intent(MainActivity.this,PlaybackService.class).setAction("org.sou1.CLEAR_SCORE"));}
+        @JavascriptInterface public String score(){return PlaybackService.getScoreSnapshot();}
         @JavascriptInterface public String status(){return PlaybackService.getStatus();}
         @JavascriptInterface public boolean isPlaying(){return PlaybackService.isPlaying();}
         @JavascriptInterface public double level(){return PlaybackService.getLevel();}

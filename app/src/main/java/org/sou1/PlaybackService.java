@@ -147,6 +147,12 @@ public final class PlaybackService extends Service {
         double value = intent.getDoubleExtra(key, fallback);
         return Double.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
     }
+    private static volatile AmbientEngine scoreEngine;
+    private static volatile String stoppedScore="{\"frame\":0,\"rate\":48000,\"events\":[]}";
+    public static String getScoreSnapshot() {
+        AmbientEngine engine = scoreEngine;
+        return engine == null ? stoppedScore : engine.getScoreSnapshot();
+    }
     private static final Object TELEMETRY_LOCK = new Object();
     private static final float[] waveform = new float[64];
     private static float level;
@@ -216,6 +222,7 @@ public final class PlaybackService extends Service {
     @Override public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) { stopPlayback(); return START_NOT_STICKY; }
         String action = intent.getAction();
+        if("org.sou1.CLEAR_SCORE".equals(action)){stoppedScore="{\"frame\":0,\"rate\":48000,\"events\":[]}";if(current==null)stopSelf();return START_NOT_STICKY;}
         if ("org.sou1.TIMER".equals(action)) {
             main.removeCallbacks(endSession);
             int minutes = intent.getIntExtra("minutes", 0);
@@ -323,6 +330,8 @@ public final class PlaybackService extends Service {
     private void stopPlayback() {
         main.removeCallbacks(endSession);
         Session old = current;
+        if(old!=null)stoppedScore=old.engine.getScoreSnapshot();
+        scoreEngine=null;
         current = null;
         playing = false;
         timerMinutes = 0; timerDeadline = 0; publishStatus();
@@ -356,6 +365,7 @@ public final class PlaybackService extends Service {
         }
         Session(long seed) {
             engine = new AmbientEngine(48000, seed);
+            scoreEngine = engine;
             engine.setParameters(parameters);
             thread = new Thread(this, "SOU1-audio");
         }

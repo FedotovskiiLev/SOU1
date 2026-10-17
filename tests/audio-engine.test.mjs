@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const source = await readFile(new URL('../docs/audio-engine.js', import.meta.url), 'utf8');
 const weather = await readFile(new URL('../docs/environment-audio.js', import.meta.url), 'utf8');
+const historySource=await readFile(new URL('../docs/note-history.js',import.meta.url),'utf8');
+const historyUrl=`data:text/javascript;base64,${Buffer.from(historySource).toString('base64')}`;
 const weatherUrl = `data:text/javascript;base64,${Buffer.from(weather).toString('base64')}`;
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(source.replace("'./environment-audio.js'", JSON.stringify(weatherUrl))).toString('base64')}`;
 const {AmbientEngine, MacroBus} = await import(moduleUrl);
@@ -106,7 +108,7 @@ globalThis.AudioWorkletProcessor = class {
 };
 globalThis.registerProcessor = (name, cls) => { assert.equal(name, 'sou1-ambient'); Processor = cls; };
 const adapter = (await readFile(new URL('../docs/audio-worklet.js', import.meta.url), 'utf8'))
-  .replace("'./audio-engine.js'", JSON.stringify(moduleUrl));
+  .replace("'./note-history.js'",JSON.stringify(historyUrl)).replace("'./audio-engine.js'", JSON.stringify(moduleUrl));
 await import(`data:text/javascript;base64,${Buffer.from(adapter).toString('base64')}`);
 const processor = new Processor({processorOptions: {seed: 7}});
 const channels = [buffer(128), buffer(128)];
@@ -128,3 +130,10 @@ processor.port.onmessage({data:{type:'reseed',seed:987}});
 for(let i=0;i<20;i++)processor.process([],outputs);
 assert.equal(processor.engine,sameEngine);assert.equal(processor.engine.seed,987);assert.equal(processor.engine.parameters,savedControls);assert(processor.engine.playing);
 console.log('PASS: JS DSP and AudioWorklet contract, including knob snapshot and same-engine reseed');
+
+processor.port.onmessage({data:{type:'score'}});
+const scoreMessage=processor.messages.at(-1);
+assert.equal(scoreMessage.type,'score');assert.equal(scoreMessage.score.seed,987);
+assert(scoreMessage.score.events.length>0&&scoreMessage.score.events.length<=512);
+assert(scoreMessage.score.events.every(e=>e[0]<=processor.engine.frame));
+console.log('PASS actual worklet generated-note telemetry after reseed');
