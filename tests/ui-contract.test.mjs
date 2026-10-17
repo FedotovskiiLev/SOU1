@@ -2,14 +2,15 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
+const appSource=fs.readFileSync(new URL('../docs/app.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'');
 const elements=new Map();
 function element(id=''){const e={id,value:'0',textContent:'',style:{setProperty(){}},dataset:{},classList:{toggle(){}},listeners:{},setAttribute(k,v){this[k]=v},removeAttribute(k){delete this[k]},addEventListener(k,f){this.listeners[k]=f},append(){},focus(){},setPointerCapture(){},getContext(){return{}},set innerHTML(s){for(const m of s.matchAll(/id="([^"]+)"/g))elements.set(m[1],element(m[1]));}};return e;}
 const html=fs.readFileSync(new URL('../docs/index.html',import.meta.url),'utf8');
 for(const m of html.matchAll(/id="([^"]+)"/g))elements.set(m[1],element(m[1]));
 elements.get('rain-type').value='1';
-const context={console,document:{getElementById:id=>elements.get(id),documentElement:{},querySelectorAll:()=>[],createElement:()=>element(),body:{classList:{toggle(){}}},addEventListener(){}},window:{addEventListener(){}},navigator:{language:'en'},localStorage:{getItem:()=>null,setItem(){}},crypto:{getRandomValues:a=>{a[0]=1;return a}},performance:{now:()=>0},matchMedia:()=>({matches:false}),requestAnimationFrame(){},fetch:()=>Promise.resolve({json:()=>Promise.resolve({apk:null})}),setTimeout,clearTimeout};
+const context={console,drawAsciiGrid(){},drawPianoRoll(){},setInterval(){},document:{getElementById:id=>elements.get(id),documentElement:{},querySelectorAll:()=>[],createElement:()=>element(),body:{classList:{toggle(){}}},addEventListener(){}},window:{addEventListener(){}},navigator:{language:'en'},localStorage:{getItem:()=>null,setItem(){}},crypto:{getRandomValues:a=>{a[0]=1;return a}},performance:{now:()=>0},matchMedia:()=>({matches:false}),requestAnimationFrame(){},fetch:()=>Promise.resolve({json:()=>Promise.resolve({apk:null})}),setTimeout,clearTimeout};
 vm.createContext(context);
-vm.runInContext(fs.readFileSync(new URL('../docs/app.js',import.meta.url),'utf8'),context);
+vm.runInContext(appSource,context);
 assert.equal(vm.runInContext("t('quiet')",context),'');
 for(const key of ['warmth','strength','width','wash','pad','pluck','bell','texture','pulse','evolution','rain','thunder','wind'])assert.ok(elements.has(key),key);
 vm.runInContext("setValue('rain',.4)",context);
@@ -47,7 +48,7 @@ assert.equal(elements.get('new-seed').disabled,false);
 console.log('PASS composer controls, melody/drum toggles, live reseed preserves playback/timer');
 const nativeContext={...context,window:{addEventListener(){},AndroidBridge:{status:()=>JSON.stringify({playing:false})}},fetch:()=>{throw Error('native must not fetch APK metadata')}};
 vm.createContext(nativeContext);
-vm.runInContext(fs.readFileSync(new URL('../docs/app.js',import.meta.url),'utf8'),nativeContext);
+vm.runInContext(appSource,nativeContext);
 assert.equal(elements.get('apk').hidden,true);
 assert.equal(elements.get('install').hidden,true);
 console.log('PASS native hides APK/PWA install links and skips web APK fetch');
@@ -62,12 +63,12 @@ elements.get('new-seed').listeners.click();
 assert.equal(vm.runInContext('seed',nativeContext),nativeSeed);
 assert.ok(elements.get('notice').textContent);
 const legacyContext={...context,window:{addEventListener(){}},localStorage:{getItem:()=>JSON.stringify({parameters:{composition:2}}),setItem(){}}};
-vm.createContext(legacyContext);vm.runInContext(fs.readFileSync(new URL('../docs/app.js',import.meta.url),'utf8'),legacyContext);
+vm.createContext(legacyContext);vm.runInContext(appSource,legacyContext);
 assert.equal(vm.runInContext('parameters.rhythmic',legacyContext),1);
 assert.equal(vm.runInContext('parameters.ambient',legacyContext),0);
 console.log('PASS legacy composition migration and rejected native reseed preserves UI seed');
 for(const corrupt of ['null','[]','true','"wrong"','{bad']){
- const c={...context,window:{addEventListener(){}},localStorage:{getItem:()=>corrupt,setItem(){}}};vm.createContext(c);vm.runInContext(fs.readFileSync(new URL('../docs/app.js',import.meta.url),'utf8'),c);assert.equal(vm.runInContext('parameters.ambient',c),1);
+ const c={...context,window:{addEventListener(){}},localStorage:{getItem:()=>corrupt,setItem(){}}};vm.createContext(c);vm.runInContext(appSource,c);assert.equal(vm.runInContext('parameters.ambient',c),1);
 }
 console.log('PASS malformed or non-object stored preferences recover to defaults');
 let releaseResume, suspended=0, graphCount=0, pauseResume=false;
@@ -85,7 +86,7 @@ class FakeWorklet{
  connect(){return {connect:()=>({connect(){}})}}
 }
 const raceContext={...context,window:{addEventListener(){}},AudioContext:FakeAudioContext,AudioWorkletNode:FakeWorklet,setTimeout:f=>{callbacks.set(++nextTimer,f);return nextTimer},clearTimeout:id=>callbacks.delete(id)};
-vm.createContext(raceContext);vm.runInContext(fs.readFileSync(new URL('../docs/app.js',import.meta.url),'utf8'),raceContext);
+vm.createContext(raceContext);vm.runInContext(appSource,raceContext);
 await vm.runInContext('start()',raceContext);
 vm.runInContext('stop()',raceContext);
 const staleFallback=[...callbacks.values()].at(-1);
