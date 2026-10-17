@@ -8,7 +8,7 @@ function element(id=''){const e={id,value:'0',textContent:'',style:{setProperty(
 const html=fs.readFileSync(new URL('../docs/index.html',import.meta.url),'utf8');
 for(const m of html.matchAll(/id="([^"]+)"/g))elements.set(m[1],element(m[1]));
 elements.get('rain-type').value='1';
-const context={console,drawAsciiGrid(){},drawPianoRoll(){},setInterval(){},document:{getElementById:id=>elements.get(id),documentElement:{},querySelectorAll:()=>[],createElement:()=>element(),body:{classList:{toggle(){}}},addEventListener(){}},window:{addEventListener(){}},navigator:{language:'en'},localStorage:{getItem:()=>null,setItem(){}},crypto:{getRandomValues:a=>{a[0]=1;return a}},performance:{now:()=>0},matchMedia:()=>({matches:false}),requestAnimationFrame(){},fetch:()=>Promise.resolve({json:()=>Promise.resolve({apk:null})}),setTimeout,clearTimeout};
+const context={console,drawAsciiGrid(){},createPianoRoll(){return {update(){},refresh(){}}},setInterval(){},document:{getElementById:id=>elements.get(id),documentElement:{},querySelectorAll:()=>[],createElement:()=>element(),body:{classList:{toggle(){}}},addEventListener(){}},window:{addEventListener(){}},navigator:{language:'en'},localStorage:{getItem:()=>null,setItem(){}},crypto:{getRandomValues:a=>{a[0]=1;return a}},performance:{now:()=>0},matchMedia:()=>({matches:false}),requestAnimationFrame(){},fetch:()=>Promise.resolve({json:()=>Promise.resolve({apk:null})}),setTimeout,clearTimeout};
 vm.createContext(context);
 vm.runInContext(appSource,context);
 assert.equal(vm.runInContext("t('quiet')",context),'');
