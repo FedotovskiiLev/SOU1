@@ -18,7 +18,8 @@ class Sou1AmbientProcessor extends AudioWorkletProcessor {
         case 'score': this.port.postMessage({type:'score',score:{...this.history.snapshot(this.engine.frame,sampleRate),seed:this.engine.seed}}); break;
         case 'start': this.engine.start(); this.silenceReported = false; break;
         case 'reseed': this.engine.reseed(data.seed); break;
-        case 'stop': this.engine.stop(); this.silenceReported = false; break;
+        case 'stop': this.engine.stop(); this.silenceReported = false; this.port.postMessage({type:'score',score:{...this.history.snapshot(this.engine.frame,sampleRate),seed:this.engine.seed}}); break;
+        case 'score-export': this.port.postMessage({type:'score-export',requestId:data.requestId,score:{...this.history.snapshot(this.engine.frame,sampleRate),seed:this.engine.seed}}); break;
         case 'parameters':
           if (data.parameters && typeof data.parameters === 'object') this.engine.setParameters(data.parameters);
           break;
@@ -29,6 +30,7 @@ class Sou1AmbientProcessor extends AudioWorkletProcessor {
     const channels = outputs[0];
     if (channels && channels.length >= 2) this.engine.render(channels[0], channels[1]);
     if (this.engine.isSilent() && !this.silenceReported) {
+      this.port.postMessage({type:'score',score:{...this.history.snapshot(this.engine.frame,sampleRate),seed:this.engine.seed}});
       this.port.postMessage({type: 'silent'});
       this.silenceReported = true;
     }

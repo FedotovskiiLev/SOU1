@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.webkit.*;
 import android.graphics.Color;
 import org.json.*;
@@ -16,6 +17,12 @@ import java.nio.charset.StandardCharsets;
 public final class MainActivity extends Activity {
     private static final String ORIGIN = "https://sou1.local/";
     private WebView web;
+    private static final int SAVE_MIDI = 702;
+    private static final int MIDI_MAX_BYTES = 262144;
+    private static final Object MIDI_LOCK = new Object();
+    private static byte[] pendingMidi;
+    private static volatile String midiStatus = "idle";
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -88,7 +95,51 @@ public final class MainActivity extends Activity {
         intent.putExtra(PlaybackService.EXTRA_SEED,json.optLong("seed",1));
         return intent;
     }
+    private void finishMidi(String result) {
+        synchronized (MIDI_LOCK) { pendingMidi = null; midiStatus = result; }
+        runOnUiThread(() -> { if (web != null) web.evaluateJavascript(
+                "window.sou1MidiExportResult&&window.sou1MidiExportResult("+JSONObject.quote(result)+")", null); });
+    }
+    @Override protected void onActivityResult(int request, int result, Intent data) {
+        super.onActivityResult(request, result, data);
+        if (request != SAVE_MIDI) return;
+        final byte[] payload;
+        synchronized (MIDI_LOCK) {
+            if (!"pending".equals(midiStatus) || pendingMidi == null) { finishMidi("cancelled"); return; }
+            payload = pendingMidi;
+            midiStatus = "writing";
+        }
+        if (result != RESULT_OK || data == null || data.getData() == null) { finishMidi("cancelled"); return; }
+        final Uri destination = data.getData();
+        new Thread(() -> {
+            try (OutputStream output = getContentResolver().openOutputStream(destination, "wt")) {
+                if (output == null) throw new IOException("No destination stream");
+                output.write(payload);
+            } catch (IOException | RuntimeException failure) { finishMidi("failed"); return; }
+            finishMidi("saved");
+        }, "sou1-midi-save").start();
+    }
     private final class Bridge {
+        @JavascriptInterface public String midiExportStatus() { return midiStatus; }
+        @JavascriptInterface public boolean exportMidi(String encoded, String filename) {
+            if (encoded == null || encoded.length() > ((MIDI_MAX_BYTES+2)/3)*4 || filename == null || !filename.matches("SOU1-[0-9a-f]{8}\\.mid")) return false;
+            final byte[] bytes;
+            try { bytes = Base64.decode(encoded, Base64.NO_WRAP); }
+            catch (IllegalArgumentException invalid) { return false; }
+            if (bytes.length < 14 || bytes.length > MIDI_MAX_BYTES || bytes[0]!='M' || bytes[1]!='T' || bytes[2]!='h' || bytes[3]!='d' || bytes[4]!=0 || bytes[5]!=0 || bytes[6]!=0 || bytes[7]!=6) return false;
+            synchronized (MIDI_LOCK) {
+                if ("pending".equals(midiStatus) || "writing".equals(midiStatus)) return false;
+                pendingMidi = bytes; midiStatus = "pending";
+            }
+            runOnUiThread(() -> {
+                try {
+                    Intent save = new Intent(Intent.ACTION_CREATE_DOCUMENT).addCategory(Intent.CATEGORY_OPENABLE)
+                            .setType("audio/midi").putExtra(Intent.EXTRA_TITLE, filename);
+                    startActivityForResult(save, SAVE_MIDI);
+                } catch (RuntimeException unavailable) { finishMidi("failed"); }
+            });
+            return true;
+        }
         @JavascriptInterface public boolean play(String data) {
             try { startForegroundService(command(PlaybackService.ACTION_PLAY,data));return true; }
             catch(RuntimeException|JSONException failure){ return false; }
@@ -118,5 +169,5 @@ public final class MainActivity extends Activity {
     }
     @Override public void onResume(){super.onResume();if(web!=null){web.onResume();web.evaluateJavascript("window.dispatchEvent(new Event('sou1-resume'))",null);}}
     @Override public void onPause(){if(web!=null)web.onPause();super.onPause();}
-    @Override public void onDestroy(){if(web!=null){web.removeJavascriptInterface("AndroidBridge");web.destroy();web=null;}super.onDestroy();}
+    @Override public void onDestroy(){if(isFinishing() && "pending".equals(midiStatus))finishMidi("cancelled");if(web!=null){web.removeJavascriptInterface("AndroidBridge");web.destroy();web=null;}super.onDestroy();}
 }

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: AGPL-3.0-only
-name: Android debug APK
+name: Android APK verification
 on:
   push:
     branches: [main]
@@ -43,13 +43,15 @@ jobs:
           sh tests/run-environment.sh
           node tests/ui-contract.test.mjs
           node tests/viewer.test.mjs
+          node tests/midi-export.test.mjs
+          java tests/MidiExportReadTest.java tests/reports/midi-export-fixture.mid
           node tests/score.test.mjs
           node tests/composition.test.mjs
           node tests/composition-parity.test.mjs
           node tests/weather-parity.mjs
           node tests/layer-balance.test.mjs
       - name: Compile APK and run Android lint
-        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+        run: gradle --no-daemon :app:assembleDebug :app:lintDebug :app:assembleRelease :app:lintRelease
       - name: Verify APK signing and package
         run: |
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
@@ -59,5 +61,13 @@ jobs:
         with:
           name: SOU1-preview-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload unsigned release APK for owner signing
+        uses: actions/upload-artifact@v7
+        with:
+          name: SOU1-0.2.0-unsigned-release
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error
           retention-days: 14

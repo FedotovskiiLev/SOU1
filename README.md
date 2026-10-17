@@ -42,3 +42,14 @@ Run `sh tests/run.sh` for Java DSP tests, `sh tests/run-environment.sh` for weat
 ## Licensing and provenance
 
 AGPL-3.0-only. See LICENSE. All application DSP and interface code in this initial implementation is original. No Zeitgeist source history, private game files, third-party music, sample packs or external fonts are included. Java and JavaScript synthesis share the design but are not PCM-identical across implementations. Public source remains linked from the interface.
+
+
+## MIDI export (0.2)
+
+The MIDI panel exports its retained generated-note history (up to 512 events) as a type-1 `.mid` file with separate instrument tracks. Viewer visibility filters do not remove notes from the export. Live web export requests a fresh engine snapshot; stopping also retains the final snapshot before audio suspension. A new seed clears this history.
+
+Timing is preserved in seconds using a fixed 120 BPM, 960-PPQ export grid; the original changing beat grid is not recorded. General MIDI programs approximate the custom synthesizer, and effects/weather are not MIDI notes. Captured drum pitches are preserved (the generator's high tom pitch49 also maps to GM crash cymbal49). MIDI 1.0 cannot identify overlapping identical channel/pitch notes independently: retriggers shorten earlier notes, same-tick duplicates coalesce, and cross-track collisions use a one-tick gap (adjacent-tick collisions coalesce). This prevents stuck notes on common players.
+
+Browsers download the file locally. Android uses the system Create Document picker without storage permissions; it reports success only after the output stream closes. A cancelled picker preserves the score. Process death cancels a pending save rather than exporting a different snapshot.
+
+Version0.2.0 uses versionCode2. CI produces an **unsigned release APK** for owner-controlled release signing; this artifact is not install-ready. The persistent release key and password must stay outside this repository. The old debug-signed preview cannot be upgraded in place with a new release certificate. The public download manifest remains pinned to the existing preview until a signed, verified replacement is deliberately published.
