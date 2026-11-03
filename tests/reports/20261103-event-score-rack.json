@@ -1,0 +1,171 @@
+{
+  "checkedAtUtc": "2026-11-03T22:40:00Z",
+  "baseCommit": "4d584a075038fc779af01914cecdf2c5e17a4948",
+  "node": "24.22.1",
+  "testSuites": {
+    "eventScoreRack": {
+      "pass": 19,
+      "fail": 0
+    },
+    "sampler": {
+      "pass": 34,
+      "fail": 0
+    },
+    "offlineRenderer": {
+      "pass": 28,
+      "fail": 0
+    },
+    "originalDspAudioWorklet": "PASS",
+    "originalMidi": "PASS"
+  },
+  "independentReview": "No blocking findings; 500 additional score configurations and extreme/different-duration renders checked; both source pins independently verified against GitHub bytes.",
+  "stressRender": {
+    "duration": 120,
+    "profile": "pulse",
+    "bpm": 180,
+    "density": 1,
+    "complexity": 1,
+    "outputGainDb": -6,
+    "frames": 5760000,
+    "sourceEventCount": 3475,
+    "routedEvents": 3430,
+    "mutedEvents": 45,
+    "fallbackEvents": 3,
+    "accepted": 3430,
+    "dropped": 0,
+    "unmapped": 0,
+    "activeVoices": 0,
+    "sha256": "3105124c1f553ba4d3e05eb5d4595f148d4b35ac48ebb50d84e69d9472e00871"
+  },
+  "nocturne": {
+    "schema": "sou1.event-score-cue.v1",
+    "profile": "nocturne",
+    "seed": 20261103,
+    "sampleRate": 48000,
+    "duration": 20,
+    "parameters": {
+      "ambient": 0.65,
+      "counterpoint": 0.2,
+      "rhythmic": 0,
+      "arpeggio": 0.25,
+      "bpm": 72,
+      "density": 0.43,
+      "complexity": 0.4,
+      "swing": 0.12,
+      "evolution": 0.2,
+      "melodyEnabled": true,
+      "drumsEnabled": false,
+      "pad": 0.2,
+      "pluck": 0.65,
+      "bell": 0.4,
+      "texture": 0.08,
+      "pulse": 0.16,
+      "kick": 0.4,
+      "snare": 0.3,
+      "hihat": 0.2,
+      "toms": 0,
+      "cymbal": 0
+    },
+    "outputGainDb": 16,
+    "frames": 960000,
+    "activeFrames": 864000,
+    "sourceCommit": "70bf98168b1c854f8ce79676e02acc4bc44bac93",
+    "sourceHashes": {
+      "audioEngineSha256": "ea1df6717f43a1e62b272a2202fb716d0940194e71febd97b0bc283cc439d6fb",
+      "environmentAudioSha256": "76e226e8a0345fe5bfd205fa44a8432cd720e54005326666e414265325a145ad"
+    },
+    "bankId": "vcsl-mini-v1",
+    "bankSourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+    "sourceEventCount": 74,
+    "routedEvents": 74,
+    "mutedEvents": 0,
+    "fallbackEvents": 6,
+    "rack": {
+      "accepted": 74,
+      "dropped": 0,
+      "unmapped": 0,
+      "choked": 0,
+      "activeVoices": 0
+    },
+    "peakDbfs": -12.175133331342876,
+    "rmsDbfs": -23.329116411932063,
+    "clippedSamples": 0,
+    "nonfiniteSamples": 0,
+    "sha256": "22079ef31fcd666aa6c5e691ef55b08edaf3e9a76299f5cd855586684c497d1f",
+    "limitations": [
+      "Original EventScore timing/pitch/gates/pan are preserved for routed notes; only velocity is scaled by the layer gain.",
+      "Sound is a new arrangement: marimba replaces pluck/bell, sine substitutes pad/texture/bass. Original live DSP effects/weather are not reproduced.",
+      "Out-of-range marimba pitches use explicitly counted sine fallback without octave folding.",
+      "Tom/cymbal layers must be muted while drums are enabled; bank does not contain those instruments.",
+      "Percussion one-shots retain natural sample tails; stopping at duration minus 2 seconds explicitly releases all voices.",
+      "Offline Node qualification only; no PWA, Android, VST integration, listening approval or release claim."
+    ]
+  },
+  "pulse": {
+    "schema": "sou1.event-score-cue.v1",
+    "profile": "pulse",
+    "seed": 7311,
+    "sampleRate": 48000,
+    "duration": 20,
+    "parameters": {
+      "ambient": 0.15,
+      "counterpoint": 0,
+      "rhythmic": 0.65,
+      "arpeggio": 0.3,
+      "bpm": 92,
+      "density": 0.6,
+      "complexity": 0.48,
+      "swing": 0.17,
+      "evolution": 0.2,
+      "melodyEnabled": true,
+      "drumsEnabled": true,
+      "pad": 0.12,
+      "pluck": 0.55,
+      "bell": 0.23,
+      "texture": 0.04,
+      "pulse": 0.3,
+      "kick": 0.5,
+      "snare": 0.38,
+      "hihat": 0.25,
+      "toms": 0,
+      "cymbal": 0
+    },
+    "outputGainDb": 12,
+    "frames": 960000,
+    "activeFrames": 864000,
+    "sourceCommit": "70bf98168b1c854f8ce79676e02acc4bc44bac93",
+    "sourceHashes": {
+      "audioEngineSha256": "ea1df6717f43a1e62b272a2202fb716d0940194e71febd97b0bc283cc439d6fb",
+      "environmentAudioSha256": "76e226e8a0345fe5bfd205fa44a8432cd720e54005326666e414265325a145ad"
+    },
+    "bankId": "vcsl-mini-v1",
+    "bankSourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+    "sourceEventCount": 225,
+    "routedEvents": 224,
+    "mutedEvents": 1,
+    "fallbackEvents": 0,
+    "rack": {
+      "accepted": 224,
+      "dropped": 0,
+      "unmapped": 0,
+      "choked": 42,
+      "activeVoices": 0
+    },
+    "peakDbfs": -10.967221591967695,
+    "rmsDbfs": -23.642502264293313,
+    "clippedSamples": 0,
+    "nonfiniteSamples": 0,
+    "sha256": "0a00ab17c44f61e0ca72476dbed61a23dd6110257dee191f6e17107d009eaadb",
+    "limitations": [
+      "Original EventScore timing/pitch/gates/pan are preserved for routed notes; only velocity is scaled by the layer gain.",
+      "Sound is a new arrangement: marimba replaces pluck/bell, sine substitutes pad/texture/bass. Original live DSP effects/weather are not reproduced.",
+      "Out-of-range marimba pitches use explicitly counted sine fallback without octave folding.",
+      "Tom/cymbal layers must be muted while drums are enabled; bank does not contain those instruments.",
+      "Percussion one-shots retain natural sample tails; stopping at duration minus 2 seconds explicitly releases all voices.",
+      "Offline Node qualification only; no PWA, Android, VST integration, listening approval or release claim."
+    ]
+  },
+  "ffmpegDecode": "Both WAVs and pulse MP3 pass full decode.",
+  "githubCi": "Not yet checked for new commit. Local tests are not GitHub CI.",
+  "scope": "Offline original EventScore -> new instrument arrangement; not original live timbres/effects, PWA/Android, realtime qualification or release."
+}
