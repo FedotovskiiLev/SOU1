@@ -4,6 +4,8 @@ import {readFile, open, unlink, mkdir} from 'node:fs/promises';
 import {resolve, dirname} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
+import {loadOriginalScore} from './instruments/event-score.mjs';
+import {ENGINE_SHA,ENV_SHA} from './instruments/event-score-core.mjs';
 
 export const SOURCE_COMMIT='70bf98168b1c854f8ce79676e02acc4bc44bac93';
 export const PROFILES=Object.freeze({
@@ -24,10 +26,8 @@ export function validateOptions(o={}) {
   return p;
 }
 async function loadEngine() {
-  const weather=await readFile(new URL('../docs/environment-audio.js',import.meta.url),'utf8');
-  const engine=await readFile(new URL('../docs/audio-engine.js',import.meta.url),'utf8');
-  const weatherUrl='data:text/javascript;base64,'+Buffer.from(weather).toString('base64');
-  return import('data:text/javascript;base64,'+Buffer.from(engine.replace("'./environment-audio.js'",JSON.stringify(weatherUrl))).toString('base64'));
+  // The report names a pinned source commit. Execute only its verified bytes.
+  return loadOriginalScore();
 }
 export function wavHeader(frames,rate) {
   if(!Number.isSafeInteger(frames)||frames<0||frames*6>0xffffffff-36)throw new RangeError('WAV size');
@@ -64,21 +64,27 @@ export async function renderCue(options={}) {
   }
   if(clipped)throw new Error('Output gain causes clipping; reduce outputGainDb');
   const rms=Math.sqrt(sumSquares/(frames*2));
-  const report={schema:'sou1.offline-cue.v1',sourceCommit:SOURCE_COMMIT,...o,frames,channels:2,bitDepth:24,format:'PCM signed little-endian WAV',parameters:dsp.parameters,peak,peakDbfs:peak?20*Math.log10(peak):null,rmsDbfs:rms?20*Math.log10(rms):null,clippedSamples:clipped,nonfiniteSamples:nonfinite,acceptedNotes:dsp.noteOnCount,droppedNotes:dsp.droppedNotes,sha256:createHash('sha256').update(wav).digest('hex'),limitations:['Original SOU1 oscillator engine only; no external synth/sample bank is integrated.','RMS dBFS is not LUFS or a listening-quality judgment.','Final two seconds stop note scheduling and fade; note-event durations are the generated gates, not a lossless audio transcription.','No additive stems: shared nonlinear master and reverb cannot be reconstructed by summing separately rendered layers.']};
+  const report={schema:'sou1.offline-cue.v1',sourceCommit:SOURCE_COMMIT,sourceHashes:{audioEngineSha256:ENGINE_SHA,environmentAudioSha256:ENV_SHA},...o,frames,channels:2,bitDepth:24,format:'PCM signed little-endian WAV',parameters:dsp.parameters,peak,peakDbfs:peak?20*Math.log10(peak):null,rmsDbfs:rms?20*Math.log10(rms):null,clippedSamples:clipped,nonfiniteSamples:nonfinite,acceptedNotes:dsp.noteOnCount,droppedNotes:dsp.droppedNotes,sha256:createHash('sha256').update(wav).digest('hex'),limitations:['Original SOU1 oscillator engine only; no external synth/sample bank is integrated.','RMS dBFS is not LUFS or a listening-quality judgment.','Final two seconds stop note scheduling and fade; note-event durations are the generated gates, not a lossless audio transcription.','No additive stems: shared nonlinear master and reverb cannot be reconstructed by summing separately rendered layers.']};
   return {wav,report,events};
 }
 export async function saveCue(outBase,{wav,report,events}) {
   // Reserve both files exclusively. A collision never removes an existing file.
+  // Serialize before reserving: malformed/cyclic reports must create no files.
+  const json=JSON.stringify({...report,events},null,2)+'\n';
   const paths=[outBase+'.wav',outBase+'.json'], handles=[];
   try {
     for(const p of paths)handles.push(await open(p,'wx'));
     await handles[0].writeFile(wav);
-    await handles[1].writeFile(JSON.stringify({...report,events},null,2)+'\n');
+    await handles[1].writeFile(json);
+    for(const h of handles)await h.close();
   } catch(error) {
-    for(let i=0;i<handles.length;i++){await handles[i].close();await unlink(paths[i]);}
+    // One cleanup failure must not leave later handles open or hide the cause.
+    const cleanupErrors=[];
+    for(const h of handles)try{await h.close();}catch(e){cleanupErrors.push(e);}
+    for(let i=0;i<handles.length;i++)try{await unlink(paths[i]);}catch(e){if(e.code!=='ENOENT')cleanupErrors.push(e);}
+    if(cleanupErrors.length)error.cleanupErrors=cleanupErrors;
     throw error;
   }
-  for(const h of handles)await h.close();
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href) {
   const [configPath,outBase]=process.argv.slice(2);

@@ -1,0 +1,114 @@
+{
+  "checkedAtUtc": "2026-11-03T23:29:00Z",
+  "baseCommit": "2d9ed6311dc1256123a694e9fcd9b5cf74bda42d",
+  "tests": {
+    "pass": 127,
+    "fail": 0,
+    "skipped": 0,
+    "videoCli": 12,
+    "originalOfflineRenderer": 28,
+    "percussion": 8,
+    "eventScore": 20,
+    "browserNodeHttp": 25,
+    "sampler": 34,
+    "originalDspAudioWorklet": "PASS",
+    "originalMidi": "PASS"
+  },
+  "fullCliRenderReplay": {
+    "engine": "cc0",
+    "sha256": "0b70381206b1072b1a64f249533a4ca7da50706e07796a429e886d00aeb4b82c",
+    "frames": 1728000,
+    "duration": 36,
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitDepth": 24,
+    "peakDbfs": -10.94528736627745,
+    "rmsDbfs": -23.715861477775917
+  },
+  "replayVerified": true,
+  "priorPercussionDemoByteIdentical": true,
+  "independentWavProbe": {
+    "codec": "pcm_s24le",
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitsPerSample": 24,
+    "duration": 36.0
+  },
+  "fixedDefects": [
+    "Legacy oscillator renderer named a pinned source commit without checking source bytes; it now shares the verified importer.",
+    "JSON serialization happened after output reservation and cleanup errors could hide the original failure or leak a later handle/file. Serialization precedes reservation and all cleanup steps are attempted.",
+    "FIFO input could block before the regular-file check; nonblocking open now rejects config/receipt FIFOs promptly."
+  ],
+  "newEntryPoint": "tools/music-for-video.mjs: render, replay, profiles, help; local Node API renderRecipe is also exported.",
+  "receiptEvidence": {
+    "normalizedRecipe": {
+      "schema": "sou1.video-recipe.v1",
+      "engine": "cc0",
+      "options": {
+        "profile": "pulse",
+        "seed": 7311,
+        "sampleRate": 48000,
+        "duration": 36,
+        "parameters": {
+          "ambient": 0.15,
+          "counterpoint": 0,
+          "rhythmic": 0.65,
+          "arpeggio": 0.3,
+          "bpm": 112,
+          "density": 0.72,
+          "complexity": 0.65,
+          "swing": 0.17,
+          "evolution": 0.2,
+          "melodyEnabled": true,
+          "drumsEnabled": true,
+          "pad": 0.12,
+          "pluck": 0.55,
+          "bell": 0.23,
+          "texture": 0.04,
+          "pulse": 0.3,
+          "kick": 0.5,
+          "snare": 0.38,
+          "hihat": 0.25,
+          "toms": 0.7,
+          "cymbal": 0.3
+        },
+        "outputGainDb": 12
+      }
+    },
+    "rendererFiles": {
+      "tools/music-for-video.mjs": "833f63210d1e73ac11be636a862526955f92b7a88b9e8ef430e5cde94b3a52a5",
+      "tools/render-cue.mjs": "65da76a737e166f5fce4a5386b2a154bb53134d7f1a9ece9593c2843a769d862",
+      "tools/instruments/event-score.mjs": "522f78dc9a75277c7ea9883a661ae99d03bd1f7e945e7520cd03a60259a8e13b",
+      "tools/instruments/event-score-core.mjs": "567b37af8314713eb46743356354397c49c7015dae0f2d35c7a232b20cd6305e",
+      "docs/audio-engine.js": "ea1df6717f43a1e62b272a2202fb716d0940194e71febd97b0bc283cc439d6fb",
+      "docs/environment-audio.js": "76e226e8a0345fe5bfd205fa44a8432cd720e54005326666e414265325a145ad",
+      "tools/render-score-cue.mjs": "3d9f6664fa4843f20baabe4092ff7a6a64cfc3daa4904611de6282802552eb4d",
+      "tools/instruments/rack.mjs": "e564577d744810037b8111b2c98311e48ff44e9aad727a9f548ba0189b52d556",
+      "tools/instruments/wav.mjs": "52389c160f2ecc1aaea0fa0e119d1eb11300dafa2a80c8f63b400ec241f38a4c",
+      "tools/instruments/load-bank.mjs": "9e56c54facd115c37e1218ce39724c1c9eec60b5c43ba9ab693a80889d09cfaa",
+      "assets/cc0-mini/manifest.json": "d1ec6ce110a9a0806a561ac0a0744453019b3f9dd5dc9459bf027e1b300f4cca"
+    },
+    "runtime": {
+      "node": "v24.22.1",
+      "platform": "linux",
+      "arch": "x64"
+    }
+  },
+  "independentReview": {
+    "status": "PASS; no remaining blockers",
+    "checks": [
+      "FIFO config/replay returns normal error without timeout",
+      "No-overwrite and cleanup failure injection",
+      "Legacy source hash pin",
+      "Reproducible WAV and receipt validation"
+    ]
+  },
+  "limits": [
+    "Output pair is exclusive, not crash-atomic.",
+    "Replay succeeds only after WAV SHA256 matches; cross-runtime identity is not promised.",
+    "Existing transport tail, dry CC0 arrangement and sample limits remain documented.",
+    "No production PWA/Android changes, browser launch, listening approval, hosting or release.",
+    "No new MP3 duplicate: unified 36s WAV is byte-identical to the previous percussion demo."
+  ],
+  "githubCi": "Not yet checked for new commit; local tests are not GitHub CI."
+}

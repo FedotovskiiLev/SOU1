@@ -25,6 +25,18 @@ Presets are complete snapshots of exposed musical, effect and weather controls. 
 
 Early preview. DSP numerical/JVM/Node tests exist; a generated APK is not a claim of physical-device, listening or background-playback qualification. Browser playback can be suspended by the browser/OS. Android's notification can stop playback; audio-focus loss and headphone disconnect also stop it.
 
+## Offline music for video (development branch)
+
+One Node command renders stereo PCM24 WAV plus a reproducible JSON receipt:
+
+`node tools/music-for-video.mjs render --config examples/cues/video-pulse.json --out output/teaser`
+
+Choose the original oscillator DSP or the optional CC0 instrument rack. Replay a
+receipt with `node tools/music-for-video.mjs replay output/teaser.json --out output/repeat`;
+the WAV must match its expected hash before it is saved. See
+[Music for video](tools/MUSIC_FOR_VIDEO.md) for profiles, limits, licensing and
+editor use. This is an offline prototype, not a change to the installed app.
+
 ## Run web locally
 
 Serve `docs/` through localhost HTTP or HTTPS. Audio starts only after a click. Run `node tests/audio-engine.test.mjs` for DSP tests. The app needs a current browser supporting AudioWorklet. Install through your browser when available; otherwise use it as a normal web app.
@@ -41,7 +53,7 @@ Run `sh tests/run.sh` for Java DSP tests, `sh tests/run-environment.sh` for weat
 
 ## Licensing and provenance
 
-AGPL-3.0-only. See LICENSE. All application DSP and interface code in this initial implementation is original. No Zeitgeist source history, private game files, third-party music, sample packs or external fonts are included. Java and JavaScript synthesis share the design but are not PCM-identical across implementations. Public source remains linked from the interface.
+Application and tool code: AGPL-3.0-only. See LICENSE. All application DSP and interface code in the initial implementation is original. The optional offline bank in `assets/cc0-mini/` contains separately licensed CC0-1.0 VCSL derivatives; see [provenance](tools/CC0_SAMPLER.md). No Zeitgeist source history, private game files, third-party song recordings or external fonts are included. Java and JavaScript synthesis share the design but are not PCM-identical across implementations. Public source remains linked from the interface.
 
 
 ## MIDI export (0.2)
@@ -53,3 +65,4 @@ Timing is preserved in seconds using a fixed 120 BPM, 960-PPQ export grid; the o
 Browsers download the file locally. Android uses the system Create Document picker without storage permissions; it reports success only after the output stream closes. A cancelled picker preserves the score. Process death cancels a pending save rather than exporting a different snapshot.
 
 Version0.2.0 uses versionCode2. CI produces an **unsigned release APK** for owner-controlled release signing; this artifact is not install-ready. The persistent release key and password must stay outside this repository. The old debug-signed preview cannot be upgraded in place with a new release certificate. The public download manifest now points to the signed 0.2.0 APK. The owner confirmed a successful phone check on 2026-10-17; this does not claim broader device or background-playback qualification. Download the APK from the PWA or [GitHub Releases](https://github.com/FedotovskiiLev/SOU1/releases/tag/v0.2.0).
+
