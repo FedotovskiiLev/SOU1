@@ -1,0 +1,278 @@
+{
+  "schema": "sou1.cc0-bank.v1",
+  "id": "vcsl-mini-v1",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/LICENSE",
+  "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+  "samples": [
+    {
+      "id": "kick",
+      "file": "kick.wav",
+      "license": "CC0-1.0",
+      "author": "VCSL / Versilian Studios LLC",
+      "sourceRepository": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Membranophones/Struck Membranophones/Bass Drum 1/BDrumNew_hit_v3_rr1_Sum.wav",
+      "sourceUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Bass%20Drum%201/BDrumNew_hit_v3_rr1_Sum.wav",
+      "sourceGitBlobSha1": "5f068b40b13f887c170d574b916dd21927f545ca",
+      "sourceSha256": "a2d8829e8b2b59e8afb12fa396b01758827059339c2a84ad066d17b36c82d1ff",
+      "sourceBytes": 367124,
+      "sha256": "64ed586fe05d8c921ef99533a08b9593020b90fa8041b00a32a6ed2b2a1e6c95",
+      "bytes": 183584,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 91770,
+      "decodedBytes": 367080,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "quantization": "PCM16 round ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "rootNote": 60
+    },
+    {
+      "id": "snare",
+      "file": "snare.wav",
+      "license": "CC0-1.0",
+      "author": "VCSL / Versilian Studios LLC",
+      "sourceRepository": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Membranophones/Struck Membranophones/Snare Drum, Modern 1/Snare2_HitSN_v5_rr1_Mid.wav",
+      "sourceUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Membranophones/Struck%20Membranophones/Snare%20Drum,%20Modern%201/Snare2_HitSN_v5_rr1_Mid.wav",
+      "sourceGitBlobSha1": "7439fbcbbce4e29decc5220808799615ce15c22b",
+      "sourceSha256": "6ec8445cb207df8f1178d8c3894f47969fd53fb2b81c404317e466de4598dc3e",
+      "sourceBytes": 240496,
+      "sha256": "a194e2153eedaf75e8e59aa76460e072e38ec54bc63d35a92a7e4e4608130633",
+      "bytes": 120270,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 60113,
+      "decodedBytes": 240452,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "quantization": "PCM16 round ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "rootNote": 60
+    },
+    {
+      "id": "hat-rr1",
+      "file": "hat-rr1.wav",
+      "license": "CC0-1.0",
+      "author": "VCSL / Versilian Studios LLC",
+      "sourceRepository": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitC_v2_rr1_Mid.wav",
+      "sourceUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Idiophones/Struck%20Idiophones/Hi-Hat%20Cymbal/HiHat_HitC_v2_rr1_Mid.wav",
+      "sourceGitBlobSha1": "6855f948794d15bbc636996256cab0a14839e6a1",
+      "sourceSha256": "e1fb54c9a030800038abcebbed1c056fb74bdeec627315f3cd5fd893c6e6b031",
+      "sourceBytes": 247272,
+      "sha256": "4bb0501f23ddd2909dde48023e44a5afdf6c738451e65f978e671f052e7e37d5",
+      "bytes": 123628,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 61792,
+      "decodedBytes": 247168,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "quantization": "PCM16 round ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "rootNote": 60
+    },
+    {
+      "id": "hat-rr2",
+      "file": "hat-rr2.wav",
+      "license": "CC0-1.0",
+      "author": "VCSL / Versilian Studios LLC",
+      "sourceRepository": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitC_v2_rr2_Mid.wav",
+      "sourceUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Idiophones/Struck%20Idiophones/Hi-Hat%20Cymbal/HiHat_HitC_v2_rr2_Mid.wav",
+      "sourceGitBlobSha1": "7c01881e59793e38511450ff217fb7eee60809fa",
+      "sourceSha256": "72830eafed387f4b4b5904d4d6f1da23e13b48986fa1bc09d7c5771eafbb3a1a",
+      "sourceBytes": 250072,
+      "sha256": "5926d566438f908489c087e108ee9bcea74c1b8baa910579769abf98aabd6359",
+      "bytes": 125028,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 62492,
+      "decodedBytes": 249968,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "quantization": "PCM16 round ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "rootNote": 60
+    },
+    {
+      "id": "marimba-c",
+      "file": "marimba-c.wav",
+      "license": "CC0-1.0",
+      "author": "VCSL / Versilian Studios LLC",
+      "sourceRepository": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_C4_med_01.wav",
+      "sourceUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Idiophones/Struck%20Idiophones/Marimba/Marimba_hit_Outrigger_C4_med_01.wav",
+      "sourceGitBlobSha1": "85c657dd0a8f58808efad5e9184d5b9124285512",
+      "sourceSha256": "3e88c006eef05e8f7891f8f6027042006199a4ec3b53a0ad7308f9782a52d4df",
+      "sourceBytes": 655244,
+      "sha256": "489d8ea15632c50806b33101706d64b36f04bfb6dafc06981d4bf261ecf7b2be",
+      "bytes": 218444,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 109200,
+      "decodedBytes": 436800,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "quantization": "PCM16 round ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "rootNote": 72
+    },
+    {
+      "id": "marimba-g",
+      "file": "marimba-g.wav",
+      "license": "CC0-1.0",
+      "author": "VCSL / Versilian Studios LLC",
+      "sourceRepository": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_G4_med_01.wav",
+      "sourceUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Idiophones/Struck%20Idiophones/Marimba/Marimba_hit_Outrigger_G4_med_01.wav",
+      "sourceGitBlobSha1": "be84c27de4fea671b78c82591aa6d6f98c06619e",
+      "sourceSha256": "278e738d8214cdc192e63c3350b1e464a72c86dc135ddf0c5ce035569be66c71",
+      "sourceBytes": 580262,
+      "sha256": "20839c828f2cfe0c99ff0fea54826341a247b4c674a4b1622e8908e8b815d12a",
+      "bytes": 193450,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 96703,
+      "decodedBytes": 386812,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "quantization": "PCM16 round ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "rootNote": 79
+    },
+    {
+      "id": "shaker-double",
+      "file": "shaker-double.wav",
+      "license": "CC0-1.0",
+      "author": "VCSL / Versilian Studios LLC",
+      "sourceRepository": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Idiophones/Struck Idiophones/Shaker, Small/Mid_ShakerDouble_Down_rr1.wav",
+      "sourceUrl": "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/Idiophones/Struck%20Idiophones/Shaker,%20Small/Mid_ShakerDouble_Down_rr1.wav",
+      "sourceGitBlobSha1": "f99341479f355a909f0cee16880e8a60d6bf925b",
+      "sourceSha256": "0df7c271e1dba4de7304f7df81886390dd9ae698bfdd6df570026af4f2223574",
+      "sourceBytes": 46844,
+      "sha256": "448cfc481f6047cd5eab2b7a6f4349f1312ea0091f9a402d4f6f7b93d748b38d",
+      "bytes": 23442,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 11699,
+      "decodedBytes": 46796,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "quantization": "PCM16 round ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "rootNote": 60
+    }
+  ],
+  "instruments": [
+    {
+      "id": "kick",
+      "zones": [
+        {
+          "sample": "kick",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "gain": 0.6,
+      "oneShot": true
+    },
+    {
+      "id": "snare",
+      "zones": [
+        {
+          "sample": "snare",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "gain": 0.38,
+      "oneShot": true
+    },
+    {
+      "id": "closed-hat",
+      "zones": [
+        {
+          "sample": "hat-rr1",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        },
+        {
+          "sample": "hat-rr2",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "gain": 0.25,
+      "oneShot": true,
+      "chokeGroup": "hat"
+    },
+    {
+      "id": "marimba",
+      "zones": [
+        {
+          "sample": "marimba-c",
+          "keyLow": 60,
+          "keyHigh": 75,
+          "pitched": true
+        },
+        {
+          "sample": "marimba-g",
+          "keyLow": 76,
+          "keyHigh": 91,
+          "pitched": true
+        }
+      ],
+      "gain": 0.65,
+      "oneShot": false
+    },
+    {
+      "id": "shaker-double",
+      "zones": [
+        {
+          "sample": "shaker-double",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "gain": 0.3,
+      "oneShot": true
+    }
+  ]
+}
