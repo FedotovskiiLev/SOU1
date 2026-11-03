@@ -1,0 +1,45 @@
+{
+  "checkedAtUtc": "2026-11-03T22:58:00Z",
+  "baseCommit": "82462c2f0f9011f62487700ff3615a64cd6c896f",
+  "node": "24.22.1",
+  "tests": {
+    "totalPass": 106,
+    "fail": 0,
+    "browserPrototypeNodeAndHttp": 25,
+    "eventScoreRack": 19,
+    "sampler": 34,
+    "originalOfflineRenderer": 28,
+    "originalDspAudioWorklet": "PASS",
+    "originalMidi": "PASS"
+  },
+  "realHttpChecks": [
+    "Loopback server bound successfully",
+    "HTML/ES modules/original source served with expected MIME",
+    "CC0 manifest and all 7 samples fetched and hash checked",
+    "Browser renderer PCM agrees with Node WAV within Float32/PCM24 rounding",
+    "404/size-limit/corrupted-source/path traversal fail closed"
+  ],
+  "mockChecks": [
+    "Worker cancellation and stale results",
+    "Play/stop/replay and pending resume",
+    "Suspended/interrupted audio disconnects old source immediately",
+    "Visibility/pagehide/BFCache DOM wiring",
+    "Verified-content Blob module construction/import dispatch/revocation"
+  ],
+  "actualBrowser": {
+    "status": "BLOCKED_BEFORE_PAGE_LOAD",
+    "target": "/usr/bin/chromium headless startup",
+    "firstAttempt": "Failed to create headless user data directory container.",
+    "workspaceProfileAttempt": "FATAL process_singleton_posix.cc: socket() failed: Operation not permitted (1)",
+    "attemptedBypass": false,
+    "notRun": [
+      "Actual DOM/layout/screenshots",
+      "Browser Worker/CSP/Blob execution",
+      "Web Audio output/device playback",
+      "Mobile/background qualification",
+      "Subjective listening"
+    ]
+  },
+  "scope": "Isolated experiments/rack-browser prototype; shared score routing refactor only; no changes to docs/ production PWA, Android, hosting, permissions or release.",
+  "githubCi": "Not yet checked for new commit; Node tests are not GitHub CI."
+}
