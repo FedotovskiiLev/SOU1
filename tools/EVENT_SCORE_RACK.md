@@ -55,10 +55,11 @@ playback:
   reproduce the original SOU1 voice spectra or attack envelopes.
 - Kick/snare/hi-hat use the CC0 recordings. The kick is an orchestral bass drum,
   not an electronic kit kick. Closed hat has two deterministic round robins.
-- There are no tom/crash samples or replacement backends. When drums are enabled,
-  nonzero `toms` or `cymbal` settings are rejected. Both supplied profiles
-  explicitly set them to zero; any emitted source events remain visible as
-  muted records in the audit.
+- Tom events use real CC0 high/low stick-tom recordings. Keys 49/47/45 play
+  high, high down two semitones, and low. These are articulation keys, not
+  concert-pitch tuning. Cymbal events use the recorded short clash articulation.
+  The pulse profile enables both layers; setting either gain to zero remains
+  an explicit user mute recorded in the audit.
 - The original score's melody-enable semantics are preserved: it disables
   pluck/bell, not the long pads, texture and bass. Zero layer gain is explicit
   mute, not a failure to map a note.

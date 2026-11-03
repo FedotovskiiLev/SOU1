@@ -59,8 +59,8 @@ semantics. This is a small renderer boundary, not a desktop-plugin host.
 
 ## Compact bank and provenance
 
-The seven WAV files in `assets/cc0-mini/` total **987,846 bytes**. Decoded mono
-Float32 data totals **1,975,076 bytes** (under 2 MiB), excluding object/queue,
+The ten WAV files in `assets/cc0-mini/` total **1,664,968 bytes**. Decoded mono
+Float32 data totals **3,329,056 bytes** (under 4 MiB), excluding object/queue,
 voice, renderer and transient load/copy overhead. The loader caps both decoded
 source data and mapped instrument copies to its budget (default 8 MiB). Peak
 memory during loading can exceed that steady-state PCM budget.
@@ -86,6 +86,15 @@ Selection:
 - Closed hi-hat: `HiHat_HitC_v2_rr1_Mid.wav` and `rr2`.
 - Marimba: `Marimba_hit_Outrigger_C4_med_01.wav` and `G4_med`.
 - Small shaker: `Mid_ShakerDouble_Down_rr1.wav`, a double-down gesture.
+- High/low stick toms: `TomH_HitS_v3_rr1_Mid.wav` and `TomL_HitS_v3_rr1_Mid.wav`.
+- Short clash cymbal: `cymbal_crash1_short1.wav`, not a free-decay crash or ride.
+
+Tom routing keys are 49 (high), 47 (high shifted down two semitones), and 45
+(low). They select drum articulations rather than representing concert-pitch MIDI
+tuning. The measured main-body centers descend roughly 108, 96, 90 Hz. Unsupported
+tom keys fail explicitly; they are not silently substituted. The short cymbal
+contains a fast recorded decay: 99% energy within about 0.41 seconds, followed by
+a quiet tail. No claim of a full crash or ride library is made.
 
 **Pitch convention:** the marimba filenames use a different octave convention
 from MIDI's middle-C=60 naming. Spectral inspection found dominant tones around
@@ -98,8 +107,8 @@ round-to-even, no dither, no resampling, no trimming, no normalization or gain.
 Original stereo/24-bit material remains upstream; this small bank is an
 intentional compact mono derivative. These quality trade-offs need listening.
 
-To rebuild, retrieve only the seven exact upstream files listed in
-`upstream.json`, name them `sample0.wav` through `sample6.wav` in a local input
+To rebuild, retrieve only the ten exact upstream files listed in
+`upstream.json`, name them `sample0.wav` through `sample9.wav` in a local input
 folder, then run:
 
 ```sh
@@ -108,7 +117,7 @@ python tools/prepare-cc0-mini.py /path/to/pinned-originals /path/to/rebuilt-bank
 
 The converter performs no network requests and verifies pinned raw SHA256 and
 Git blobs before transforming files. It was run twice into separate output
-directories; all seven resulting WAV files and manifest were byte-identical.
+directories; all ten resulting WAV files and manifest were byte-identical.
 
 ## Safety and licensing boundaries
 

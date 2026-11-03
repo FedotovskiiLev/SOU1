@@ -6,7 +6,7 @@ export const ENV_SHA='76e226e8a0345fe5bfd205fa44a8432cd720e54005326666e414265325
 export const SCORE_LAYERS=Object.freeze(['pad','pluck','bell','texture','pulse','kick','snare','hihat','toms','cymbal']);
 const PROFILES={
   nocturne:{ambient:.65,counterpoint:.2,rhythmic:0,arpeggio:.25,bpm:72,density:.43,complexity:.4,swing:.12,evolution:.2,melodyEnabled:true,drumsEnabled:false,pad:.20,pluck:.65,bell:.4,texture:.08,pulse:.16,kick:.4,snare:.3,hihat:.2,toms:0,cymbal:0},
-  pulse:{ambient:.15,counterpoint:0,rhythmic:.65,arpeggio:.3,bpm:92,density:.6,complexity:.48,swing:.17,evolution:.2,melodyEnabled:true,drumsEnabled:true,pad:.12,pluck:.55,bell:.23,texture:.04,pulse:.3,kick:.5,snare:.38,hihat:.25,toms:0,cymbal:0}
+  pulse:{ambient:.15,counterpoint:0,rhythmic:.65,arpeggio:.3,bpm:92,density:.6,complexity:.48,swing:.17,evolution:.2,melodyEnabled:true,drumsEnabled:true,pad:.12,pluck:.55,bell:.23,texture:.04,pulse:.3,kick:.5,snare:.38,hihat:.25,toms:.55,cymbal:.25}
 };for(const p of Object.values(PROFILES))Object.freeze(p);export const SCORE_PROFILES=Object.freeze(PROFILES);
 export function validateScoreOptions(options={}){
   if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(k=>!['profile','seed','sampleRate','duration','parameters','outputGainDb'].includes(k)))throw new TypeError('Unknown score cue option');
@@ -21,8 +21,6 @@ export function validateScoreOptions(options={}){
     else if(!Number.isFinite(value)||value<0||value>1)throw new RangeError('Score parameter 0..1');
     p[key]=value;
   }
-  // There are deliberately no fake tom or crash samples in the compact bank.
-  if(p.drumsEnabled&&(p.toms>0||p.cymbal>0))throw new Error('Tom/cymbal backends not implemented; explicitly mute those layers');
   return {...o,parameters:Object.freeze(p)};
 }
 export function composeWithScore(EventScore,options={}){
@@ -46,7 +44,7 @@ export function composeWithScore(EventScore,options={}){
     else if(sourceInstrument===4)instrument='sine-bass';
     else if(sourceInstrument===1||sourceInstrument===2){
       instrument='marimba';if(pitch<60||pitch>91){instrument='sine-fallback';disposition='fallback';fallback++;}
-    }else instrument=({5:'kick',6:'snare',7:'closed-hat'})[sourceInstrument];
+    }else instrument=({5:'kick',6:'snare',7:'closed-hat',8:'toms',9:'short-clash'})[sourceInstrument];
     if(!instrument)throw new Error('Unmapped non-muted EventScore layer: '+layer);
     const e={frame,instrument,pitch,duration,velocity:velocity*gain,pan};events.push(e);audit.push({sourceIndex,layer,disposition,instrument,layerGain:gain,eventIndex:events.length-1});
   }});

@@ -53,7 +53,7 @@ BFCache creates a fresh idle controller without automatic playback.
   scenario. A device/browser may resample the prepared 48 kHz buffer to its hardware
   sample rate; device output is not asserted bit-identical.
 - Musical caveats remain: simple sine pad/bass/texture replacements, marimba
-  fallback outside its range, no tom/crash backends, no original effects/weather,
+  fallback outside its range, stick toms and a short clash cymbal (not a full crash/ride kit), no original effects/weather,
   and a 50-ms release followed by approximately 1.95 seconds of ending silence.
 
 ## Verification on 2026-11-03

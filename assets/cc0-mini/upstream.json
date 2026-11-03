@@ -61,5 +61,32 @@
     "size": 46844,
     "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/f99341479f355a909f0cee16880e8a60d6bf925b",
     "sha256": "0df7c271e1dba4de7304f7df81886390dd9ae698bfdd6df570026af4f2223574"
+  },
+  {
+    "path": "Membranophones/Struck Membranophones/Tom 1/Stick/TomH_HitS_v3_rr1_Mid.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "c9709d5bdaddaf3bd93a6b2c87cbc3cd6f148f8f",
+    "size": 424648,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/c9709d5bdaddaf3bd93a6b2c87cbc3cd6f148f8f",
+    "sha256": "40bd5cf904ed20eb8e7bba6298e356b66cedd313b4f459c5a5884c054bf447a4"
+  },
+  {
+    "path": "Membranophones/Struck Membranophones/Tom 2/Stick/TomL_HitS_v3_rr1_Mid.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "5f088286ca22b0f736e3d475bb68609bb90b2fcd",
+    "size": 508520,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/5f088286ca22b0f736e3d475bb68609bb90b2fcd",
+    "sha256": "bdc312f2f4c799cb43319a7aa0e664bf6194c6f8b14151051b375968df55eab4"
+  },
+  {
+    "path": "Idiophones/Struck Idiophones/Clash Cymbals 1/cymbal_crash1_short1.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "0c673c045f65656bec9b09d68473718bd9a5b0dc",
+    "size": 420946,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/0c673c045f65656bec9b09d68473718bd9a5b0dc",
+    "sha256": "7ac4afb439b7c1279e3280f60b1e25fb0865fc6b7e59d09c78c6e97bc987195d"
   }
 ]
