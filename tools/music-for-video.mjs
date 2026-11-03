@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Unified local CLI. No downloads, account access, video editor, or browser required.
-import {open,readFile,lstat,mkdir} from 'node:fs/promises';
-import {constants} from 'node:fs';
+import {readFile,lstat,mkdir} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {renderCue,validateOptions,saveCue,PROFILES} from './render-cue.mjs';
 import {renderScoreCue} from './render-score-cue.mjs';
 import {validateScoreOptions,SCORE_PROFILES} from './instruments/event-score.mjs';
+import {readJson} from './bounded-json.mjs';
+export {readJson};
 const digest=b=>createHash('sha256').update(b).digest('hex');
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 const ENGINES=['cc0','synth'];
-const COMMON=['tools/music-for-video.mjs','tools/render-cue.mjs','tools/instruments/event-score.mjs','tools/instruments/event-score-core.mjs','docs/audio-engine.js','docs/environment-audio.js'];
+const COMMON=['tools/music-for-video.mjs','tools/bounded-json.mjs','tools/render-cue.mjs','tools/instruments/event-score.mjs','tools/instruments/event-score-core.mjs','docs/audio-engine.js','docs/environment-audio.js'];
 const CC0=['tools/render-score-cue.mjs','tools/instruments/rack.mjs','tools/instruments/wav.mjs','tools/instruments/load-bank.mjs','assets/cc0-mini/manifest.json'];
 export function normalizeRecipe(recipe){
   if(!plain(recipe)||Object.keys(recipe).some(k=>!['schema','engine','options'].includes(k))||recipe.schema!=='sou1.video-recipe.v1'||!ENGINES.includes(recipe.engine)||!plain(recipe.options))throw new TypeError('Expected sou1.video-recipe.v1 with engine cc0/synth and options');
@@ -22,12 +23,6 @@ export async function rendererFingerprint(engine){
   if(!ENGINES.includes(engine))throw new TypeError('Unknown engine');
   const result={};for(const file of [...COMMON,...(engine==='cc0'?CC0:[])])result[file]=digest(await readFile(new URL('../'+file,import.meta.url)));
   return result;
-}
-export async function readJson(path,limit){
-  // A FIFO must not block waiting for a writer before fstat can reject it.
-  const handle=await open(path,constants.O_RDONLY|(constants.O_NONBLOCK??0));
-  try{const st=await handle.stat();if(!st.isFile()||st.size>limit)throw new RangeError('Input must be a bounded regular JSON file');let length=0;const chunks=[];for await(const chunk of handle.createReadStream({autoClose:false})){length+=chunk.length;if(length>limit)throw new RangeError('JSON input exceeds size limit');chunks.push(chunk);}return JSON.parse(Buffer.concat(chunks).toString('utf8'));}
-  finally{await handle.close();}
 }
 export async function renderRecipe(input,{expectedSha256,expectedRenderer}={}){
   const recipe=normalizeRecipe(input),rendererFiles=await rendererFingerprint(recipe.engine);

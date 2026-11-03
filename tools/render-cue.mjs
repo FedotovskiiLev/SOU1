@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Local, dependency-free prototype using unmodified SOU1 0.2.0 DSP.
-import {readFile, open, unlink, mkdir} from 'node:fs/promises';
+import {open, unlink, mkdir} from 'node:fs/promises';
 import {resolve, dirname} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {loadOriginalScore} from './instruments/event-score.mjs';
 import {ENGINE_SHA,ENV_SHA} from './instruments/event-score-core.mjs';
+import {readJson} from './bounded-json.mjs';
 
 export const SOURCE_COMMIT='70bf98168b1c854f8ce79676e02acc4bc44bac93';
 export const PROFILES=Object.freeze({
@@ -89,7 +90,7 @@ export async function saveCue(outBase,{wav,report,events}) {
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href) {
   const [configPath,outBase]=process.argv.slice(2);
   if(!configPath||!outBase)throw new Error('Usage: node render-cue.mjs cue.json output/base');
-  const options=JSON.parse(await readFile(configPath,'utf8'));
+  const options=await readJson(configPath,64*1024);
   const {wav,report,events}=await renderCue(options);
   await mkdir(dirname(resolve(outBase)),{recursive:true});
   await saveCue(outBase,{wav,report,events});

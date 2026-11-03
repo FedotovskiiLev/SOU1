@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-import {readFile,mkdir} from 'node:fs/promises';
+import {mkdir} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
@@ -7,6 +7,7 @@ import {InstrumentRack,SineInstrument} from './instruments/rack.mjs';
 import {loadBank} from './instruments/load-bank.mjs';
 import {composeScorePlan} from './instruments/event-score.mjs';
 import {wavHeader,saveCue} from './render-cue.mjs';
+import {readJson} from './bounded-json.mjs';
 export async function renderScoreCue(options={},blockSize=256){
   if(!Number.isInteger(blockSize)||blockSize<1||blockSize>2048)throw new RangeError('blockSize 1..2048');
   const plan=await composeScorePlan(options),o=plan.options;
@@ -31,5 +32,5 @@ export async function renderScoreCue(options={},blockSize=256){
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){
   const [config,out]=process.argv.slice(2);if(!config||!out)throw new Error('Usage: node tools/render-score-cue.mjs cue.json output/base');
-  const result=await renderScoreCue(JSON.parse(await readFile(config,'utf8')));await mkdir(dirname(resolve(out)),{recursive:true});await saveCue(out,result);console.log(JSON.stringify({...result.report,sourceEvents:undefined,routingAudit:undefined},null,2));
+  const result=await renderScoreCue(await readJson(config,64*1024));await mkdir(dirname(resolve(out)),{recursive:true});await saveCue(out,result);console.log(JSON.stringify({...result.report,sourceEvents:undefined,routingAudit:undefined},null,2));
 }
