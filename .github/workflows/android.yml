@@ -50,6 +50,12 @@ jobs:
           node tests/composition-parity.test.mjs
           node tests/weather-parity.mjs
           node tests/layer-balance.test.mjs
+      - name: Verify recorded percussion and composition integration
+        run: |
+          node --test tests/*.test.mjs
+          sh tests/run-recorded-engine.sh
+          sh tests/run-native-drum-banks.sh
+          sh tests/run-native-drum-service.sh
       - name: Compile APK and run Android lint
         run: gradle --no-daemon :app:assembleDebug :app:lintDebug :app:assembleRelease :app:lintRelease
       - name: Verify APK signing and package

@@ -4,7 +4,7 @@ An original ambient instrument for focus, study and quiet work. ASCII interface,
 
 - **PWA:** dependency-free Web Audio / AudioWorklet, local preferences and offline cache after first load.
 - **Android:** the same bundled interface with native AudioTrack synthesis in a foreground media service. Android8+; no Internet, microphone or storage permissions.
-- **Sound:** the original oscillator engine remains the default. This development branch adds optional bundled CC0 recorded drum kits to the PWA; original melodic synthesis, effects and weather remain. Android still uses its original native synthesis. No streamed audio. Start quietly.
+- **Sound:** the original oscillator engine remains the default. This development branch adds optional bundled CC0 recorded drum kits to the PWA and native Android service; original melodic synthesis, effects and weather remain. The new native path still needs APK/device acceptance. No streamed audio. Start quietly.
 - **Privacy:** no accounts, analytics, recording or uploads.
 
 ## Controls
@@ -71,7 +71,7 @@ Version0.2.0 uses versionCode2. CI produces an **unsigned release APK** for owne
 
 The local rack can select the CC0 Fugue State Audio x0xproc1 kit and render a
 repeatable common-note A/B against the original oscillator drums. See
-[the electronic-drums guide](tools/ELECTRONIC_DRUMS.md). The standalone CLI remains available. The opt-in PWA path below now also uses these banks; Android and Surge XT hosting are not integrated by this step.
+[the electronic-drums guide](tools/ELECTRONIC_DRUMS.md). The standalone CLI remains available. The opt-in PWA and native Android paths below also use these banks; Surge XT hosting is separate.
 
 See [five complete CC0 drum kits and aligned stem rendering](tools/FULL_DRUM_KITS.md) for the full 58-sound catalog.
 
@@ -95,9 +95,9 @@ See [the separate Guigui acoustic CC0 soft/dynamic presets](tools/ACOUSTIC_DRUMS
 The existing Voices panel now offers the original procedural drums plus nine
 recorded CC0 banks. Stop playback before changing the bank, enable **Drums**, then
 press Play. Preparation is explicit and cancellable; failure is reported rather
-than silently falling back to synthesis. Native Android hides this web-only choice
-until its own playback implementation is ready. Existing saved settings default to
-procedural drums.
+than silently falling back to synthesis. The updated native Android bridge exposes
+the same choice using its own background loader and native engine. Older native
+bridges hide the choice. Existing saved settings default to procedural drums.
 
 Samples are loaded and checksum-verified in a worker, resampled once to the audio
 context rate and handed to a fixed 16-voice worklet pool. No decoding, sinc filter
@@ -126,3 +126,21 @@ These checks are not an actual-browser, device, listening or release qualificati
 The current cloud browser cannot reach the available localhost preview.
 
 See [PWA integration, packaging and acceptance details](tools/PWA_RECORDED_DRUMS.md).
+
+## Native recorded drums (development, device acceptance pending)
+
+The foreground service prepares the selected bundled kit on one bounded worker,
+then constructs the same native engine with an immutable bank. UI and service
+correlate request IDs; cancelled/failed/stale work cannot silently restart playback.
+The selected timer starts with the ready native session, including when the WebView
+is hidden. Stop, focus loss, headphone disconnect and destruction cancel preparation.
+The original procedural constructor and native AudioTrack stop policy are preserved.
+No new network, storage, microphone or other permissions are added.
+
+Bank preparation matches 9,997,004 JS Float32 frames and all 156 PCM hashes; the
+recorded native engine matches 2,402,400 JS Float32 samples. These are deterministic
+software comparisons, not device playback evidence. The aggregate Node suite and
+new JVM tests are now part of the existing Android CI before APK compilation/lint.
+See [native service contract and qualification limits](tools/NATIVE_DRUM_SERVICE.md)
+and [native bank preparation](tests/NATIVE_DRUM_BANKS.md). APK build, genuine browser
+and physical-device checks remain required before any release.

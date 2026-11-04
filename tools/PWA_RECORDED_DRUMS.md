@@ -10,7 +10,8 @@ continuous SOU1 engine. It is not a release or a claim of browser/device accepta
   layer controls, seed/reseed, sleep timer and retained MIDI history are unchanged.
 - The separate expressive finite composer and its full-score MIDI exporter remain
   offline/experimental tools. Selecting a drum bank does not replace live notes.
-- Android still uses the original native engine; the web-only selector is hidden.
+- The updated Android bridge exposes the same selector through a native bank
+  preparation/engine path; older bridges hide the unsupported choice.
 
 ## Preparation and playback
 
@@ -57,7 +58,9 @@ stop/reseed/reset, the actual worklet module with a host shim, worker cancellati
 UI races using DOM/AudioContext doubles, and service-worker packaging contracts.
 The Java LiveDrumPool building block additionally matches 18,000 JS/native frames
 at 8/44.1/48 kHz and reports zero measured allocation over one million hot-loop
-iterations. That class is not yet connected to the Android service.
+iterations. The native service now uses this pool through the optional bank
+constructor; see NATIVE_DRUM_SERVICE.md for its separate integration tests and
+unverified device/build requirements.
 
 These are software tests, not listening, browser, performance-deadline or Android
 qualification. The available cloud browser cannot reach the localhost preview;

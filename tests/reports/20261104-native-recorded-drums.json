@@ -1,0 +1,77 @@
+{
+  "schema": "sou1.validation.v1",
+  "date": "2026-11-04",
+  "baseCommit": "7e5b24bb3b6be5dfd25a04860db255723743672d",
+  "scope": "Opt-in native recorded percussion, bounded preparation and correlated UI/service lifecycle; no release",
+  "nodeSuite": {
+    "command": "node --test tests/*.test.mjs",
+    "passed": 313,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 100803.56124
+  },
+  "nativeEngine": {
+    "command": "sh tests/run-recorded-engine.sh",
+    "legacyPcmFixtures": 20,
+    "jsComparedFloatSamples": 2402400,
+    "allBitIdentical": true,
+    "measuredAllocatedBytes": 0,
+    "allocationFrameCount": 640000
+  },
+  "nativeBanks": {
+    "command": "sh tests/run-native-drum-banks.sh",
+    "apiAssertions": 3263,
+    "jsComparedFrames": 9997004,
+    "allBitIdentical": true,
+    "sampleHashesMatched": 156,
+    "catalogTests": 8
+  },
+  "nativeService": {
+    "command": "sh tests/run-native-drum-service.sh",
+    "lifecycleAssertions": 226,
+    "java17ParsedSources": 3,
+    "androidApiCompilation": false,
+    "scope": "Real pure-Java coordinator plus source wiring checks; not Android Service/Handler execution"
+  },
+  "uiReview": {
+    "sessionTests": 12,
+    "remainingBlockers": 0,
+    "scope": "Independent read-only Node/DOM mocks",
+    "verified": [
+      "Matching request and bank required before playing state",
+      "Cancelled/retired requests do not revive",
+      "Background completion wins over UI timeout",
+      "Failed STOP stays observable and retryable",
+      "Adopted preparation restores controls and seed",
+      "Timer is native-service-owned from PLAY; resume never resets it",
+      "MIDI export and preparation interlocks",
+      "Legacy bridge fallback"
+    ]
+  },
+  "preserved": [
+    "Procedural constructor PCM and old controls",
+    "Original continuous EventScore and retained MIDI history",
+    "Canonical offline composition core files",
+    "Native AudioTrack cancellation/write policy",
+    "Manifest, permissions, installed APK and version"
+  ],
+  "buildChanges": [
+    "Existing CI now runs aggregate Node and new JVM suites before APK build/lint; runners and budget unchanged"
+  ],
+  "notVerified": [
+    "Android API compilation, lint and APK at this new head until CI finishes",
+    "Real Android device, background audio/focus/notification/timer and listening",
+    "Actual browser AudioWorklet/install/update/offline and sound output",
+    "New expressive MIDI composer in main live app",
+    "Surge/SFZ host in SOU1",
+    "Signing or public release"
+  ],
+  "remainingAcceptance": "Keep draft and original release unchanged until genuine browser/device checks and final product integration are complete.",
+  "serviceReview": {
+    "scope": "Independent read-only service/API/resource-lifetime review and exact package verification",
+    "remainingBlockers": 0,
+    "packageFilesMatched": 118,
+    "packageBytesMatched": 9669430,
+    "androidApiCompilation": false
+  }
+}

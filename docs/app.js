@@ -1,3 +1,4 @@
+import {NativeDrumSession,nativeDrumCapabilities} from './native-drum-session.js';
 import {loadRecordedDrums} from './drum-loader.js';
 import {encodeMidi} from './midi-export.js';
 import {createPianoRoll} from './note-history.js';
@@ -25,7 +26,10 @@ let preset=saved.preset==='custom'?'custom':Object.hasOwn(presets,saved.preset)?
 let seed=Number.isInteger(saved.seed)?saved.seed>>>0:crypto.getRandomValues(new Uint32Array(1))[0];
 let volume=Number.isFinite(saved.volume)?clamp(saved.volume):.35;
 const drumKits=['procedural','vcsl','fsa-electronic','fsa-distkit','fsa-sdbkit','fsa-synthkit','fsa-x0xproc1','fsa-x0xproc2','guigui-soft','guigui-dynamic'];
-let drumKit=!native&&drumKits.includes(saved.drumKit)?saved.drumKit:'procedural',drumLoadAbort=null,audioGeneration=0,rejectPreparation=null;
+const nativeDrums=native&&nativeDrumCapabilities(window.AndroidBridge,drumKits);
+const nativeSession=nativeDrums?new NativeDrumSession(window.AndroidBridge,drumKits):null;
+let nativePreparing=false;
+let drumKit=(!native||nativeDrums)&&drumKits.includes(saved.drumKit)?saved.drumKit:'procedural',drumLoadAbort=null,audioGeneration=0,rejectPreparation=null;
 let context,node,gain,analyser,frequency,timeData,playing=false,busy=false,exportBusy=false,started=0,elapsedBefore=0,timerHandle,timerEndAt=0,installEvent,silentFallback;
 const t=key=>dictionary[language][key]??key;
 function persist(){try{localStorage.setItem('sou1-v1',JSON.stringify({language,parameters,preset,seed,volume,drumKit}))}catch{}}
@@ -36,22 +40,22 @@ for(const key of ['ambient','counterpoint','rhythmic','arpeggio','density','comp
 for(const key of ['kick','snare','hihat','toms','cymbal'])controls.push({key,label:key,group:'drumkit'});
 for(const item of controls){const card=document.createElement('div');card.className='knob-card';card.innerHTML=`<label id="${item.key}-label" class="knob-label"></label><div class="knob" role="slider" tabindex="0" aria-labelledby="${item.key}-label" aria-valuemin="0" aria-valuemax="100" id="${item.key}"></div><output id="${item.key}-value" class="knob-value"></output><div class="knob-ends"><span id="${item.key}-low"></span><span id="${item.key}-high"></span></div>`;$(item.group||'knobs').append(card);const knob=$(item.key);let drag;knob.addEventListener('pointerdown',e=>{if(e.button!==0)return;knob.focus();drag={y:e.clientY,value:parameters[item.key]};knob.setPointerCapture(e.pointerId)});knob.addEventListener('pointermove',e=>{if(!drag)return;setValue(item.key,drag.value+(drag.y-e.clientY)/(e.shiftKey?600:180))});const finish=()=>drag=null;knob.addEventListener('pointerup',finish);knob.addEventListener('pointercancel',finish);knob.addEventListener('lostpointercapture',finish);knob.addEventListener('keydown',e=>{let v=parameters[item.key];if(['ArrowUp','ArrowRight'].includes(e.key))v+=e.shiftKey?.001:.01;else if(['ArrowDown','ArrowLeft'].includes(e.key))v-=e.shiftKey?.001:.01;else if(e.key==='Home')v=0;else if(e.key==='End')v=1;else return;e.preventDefault();setValue(item.key,v)});}
 function updateKnobs(){syncComposer();for(const {key}of controls){const value=Math.round(parameters[key]*100);$(key).style.setProperty('--value',value);$(key).setAttribute('aria-valuenow',value);$(key+'-value').textContent=String(value).padStart(2,'0')}for(const el of document.querySelectorAll('[data-preset]')){el.classList.toggle('selected',el.dataset.preset===preset);el.setAttribute('aria-pressed',String(el.dataset.preset===preset))}}
-function sendParameters(){if(native){if(playing)window.AndroidBridge.update(JSON.stringify({...parameters,volume,seed}))}else node?.port.postMessage({type:'parameters',parameters})}
+function sendParameters(){if(native){if(playing||nativePreparing)window.AndroidBridge.update(JSON.stringify({...parameters,volume,seed}))}else node?.port.postMessage({type:'parameters',parameters})}
 function setValue(key,v){parameters[key]=clamp(v);if(key==='rain'&&parameters[key]>0&&parameters.rainType===0)parameters.rainType=Number($('rain-type').value);preset='custom';updateKnobs();sendParameters();persist();syncWeather()}
 for(const el of document.querySelectorAll('[data-preset]'))el.addEventListener('click',()=>{preset=el.dataset.preset;parameters={...presets[preset]};updateKnobs();sendParameters();persist();syncWeather()});
 $('volume').value=Math.round(volume*100);$('volume-value').value=Math.round(volume*100)+'%';$('volume').addEventListener('input',e=>{volume=clamp(Number(e.target.value)/100);$('volume-value').value=Math.round(volume*100)+'%';if(gain)gain.gain.setTargetAtTime(volume,context.currentTime,.05);sendParameters();persist()});
-function state(value){playing=value;$('drum-samples').disabled=native||playing||busy||exportBusy;document.body.classList.toggle('playing',value);$('play-label').textContent=t(value?'stop':'begin');$('play-icon').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',t(value?'stop':'begin'));$('play').setAttribute('aria-pressed',String(value));$('state').textContent=t(value?'playing':'standby');$('new-seed').disabled=busy||exportBusy;}
-function syncPreparation(){ $('play').disabled=busy;$('new-seed').disabled=busy||exportBusy;$('drum-samples').disabled=native||playing||busy||exportBusy;$('cancel-prepare').disabled=!busy; }
-function cancelPreparation(){if(!busy)return;audioGeneration++;rejectPreparation?.(Object.assign(new Error('Preparation cancelled'),{name:'AbortError'}));drumLoadAbort?.abort();context?.close().catch(()=>{});}
+function state(value){playing=value;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;document.body.classList.toggle('playing',value);$('play-label').textContent=t(value?'stop':'begin');$('play-icon').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',t(value?'stop':'begin'));$('play').setAttribute('aria-pressed',String(value));$('state').textContent=t(value?'playing':'standby');$('new-seed').disabled=busy||nativePreparing||exportBusy;syncPreparation();}
+function syncPreparation(){ $('play').disabled=busy||nativePreparing;$('new-seed').disabled=busy||nativePreparing||exportBusy;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;$('cancel-prepare').disabled=!(busy||nativePreparing); }
+function cancelPreparation(){if(nativePreparing){try{nativeSession.cancel();}catch{applyNativeSession();return;}nativePreparing=false;state(false);$('notice').textContent=language==='ru'?'Подготовка отменена.':'Preparation cancelled.';return;}if(!busy)return;audioGeneration++;rejectPreparation?.(Object.assign(new Error('Preparation cancelled'),{name:'AbortError'}));drumLoadAbort?.abort();context?.close().catch(()=>{});}
 async function start(){
- if(busy||playing)return;
+ if(busy||playing||nativePreparing)return;
  const generation=++audioGeneration;busy=true;clearTimeout(silentFallback);syncPreparation();let current,cancelReject;
  const cancellation=new Promise((_,reject)=>cancelReject=reject);rejectPreparation=cancelReject;
  const wait=task=>Promise.race([task,cancellation]);
  const cancelled=()=>generation!==audioGeneration||(!native&&context!==current);
  const check=()=>{if(cancelled())throw new DOMException('Preparation cancelled','AbortError');};
  try{
-  if(native){if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error('Native playback unavailable');}
+  if(native){if(nativeSession){if(!nativeSession.start({...parameters,volume,seed,drumKit,timerMinutes:Number($('timer').value)||0}))throw Error('Native playback is still active');nativePreparing=true;syncPreparation();$('notice').textContent=language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';return;}if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error('Native playback unavailable');}
   else{
    if(!context)context=new AudioContext({latencyHint:'playback'});current=context;
    if(!node){
@@ -83,17 +87,17 @@ async function start(){
   }
   started=performance.now();state(true);$('notice').textContent=t('quiet');scheduleTimer();
  }catch(error){
-  console.error(error);$('notice').textContent=error.name==='AbortError'?(language==='ru'?'Подготовка отменена.':'Preparation cancelled.'):t('error')+(drumKit!=='procedural'?' '+error.message:'');
+  nativePreparing=false;console.error(error);$('notice').textContent=error.name==='AbortError'?(language==='ru'?'Подготовка отменена.':'Preparation cancelled.'):t('error')+(drumKit!=='procedural'?' '+error.message:'');
   if(current){await current.close().catch(()=>{});if(context===current)context=node=gain=analyser=null;}state(false);
  }finally{if(rejectPreparation===cancelReject)rejectPreparation=null;drumLoadAbort?.abort();drumLoadAbort=null;busy=false;syncPreparation();}
 }
 
-function stop(){if(!playing)return;elapsedBefore+=(performance.now()-started);state(false);clearTimeout(timerHandle);timerEndAt=0;if(native)window.AndroidBridge.stop();else{node?.port.postMessage({type:'stop'});clearTimeout(silentFallback);const stoppingContext=context;silentFallback=setTimeout(()=>{if(context===stoppingContext&&!playing&&!busy)stoppingContext?.suspend()},3000)}}
+function stop(){if(!playing)return;elapsedBefore+=(performance.now()-started);state(false);clearTimeout(timerHandle);timerEndAt=0;if(native){if(nativeSession){try{nativeSession.cancel();}catch{applyNativeSession();}}else window.AndroidBridge.stop();}else{node?.port.postMessage({type:'stop'});clearTimeout(silentFallback);const stoppingContext=context;silentFallback=setTimeout(()=>{if(context===stoppingContext&&!playing&&!busy)stoppingContext?.suspend()},3000)}}
 $('play').addEventListener('click',()=>playing?stop():start());
 $('cancel-prepare').addEventListener('click',cancelPreparation);syncPreparation();
-$('drum-samples').value=drumKit;$('recorded-drums-controls').hidden=native;
+$('drum-samples').value=drumKit;$('recorded-drums-controls').hidden=native&&!nativeDrums;
 $('drum-samples').addEventListener('change',async()=>{
- if(playing||busy||exportBusy){$('drum-samples').value=drumKit;return;}
+ if(playing||busy||nativePreparing||exportBusy){$('drum-samples').value=drumKit;return;}
  const selected=$('drum-samples').value;if(!drumKits.includes(selected)){ $('drum-samples').value=drumKit;return; }
  busy=true;syncPreparation();audioGeneration++;drumLoadAbort?.abort();const previous=context;
  try{if(previous)await previous.close();if(context===previous)context=node=gain=analyser=null;drumKit=selected;$('drum-source').textContent='';persist();}
@@ -101,13 +105,13 @@ $('drum-samples').addEventListener('change',async()=>{
  finally{busy=false;syncPreparation();}
 });
 
-function scheduleTimer(){clearTimeout(timerHandle);const minutes=Number($('timer').value);if(native){timerEndAt=0;if(playing)window.AndroidBridge.setTimer(minutes);return;}timerEndAt=playing&&minutes?Date.now()+minutes*60000:0;if(timerEndAt)timerHandle=setTimeout(()=>{stop();$('notice').textContent=t('timerEnd')},minutes*60000);}$('timer').addEventListener('change',scheduleTimer);
-$('new-seed').addEventListener('click',()=>{if(busy||exportBusy)return;const randomSeed=crypto.getRandomValues(new Uint32Array(1))[0];const next=randomSeed===seed?(randomSeed+0x9e3779b9)>>>0:randomSeed;if(native&&playing){if(typeof window.AndroidBridge.reseed!=='function'){ $('notice').textContent=t('error');return;}if(!window.AndroidBridge.reseed(next)){$('notice').textContent=t('error');return;}}else node?.port.postMessage({type:'reseed',seed:next});seed=next;showScore({seed,frame:0,rate:48000,events:[]});if(native&&!playing&&typeof window.AndroidBridge.clearScore==='function')window.AndroidBridge.clearScore();$('seed-value').textContent=seed.toString(16).padStart(8,'0');persist()});
+function scheduleTimer(){clearTimeout(timerHandle);const minutes=Number($('timer').value);if(native){timerEndAt=0;if(playing||nativePreparing)window.AndroidBridge.setTimer(minutes);return;}timerEndAt=playing&&minutes?Date.now()+minutes*60000:0;if(timerEndAt)timerHandle=setTimeout(()=>{stop();$('notice').textContent=t('timerEnd')},minutes*60000);}$('timer').addEventListener('change',scheduleTimer);
+$('new-seed').addEventListener('click',()=>{if(busy||nativePreparing||exportBusy)return;const randomSeed=crypto.getRandomValues(new Uint32Array(1))[0];const next=randomSeed===seed?(randomSeed+0x9e3779b9)>>>0:randomSeed;if(native&&playing){if(typeof window.AndroidBridge.reseed!=='function'){ $('notice').textContent=t('error');return;}if(!window.AndroidBridge.reseed(next)){$('notice').textContent=t('error');return;}}else node?.port.postMessage({type:'reseed',seed:next});seed=next;showScore({seed,frame:0,rate:48000,events:[]});if(native&&!playing&&typeof window.AndroidBridge.clearScore==='function')window.AndroidBridge.clearScore();$('seed-value').textContent=seed.toString(16).padStart(8,'0');persist()});
 
 $('language').addEventListener('click',()=>{language=language==='en'?'ru':'en';translate();persist()});
 $('seed-value').textContent=seed.toString(16).padStart(8,'0');updateKnobs();translate();restoreNative();
 let lastFrame=0,level=0;const reduced=matchMedia('(prefers-reduced-motion: reduce)');const canvas=$('orb'),paint=canvas.getContext('2d');let wave=new Float32Array(64);
-function draw(now){requestAnimationFrame(draw);if(now-lastFrame<65)return;lastFrame=now;let energy=0;if(native&&playing){try{wave=JSON.parse(window.AndroidBridge.waveform());energy=Number(window.AndroidBridge.level())||0;if(now-started>1500&&!window.AndroidBridge.isPlaying())state(false)}catch{}}else if(analyser&&context?.state==='running'){analyser.getFloatTimeDomainData(timeData);for(let i=0;i<timeData.length;i++)energy+=timeData[i]*timeData[i];energy=Math.sqrt(energy/timeData.length);for(let i=0;i<64;i++)wave[i]=timeData[Math.floor(i*timeData.length/64)]}level=level*.82+energy*.18;const motion=reduced.matches?0:Math.min(1,Math.sqrt(level*35));paint.clearRect(0,0,500,500);paint.beginPath();for(let i=0;i<=128;i++){const a=i/128*Math.PI*2,idx=Math.floor(i/128*64)%64;const normalized=Math.min(2.5,Math.abs(((wave[(idx+63)%64]||0)+(wave[idx]||0)+(wave[(idx+1)%64]||0))/3)/Math.max(.002,energy));const shape=(normalized*12+Math.sin(a*3+now*.00035)*motion*7)*motion;const r=160+shape;const x=250+Math.cos(a)*r,y=250+Math.sin(a)*r;i===0?paint.moveTo(x,y):paint.lineTo(x,y)}paint.closePath();paint.fillStyle='#000000';paint.fill();paint.strokeStyle=playing?'#ffffff':'#999999';paint.lineWidth=2;paint.stroke();paint.beginPath();paint.arc(250,250,175+motion*13,0,Math.PI*2);paint.strokeStyle='#333333';paint.lineWidth=1;paint.stroke();let art='';const chars=' .:·+*x#%@';const rows=34,cols=100;const reactive=reduced.matches?0:motion;for(let y=0;y<rows;y++){for(let x=0;x<cols;x++){const nx=(x-cols/2)/(cols/2),ny=(y-rows/2)/(rows/2),r=Math.sqrt(nx*nx+ny*ny),angle=Math.atan2(ny,nx);const wi=((Math.floor((angle+Math.PI)/(Math.PI*2)*64)%64)+64)%64;const sample=Math.min(2,Math.abs(wave[wi]||0)/Math.max(.002,energy));const ridge=.62+reactive*(sample*.055+Math.sin(angle*6)*.025);const band=Math.max(0,1-Math.abs(r-ridge)*7);const ripple=(Math.cos(r*44-reactive*sample*8)+1)*.5;const texture=(Math.sin(x*.71+y*1.13)+1)*.5;const density=band*(.25+ripple*.4+texture*.15+reactive*.2);art+=chars[Math.min(chars.length-1,Math.floor(density*(chars.length-1)))];}art+='\n'}drawAsciiGrid($('ascii'),art,cols,rows,playing?'#ffffff':'#999999');const secs=Math.floor((elapsedBefore+(playing?now-started:0))/1000);$('elapsed').textContent=String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0');if(playing&&timerEndAt&&Date.now()>=timerEndAt){stop();$('notice').textContent=t('timerEnd')}}requestAnimationFrame(draw);
+function draw(now){requestAnimationFrame(draw);if(now-lastFrame<65)return;lastFrame=now;let energy=0;if(native&&playing){try{wave=JSON.parse(window.AndroidBridge.waveform());energy=Number(window.AndroidBridge.level())||0;if(!nativeSession&&now-started>1500&&!window.AndroidBridge.isPlaying())state(false)}catch{}}else if(analyser&&context?.state==='running'){analyser.getFloatTimeDomainData(timeData);for(let i=0;i<timeData.length;i++)energy+=timeData[i]*timeData[i];energy=Math.sqrt(energy/timeData.length);for(let i=0;i<64;i++)wave[i]=timeData[Math.floor(i*timeData.length/64)]}level=level*.82+energy*.18;const motion=reduced.matches?0:Math.min(1,Math.sqrt(level*35));paint.clearRect(0,0,500,500);paint.beginPath();for(let i=0;i<=128;i++){const a=i/128*Math.PI*2,idx=Math.floor(i/128*64)%64;const normalized=Math.min(2.5,Math.abs(((wave[(idx+63)%64]||0)+(wave[idx]||0)+(wave[(idx+1)%64]||0))/3)/Math.max(.002,energy));const shape=(normalized*12+Math.sin(a*3+now*.00035)*motion*7)*motion;const r=160+shape;const x=250+Math.cos(a)*r,y=250+Math.sin(a)*r;i===0?paint.moveTo(x,y):paint.lineTo(x,y)}paint.closePath();paint.fillStyle='#000000';paint.fill();paint.strokeStyle=playing?'#ffffff':'#999999';paint.lineWidth=2;paint.stroke();paint.beginPath();paint.arc(250,250,175+motion*13,0,Math.PI*2);paint.strokeStyle='#333333';paint.lineWidth=1;paint.stroke();let art='';const chars=' .:·+*x#%@';const rows=34,cols=100;const reactive=reduced.matches?0:motion;for(let y=0;y<rows;y++){for(let x=0;x<cols;x++){const nx=(x-cols/2)/(cols/2),ny=(y-rows/2)/(rows/2),r=Math.sqrt(nx*nx+ny*ny),angle=Math.atan2(ny,nx);const wi=((Math.floor((angle+Math.PI)/(Math.PI*2)*64)%64)+64)%64;const sample=Math.min(2,Math.abs(wave[wi]||0)/Math.max(.002,energy));const ridge=.62+reactive*(sample*.055+Math.sin(angle*6)*.025);const band=Math.max(0,1-Math.abs(r-ridge)*7);const ripple=(Math.cos(r*44-reactive*sample*8)+1)*.5;const texture=(Math.sin(x*.71+y*1.13)+1)*.5;const density=band*(.25+ripple*.4+texture*.15+reactive*.2);art+=chars[Math.min(chars.length-1,Math.floor(density*(chars.length-1)))];}art+='\n'}drawAsciiGrid($('ascii'),art,cols,rows,playing?'#ffffff':'#999999');const secs=Math.floor((elapsedBefore+(playing?now-started:0))/1000);$('elapsed').textContent=String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0');if(playing&&timerEndAt&&Date.now()>=timerEndAt){stop();$('notice').textContent=t('timerEnd')}}requestAnimationFrame(draw);
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('install').hidden=false});$('install').addEventListener('click',async()=>{if(!installEvent)return;await installEvent.prompt();installEvent=null;$('install').hidden=true});
 let pendingWorker,updateRequested=false;
 if(!native&&'serviceWorker'in navigator&&location.protocol==='https:'){
@@ -122,7 +126,18 @@ $('update-app').addEventListener('click',()=>{if(!pendingWorker)return;stop();pe
 if(native){$('apk').hidden=true;$('install').hidden=true;$('connection').hidden=true;}else fetch('./version.json',{cache:'no-cache'}).then(r=>r.json()).then(data=>{if(typeof data.apk==='string'&&/^downloads\/[a-zA-Z0-9._-]+\.apk$/.test(data.apk)){$('apk').href=data.apk;$('apk').removeAttribute('aria-disabled');$('apk').textContent=t('apk')}}).catch(()=>{});
 window.addEventListener('pagehide',()=>{if(!native){cancelPreparation();stop();}});
 
-function restoreNative(){if(!native)return;try{const value=JSON.parse(window.AndroidBridge.status());if(value.playing){for(const key of Object.keys(parameters))if(value[key]!==undefined)parameters[key]=readParameter(key,value[key],parameters[key]);volume=clamp(value.volume);seed=Number(value.seed)>>>0;preset='custom';elapsedBefore=Math.max(0,Date.now()-Number(value.startedAt));started=performance.now();$('timer').value=String(value.timerMinutes||0);$('volume').value=Math.round(volume*100);$('volume-value').value=Math.round(volume*100)+'%';$('seed-value').textContent=seed.toString(16).padStart(8,'0');state(true);updateKnobs();persist();syncWeather()}else state(false)}catch{}}
+function applyNativeSession(restore=false){
+ if(!nativeSession)return null;
+ const result=restore?nativeSession.restore():nativeSession.poll();
+ nativePreparing=result.phase==='preparing'||(result.stopFailed&&result.uncertainPhase==='preparing');const value=result.data;
+ if(value&&['preparing','playing'].includes(result.phase)&&drumKits.includes(value.drumKit)){drumKit=value.drumKit;$('drum-samples').value=drumKit;$('drum-source').textContent=drumKit==='procedural'?'':drumKit;}
+ if(nativePreparing){state(false);$('notice').textContent=result.stopFailed?result.error:language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';}
+ else if(result.phase==='playing'){if(!playing){started=performance.now();elapsedBefore=0;state(true);$('notice').textContent=t('quiet');}}
+ else {state(!!(result.stopFailed&&result.uncertainPhase==='playing'));if(result.phase==='error')$('notice').textContent=result.error;}
+ syncPreparation();return value;
+}
+setInterval(()=>{if(nativeSession&&(nativeSession.requestId!==null||nativePreparing||playing))applyNativeSession();},250);
+function restoreNative(){if(!native)return;try{const value=nativeSession?applyNativeSession(true):JSON.parse(window.AndroidBridge.status());if(!value||nativeSession?.stopFailed)return;if((value.playing&&(!nativeSession||nativeSession.phase==='playing'))||(nativeSession?.phase==='preparing'&&!nativeSession.owned)){for(const key of Object.keys(parameters))if(value[key]!==undefined)parameters[key]=readParameter(key,value[key],parameters[key]);volume=clamp(value.volume);seed=Number(value.seed)>>>0;preset='custom';elapsedBefore=value.playing?Math.max(0,Date.now()-Number(value.startedAt)):0;started=performance.now();$('timer').value=String(value.timerMinutes||0);$('volume').value=Math.round(volume*100);$('volume-value').value=Math.round(volume*100)+'%';$('seed-value').textContent=seed.toString(16).padStart(8,'0');state(!!value.playing);updateKnobs();persist();syncWeather()}else if(!nativePreparing)state(false)}catch{}}
 window.addEventListener('sou1-resume',restoreNative);document.addEventListener('visibilitychange',()=>{if(!document.hidden)restoreNative()});
 
 const weatherLast={rain:.35,thunder:.25,wind:.3};
@@ -149,7 +164,7 @@ function showScore(score){if(!score||!Array.isArray(score.events)||(score.seed!=
 setInterval(()=>{if(document.hidden||$('midi-panel').hidden)return;if(native){try{if(typeof window.AndroidBridge.score==='function')showScore(JSON.parse(window.AndroidBridge.score()));}catch{}}else if(node&&context?.state==='running'&&!scorePending){scorePending=true;node.port.postMessage({type:'score'});}},250);
 showScore({seed,frame:0,rate:48000,events:[]});
 
-window.sou1MidiExportResult=status=>{exportBusy=false;syncPreparation();$('new-seed').disabled=busy||exportBusy;$('midi-export').disabled=!exportScore.events.length;$('midi-export-status').textContent=t(status==='saved'?'midiExportSaved':status==='cancelled'?'midiExportCancelled':'midiExportFailed');};
+window.sou1MidiExportResult=status=>{exportBusy=false;syncPreparation();$('new-seed').disabled=busy||nativePreparing||exportBusy;$('midi-export').disabled=!exportScore.events.length;$('midi-export-status').textContent=t(status==='saved'?'midiExportSaved':status==='cancelled'?'midiExportCancelled':'midiExportFailed');};
 $('midi-export').addEventListener('click',async()=>{
  if(exportBusy)return;
  exportBusy=true;syncPreparation();$('midi-export').disabled=true;$('new-seed').disabled=true;
@@ -169,7 +184,7 @@ $('midi-export').addEventListener('click',async()=>{
    if(!window.AndroidBridge.exportMidi(base64,result.filename))throw Error('Native MIDI save rejected');
   }else{
    const url=URL.createObjectURL(new Blob([result.bytes],{type:'audio/midi'}));
-   const link=document.createElement('a');link.href=url;link.download=result.filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);exportBusy=false;syncPreparation();$('midi-export').disabled=!exportScore.events.length;$('new-seed').disabled=busy||exportBusy;
+   const link=document.createElement('a');link.href=url;link.download=result.filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);exportBusy=false;syncPreparation();$('midi-export').disabled=!exportScore.events.length;$('new-seed').disabled=busy||nativePreparing||exportBusy;
   }
  }catch(error){console.error(error);window.sou1MidiExportResult('failed');}
 });

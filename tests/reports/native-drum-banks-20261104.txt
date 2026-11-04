@@ -1,0 +1,60 @@
+Native catalog verified: 9 kits, 118 source-locked package files, 32496 Java bytes.
+▶ native catalog generation rejects drift, unsafe paths, unbounded files and ambiguous manifests
+  ✔ byte-identical reproducibility rejects stale generated Java (627.880462ms)
+  ✔ manifest corruption and source/package disagreement (194.372311ms)
+  ✔ duplicate decoded JSON keys even with matching updated locks (710.845916ms)
+  ✔ invalid UTF-8, deep JSON and non-finite numbers (1045.781653ms)
+  ✔ sample paths and metadata remain strictly validated after relocking (695.651744ms)
+  ✔ source lock traversal, duplicate entry and oversize reject (628.517009ms)
+  ✔ symlink files and directories are not packaged (174.918341ms)
+✔ native catalog generation rejects drift, unsafe paths, unbounded files and ambiguous manifests (5457.338485ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5560.478286
+JS oracle: vcsl 44100 Hz, 8 samples, 2935252 prepared bytes
+JS oracle: vcsl 48000 Hz, 8 samples, 3194844 prepared bytes
+JS oracle: fsa-electronic 44100 Hz, 7 samples, 2011316 prepared bytes
+JS oracle: fsa-electronic 48000 Hz, 7 samples, 2189200 prepared bytes
+JS oracle: fsa-distkit 44100 Hz, 7 samples, 1257520 prepared bytes
+JS oracle: fsa-distkit 48000 Hz, 7 samples, 1368744 prepared bytes
+JS oracle: fsa-sdbkit 44100 Hz, 7 samples, 854052 prepared bytes
+JS oracle: fsa-sdbkit 48000 Hz, 7 samples, 929588 prepared bytes
+JS oracle: fsa-synthkit 44100 Hz, 7 samples, 912432 prepared bytes
+JS oracle: fsa-synthkit 48000 Hz, 7 samples, 993136 prepared bytes
+JS oracle: fsa-x0xproc1 44100 Hz, 7 samples, 754824 prepared bytes
+JS oracle: fsa-x0xproc1 48000 Hz, 7 samples, 821596 prepared bytes
+JS oracle: fsa-x0xproc2 44100 Hz, 7 samples, 1151012 prepared bytes
+JS oracle: fsa-x0xproc2 48000 Hz, 7 samples, 1252816 prepared bytes
+JS oracle: guigui-soft 44100 Hz, 7 samples, 900824 prepared bytes
+JS oracle: guigui-soft 48000 Hz, 7 samples, 980508 prepared bytes
+JS oracle: guigui-dynamic 44100 Hz, 13 samples, 1995988 prepared bytes
+JS oracle: guigui-dynamic 48000 Hz, 13 samples, 2172536 prepared bytes
+JS oracle: vcsl 8000 Hz, 8 samples, 532488 prepared bytes
+JS oracle: vcsl 192000 Hz, 8 samples, 12779340 prepared bytes
+Oracle SHA-256: 19a10f876bd21d913a387966147a9b180cd67d9522df3c3f4e559d86b13050f1
+Native/JS bank parity: vcsl 44100 Hz, 8 samples
+Native/JS bank parity: vcsl 48000 Hz, 8 samples
+Native/JS bank parity: fsa-electronic 44100 Hz, 7 samples
+Native/JS bank parity: fsa-electronic 48000 Hz, 7 samples
+Native/JS bank parity: fsa-distkit 44100 Hz, 7 samples
+Native/JS bank parity: fsa-distkit 48000 Hz, 7 samples
+Native/JS bank parity: fsa-sdbkit 44100 Hz, 7 samples
+Native/JS bank parity: fsa-sdbkit 48000 Hz, 7 samples
+Native/JS bank parity: fsa-synthkit 44100 Hz, 7 samples
+Native/JS bank parity: fsa-synthkit 48000 Hz, 7 samples
+Native/JS bank parity: fsa-x0xproc1 44100 Hz, 7 samples
+Native/JS bank parity: fsa-x0xproc1 48000 Hz, 7 samples
+Native/JS bank parity: fsa-x0xproc2 44100 Hz, 7 samples
+Native/JS bank parity: fsa-x0xproc2 48000 Hz, 7 samples
+Native/JS bank parity: guigui-soft 44100 Hz, 7 samples
+Native/JS bank parity: guigui-soft 48000 Hz, 7 samples
+Native/JS bank parity: guigui-dynamic 44100 Hz, 13 samples
+Native/JS bank parity: guigui-dynamic 48000 Hz, 13 samples
+Native/JS bank parity: vcsl 8000 Hz, 8 samples
+Native/JS bank parity: vcsl 192000 Hz, 8 samples
+PASS 3263 API/bounds assertions; 9997004 Float32 frames compared, 9997004 bit-exact; 156/156 sample hashes identical; maximum absolute PCM error 0.0
