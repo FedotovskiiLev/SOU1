@@ -1,3 +1,4 @@
+import {loadRecordedDrums} from './drum-loader.js';
 import {encodeMidi} from './midi-export.js';
 import {createPianoRoll} from './note-history.js';
 import {drawAsciiGrid} from './ascii-grid.js';
@@ -23,9 +24,11 @@ let parameters={...extraDefaults,...presets.focus};if(saved.parameters&&typeof s
 let preset=saved.preset==='custom'?'custom':Object.hasOwn(presets,saved.preset)?saved.preset:'focus';
 let seed=Number.isInteger(saved.seed)?saved.seed>>>0:crypto.getRandomValues(new Uint32Array(1))[0];
 let volume=Number.isFinite(saved.volume)?clamp(saved.volume):.35;
+const drumKits=['procedural','vcsl','fsa-electronic','fsa-distkit','fsa-sdbkit','fsa-synthkit','fsa-x0xproc1','fsa-x0xproc2','guigui-soft','guigui-dynamic'];
+let drumKit=!native&&drumKits.includes(saved.drumKit)?saved.drumKit:'procedural',drumLoadAbort=null,audioGeneration=0,rejectPreparation=null;
 let context,node,gain,analyser,frequency,timeData,playing=false,busy=false,exportBusy=false,started=0,elapsedBefore=0,timerHandle,timerEndAt=0,installEvent,silentFallback;
 const t=key=>dictionary[language][key]??key;
-function persist(){try{localStorage.setItem('sou1-v1',JSON.stringify({language,parameters,preset,seed,volume}))}catch{}}
+function persist(){try{localStorage.setItem('sou1-v1',JSON.stringify({language,parameters,preset,seed,volume,drumKit}))}catch{}}
 function translate(){document.documentElement.lang=language;for(const el of document.querySelectorAll('[data-i18n]')){const key=el.dataset.i18n;if(key==='description')el.innerHTML=t(key);else el.textContent=t(key)}$('play-label').textContent=t(playing?'stop':'begin');$('play').setAttribute('aria-label',t(playing?'stop':'begin'));$('state').textContent=t(playing?'playing':'standby');for(const item of controls){$(item.key+'-label').textContent=t(item.label);$(item.key+'-low').textContent='0';$(item.key+'-high').textContent='100'}if($('apk').href)$('apk').textContent=t('apk');}
 const controls=[{key:'intensity',label:'activity',low:'',high:''},{key:'brightness',label:'brightness',low:'',high:''},{key:'motion',label:'motion',low:'',high:''},{key:'timbre',label:'timbre',low:'',high:''}];
 for(const key of ['pad','pluck','bell','texture','pulse','warmth','strength','width','wash','rain','thunder','wind'])controls.push({key,label:key,group:['warmth','strength','width','wash'].includes(key)?'effects':['rain','thunder','wind'].includes(key)?'weather':'layers'});
@@ -37,10 +40,67 @@ function sendParameters(){if(native){if(playing)window.AndroidBridge.update(JSON
 function setValue(key,v){parameters[key]=clamp(v);if(key==='rain'&&parameters[key]>0&&parameters.rainType===0)parameters.rainType=Number($('rain-type').value);preset='custom';updateKnobs();sendParameters();persist();syncWeather()}
 for(const el of document.querySelectorAll('[data-preset]'))el.addEventListener('click',()=>{preset=el.dataset.preset;parameters={...presets[preset]};updateKnobs();sendParameters();persist();syncWeather()});
 $('volume').value=Math.round(volume*100);$('volume-value').value=Math.round(volume*100)+'%';$('volume').addEventListener('input',e=>{volume=clamp(Number(e.target.value)/100);$('volume-value').value=Math.round(volume*100)+'%';if(gain)gain.gain.setTargetAtTime(volume,context.currentTime,.05);sendParameters();persist()});
-function state(value){playing=value;document.body.classList.toggle('playing',value);$('play-label').textContent=t(value?'stop':'begin');$('play-icon').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',t(value?'stop':'begin'));$('play').setAttribute('aria-pressed',String(value));$('state').textContent=t(value?'playing':'standby');$('new-seed').disabled=busy||exportBusy;}
-async function start(){if(busy||playing)return;busy=true;clearTimeout(silentFallback);$('play').disabled=true;try{if(native){if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error("Native playback unavailable");}else{if(!context){context=new AudioContext({latencyHint:'playback'});await context.resume();if(!context.audioWorklet)throw Error('AudioWorklet unavailable');await context.audioWorklet.addModule('./audio-worklet.js');scorePending=false;node=new AudioWorkletNode(context,'sou1-ambient',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{seed}});gain=context.createGain();gain.gain.value=volume;analyser=context.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.8;frequency=new Uint8Array(analyser.frequencyBinCount);timeData=new Float32Array(analyser.fftSize);node.connect(gain).connect(analyser).connect(context.destination);const graphNode=node;node.onprocessorerror=async()=>{if(node!==graphNode)return;busy=true;state(false);clearTimeout(timerHandle);clearTimeout(silentFallback);await context?.close().catch(()=>{});context=node=gain=analyser=null;busy=false;$('play').disabled=false;$('notice').textContent=t('error')};node.port.onmessage=e=>{if(node===graphNode&&e.data.type==='score-export'&&exportRequest?.id===e.data.requestId){const request=exportRequest;exportRequest=null;clearTimeout(request.timer);if((Number(e.data.score?.seed)>>>0)===request.seed)request.resolve(e.data.score);else request.reject(Error('Score seed changed'));}if(node===graphNode&&e.data.type==='score'){scorePending=false;showScore(e.data.score);}if(node===graphNode&&e.data.type==='silent'&&!playing&&!busy){clearTimeout(silentFallback);context?.suspend()}}}await context.resume();node.port.postMessage({type:'parameters',parameters});node.port.postMessage({type:'start'});}started=performance.now();state(true);$('notice').textContent=t('quiet');scheduleTimer();}catch(error){console.error(error);$('notice').textContent=t('error');if(context){await context.close().catch(()=>{});context=node=gain=analyser=null;}state(false)}finally{busy=false;$('play').disabled=false;$('new-seed').disabled=busy||exportBusy}}
+function state(value){playing=value;$('drum-samples').disabled=native||playing||busy||exportBusy;document.body.classList.toggle('playing',value);$('play-label').textContent=t(value?'stop':'begin');$('play-icon').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',t(value?'stop':'begin'));$('play').setAttribute('aria-pressed',String(value));$('state').textContent=t(value?'playing':'standby');$('new-seed').disabled=busy||exportBusy;}
+function syncPreparation(){ $('play').disabled=busy;$('new-seed').disabled=busy||exportBusy;$('drum-samples').disabled=native||playing||busy||exportBusy;$('cancel-prepare').disabled=!busy; }
+function cancelPreparation(){if(!busy)return;audioGeneration++;rejectPreparation?.(Object.assign(new Error('Preparation cancelled'),{name:'AbortError'}));drumLoadAbort?.abort();context?.close().catch(()=>{});}
+async function start(){
+ if(busy||playing)return;
+ const generation=++audioGeneration;busy=true;clearTimeout(silentFallback);syncPreparation();let current,cancelReject;
+ const cancellation=new Promise((_,reject)=>cancelReject=reject);rejectPreparation=cancelReject;
+ const wait=task=>Promise.race([task,cancellation]);
+ const cancelled=()=>generation!==audioGeneration||(!native&&context!==current);
+ const check=()=>{if(cancelled())throw new DOMException('Preparation cancelled','AbortError');};
+ try{
+  if(native){if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error('Native playback unavailable');}
+  else{
+   if(!context)context=new AudioContext({latencyHint:'playback'});current=context;
+   if(!node){
+    await wait(current.resume());check();
+    if(!current.audioWorklet)throw Error('AudioWorklet unavailable');
+    const recorded=drumKit!=='procedural';let wireBank;
+    if(recorded){
+     $('notice').textContent=language==='ru'?'Подготавливаю записанные ударные…':'Preparing recorded drums…';
+     drumLoadAbort=new AbortController();const bank=await wait(loadRecordedDrums(drumKit,current.sampleRate,{signal:drumLoadAbort.signal}));check();drumLoadAbort=null;
+     wireBank=bank.wireBank;$('drum-source').textContent=bank.report.banks.map(b=>b.id).join(' + ');
+    }
+    await wait(current.audioWorklet.addModule(recorded?'./recorded-drum-worklet.js':'./audio-worklet.js'));check();
+    scorePending=false;node=new AudioWorkletNode(current,recorded?'sou1-recorded-drums':'sou1-ambient',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{seed,...(recorded?{wireBank}:{})}});
+    gain=current.createGain();gain.gain.value=volume;analyser=current.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.8;
+    frequency=new Uint8Array(analyser.frequencyBinCount);timeData=new Float32Array(analyser.fftSize);node.connect(gain).connect(analyser).connect(current.destination);
+    const graphNode=node;
+    node.onprocessorerror=async()=>{
+     if(node!==graphNode)return;audioGeneration++;busy=true;state(false);syncPreparation();clearTimeout(timerHandle);clearTimeout(silentFallback);
+     await current.close().catch(()=>{});if(context===current)context=node=gain=analyser=null;
+     busy=false;syncPreparation();$('notice').textContent=t('error');
+    };
+    node.port.onmessage=e=>{
+     if(node===graphNode&&e.data.type==='score-export'&&exportRequest?.id===e.data.requestId){const request=exportRequest;exportRequest=null;clearTimeout(request.timer);if((Number(e.data.score?.seed)>>>0)===request.seed)request.resolve(e.data.score);else request.reject(Error('Score seed changed'));}
+     if(node===graphNode&&e.data.type==='score'){scorePending=false;showScore(e.data.score);}
+     if(node===graphNode&&e.data.type==='silent'&&!playing&&!busy){clearTimeout(silentFallback);current.suspend();}
+    };
+   }
+   await wait(current.resume());check();node.port.postMessage({type:'parameters',parameters});node.port.postMessage({type:'start'});
+  }
+  started=performance.now();state(true);$('notice').textContent=t('quiet');scheduleTimer();
+ }catch(error){
+  console.error(error);$('notice').textContent=error.name==='AbortError'?(language==='ru'?'Подготовка отменена.':'Preparation cancelled.'):t('error')+(drumKit!=='procedural'?' '+error.message:'');
+  if(current){await current.close().catch(()=>{});if(context===current)context=node=gain=analyser=null;}state(false);
+ }finally{if(rejectPreparation===cancelReject)rejectPreparation=null;drumLoadAbort?.abort();drumLoadAbort=null;busy=false;syncPreparation();}
+}
+
 function stop(){if(!playing)return;elapsedBefore+=(performance.now()-started);state(false);clearTimeout(timerHandle);timerEndAt=0;if(native)window.AndroidBridge.stop();else{node?.port.postMessage({type:'stop'});clearTimeout(silentFallback);const stoppingContext=context;silentFallback=setTimeout(()=>{if(context===stoppingContext&&!playing&&!busy)stoppingContext?.suspend()},3000)}}
 $('play').addEventListener('click',()=>playing?stop():start());
+$('cancel-prepare').addEventListener('click',cancelPreparation);syncPreparation();
+$('drum-samples').value=drumKit;$('recorded-drums-controls').hidden=native;
+$('drum-samples').addEventListener('change',async()=>{
+ if(playing||busy||exportBusy){$('drum-samples').value=drumKit;return;}
+ const selected=$('drum-samples').value;if(!drumKits.includes(selected)){ $('drum-samples').value=drumKit;return; }
+ busy=true;syncPreparation();audioGeneration++;drumLoadAbort?.abort();const previous=context;
+ try{if(previous)await previous.close();if(context===previous)context=node=gain=analyser=null;drumKit=selected;$('drum-source').textContent='';persist();}
+ catch(error){$('drum-samples').value=drumKit;$('notice').textContent=t('error');}
+ finally{busy=false;syncPreparation();}
+});
+
 function scheduleTimer(){clearTimeout(timerHandle);const minutes=Number($('timer').value);if(native){timerEndAt=0;if(playing)window.AndroidBridge.setTimer(minutes);return;}timerEndAt=playing&&minutes?Date.now()+minutes*60000:0;if(timerEndAt)timerHandle=setTimeout(()=>{stop();$('notice').textContent=t('timerEnd')},minutes*60000);}$('timer').addEventListener('change',scheduleTimer);
 $('new-seed').addEventListener('click',()=>{if(busy||exportBusy)return;const randomSeed=crypto.getRandomValues(new Uint32Array(1))[0];const next=randomSeed===seed?(randomSeed+0x9e3779b9)>>>0:randomSeed;if(native&&playing){if(typeof window.AndroidBridge.reseed!=='function'){ $('notice').textContent=t('error');return;}if(!window.AndroidBridge.reseed(next)){$('notice').textContent=t('error');return;}}else node?.port.postMessage({type:'reseed',seed:next});seed=next;showScore({seed,frame:0,rate:48000,events:[]});if(native&&!playing&&typeof window.AndroidBridge.clearScore==='function')window.AndroidBridge.clearScore();$('seed-value').textContent=seed.toString(16).padStart(8,'0');persist()});
 
@@ -60,7 +120,7 @@ if(!native&&'serviceWorker'in navigator&&location.protocol==='https:'){
 }
 $('update-app').addEventListener('click',()=>{if(!pendingWorker)return;stop();persist();updateRequested=true;pendingWorker.postMessage({type:'ACTIVATE_UPDATE'})});
 if(native){$('apk').hidden=true;$('install').hidden=true;$('connection').hidden=true;}else fetch('./version.json',{cache:'no-cache'}).then(r=>r.json()).then(data=>{if(typeof data.apk==='string'&&/^downloads\/[a-zA-Z0-9._-]+\.apk$/.test(data.apk)){$('apk').href=data.apk;$('apk').removeAttribute('aria-disabled');$('apk').textContent=t('apk')}}).catch(()=>{});
-window.addEventListener('pagehide',()=>{if(!native)stop()});
+window.addEventListener('pagehide',()=>{if(!native){cancelPreparation();stop();}});
 
 function restoreNative(){if(!native)return;try{const value=JSON.parse(window.AndroidBridge.status());if(value.playing){for(const key of Object.keys(parameters))if(value[key]!==undefined)parameters[key]=readParameter(key,value[key],parameters[key]);volume=clamp(value.volume);seed=Number(value.seed)>>>0;preset='custom';elapsedBefore=Math.max(0,Date.now()-Number(value.startedAt));started=performance.now();$('timer').value=String(value.timerMinutes||0);$('volume').value=Math.round(volume*100);$('volume-value').value=Math.round(volume*100)+'%';$('seed-value').textContent=seed.toString(16).padStart(8,'0');state(true);updateKnobs();persist();syncWeather()}else state(false)}catch{}}
 window.addEventListener('sou1-resume',restoreNative);document.addEventListener('visibilitychange',()=>{if(!document.hidden)restoreNative()});
@@ -89,10 +149,10 @@ function showScore(score){if(!score||!Array.isArray(score.events)||(score.seed!=
 setInterval(()=>{if(document.hidden||$('midi-panel').hidden)return;if(native){try{if(typeof window.AndroidBridge.score==='function')showScore(JSON.parse(window.AndroidBridge.score()));}catch{}}else if(node&&context?.state==='running'&&!scorePending){scorePending=true;node.port.postMessage({type:'score'});}},250);
 showScore({seed,frame:0,rate:48000,events:[]});
 
-window.sou1MidiExportResult=status=>{exportBusy=false;$('new-seed').disabled=busy||exportBusy;$('midi-export').disabled=!exportScore.events.length;$('midi-export-status').textContent=t(status==='saved'?'midiExportSaved':status==='cancelled'?'midiExportCancelled':'midiExportFailed');};
+window.sou1MidiExportResult=status=>{exportBusy=false;syncPreparation();$('new-seed').disabled=busy||exportBusy;$('midi-export').disabled=!exportScore.events.length;$('midi-export-status').textContent=t(status==='saved'?'midiExportSaved':status==='cancelled'?'midiExportCancelled':'midiExportFailed');};
 $('midi-export').addEventListener('click',async()=>{
  if(exportBusy)return;
- exportBusy=true;$('midi-export').disabled=true;$('new-seed').disabled=true;
+ exportBusy=true;syncPreparation();$('midi-export').disabled=true;$('new-seed').disabled=true;
  try{
   if(native&&typeof window.AndroidBridge.score==='function')showScore(JSON.parse(window.AndroidBridge.score()));
   let snapshot=exportScore;
@@ -109,7 +169,7 @@ $('midi-export').addEventListener('click',async()=>{
    if(!window.AndroidBridge.exportMidi(base64,result.filename))throw Error('Native MIDI save rejected');
   }else{
    const url=URL.createObjectURL(new Blob([result.bytes],{type:'audio/midi'}));
-   const link=document.createElement('a');link.href=url;link.download=result.filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);exportBusy=false;$('midi-export').disabled=!exportScore.events.length;$('new-seed').disabled=busy||exportBusy;
+   const link=document.createElement('a');link.href=url;link.download=result.filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);exportBusy=false;syncPreparation();$('midi-export').disabled=!exportScore.events.length;$('new-seed').disabled=busy||exportBusy;
   }
  }catch(error){console.error(error);window.sou1MidiExportResult('failed');}
 });
@@ -118,7 +178,8 @@ if(native&&typeof window.AndroidBridge.midiExportStatus==='function'){
  let lastExportStatus='';
  setInterval(()=>{
   const status=window.AndroidBridge.midiExportStatus();if(status===lastExportStatus)return;lastExportStatus=status;
-  if(status==='pending'||status==='writing'){exportBusy=true;$('midi-export').disabled=true;$('new-seed').disabled=true;}
+  if(status==='pending'||status==='writing'){exportBusy=true;syncPreparation();$('midi-export').disabled=true;$('new-seed').disabled=true;}
   else if(status!=='idle')window.sou1MidiExportResult(status);
  },250);
 }
+

@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "repository": "stargatedaw/stargate-sample-pack",
+  "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/LICENSE",
+  "author": "Kevin B. / Fugue State Audio",
+  "description": "Five prepared electronic drum one-shots from the x0xproc1 kit. Author describes the drum bank as public-domain sounds generated via synthesis, rather than acoustic recordings. Not identified here as original Roland 808/909 hardware recordings.",
+  "retrieval": "GitHub fetch_file encoding=base64 at exact commit; raw git blob SHA and SHA256 independently checked during materialization.",
+  "transformations": [],
+  "audioAuditioned": false,
+  "audio": [
+    {
+      "localFile": "x0xproc1-clap.wav",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc1-clap.wav",
+      "gitBlobSha": "21e18f627c8265633d6d4f05cfb42fd7e7dec662",
+      "sha256": "dcd9ccb8d2f860deadd57f82206f9621d24ce1d0db8020842f609a889e236965",
+      "bytes": 204032,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc1-clap.wav",
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 33874,
+        "durationSeconds": 0.7681179138321995
+      },
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 203244
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.0820372017130115,
+        "dc": -0.0014381721600834733,
+        "fullScaleSampleCount": 0
+      },
+      "transformations": []
+    },
+    {
+      "localFile": "x0xproc1-hatclsd.wav",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatclsd.wav",
+      "gitBlobSha": "df5d83f3a33b0bd4dc4efb637f0bc2b261caa98e",
+      "sha256": "a43d2df5a21845c5256fb09ff3f1b97105514ef18b2a57bbc33d80c8892efc11",
+      "bytes": 51644,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatclsd.wav",
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 8476,
+        "durationSeconds": 0.19219954648526077
+      },
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 50856
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1998908236495535,
+        "dc": -0.006980121374805337,
+        "fullScaleSampleCount": 0
+      },
+      "transformations": []
+    },
+    {
+      "localFile": "x0xproc1-hatopen.wav",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatopen.wav",
+      "gitBlobSha": "dc8056feaf1b47667541b0599334dae6ae469953",
+      "sha256": "c6a17e715380911a708f6a2ce9b15dea5eac78a3a2ffc89404dfd04aef9e1c05",
+      "bytes": 140126,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatopen.wav",
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 23223,
+        "durationSeconds": 0.5265986394557823
+      },
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 139338
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.13243565339689578,
+        "dc": 0.0064598952969834155,
+        "fullScaleSampleCount": 0
+      },
+      "transformations": []
+    },
+    {
+      "localFile": "x0xproc1-kick.wav",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc1-kick.wav",
+      "gitBlobSha": "1a74196d16009d8ce1b3a38ed163c1bbe4fc1357",
+      "sha256": "debd64498f2912701f9d7b1948a00840a5ca3ee424111945d2be5601c7cf735e",
+      "bytes": 110636,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc1-kick.wav",
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 18308,
+        "durationSeconds": 0.41514739229024944
+      },
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 109848
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.32397108350259046,
+        "dc": -0.0011984403148498602,
+        "fullScaleSampleCount": 0
+      },
+      "transformations": []
+    },
+    {
+      "localFile": "x0xproc1-snare.wav",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc1-snare.wav",
+      "gitBlobSha": "56390a0a0093619ad84ac49930391956fbc9904e",
+      "sha256": "5c5b35d9565e53500a6bc5524ab1d4f249fe3d91878b1d1c103d95c87acdfe6b",
+      "bytes": 111182,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc1-snare.wav",
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 18399,
+        "durationSeconds": 0.4172108843537415
+      },
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 110394
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.11602955764174823,
+        "dc": 0.01908261061712506,
+        "fullScaleSampleCount": 0
+      },
+      "transformations": []
+    }
+  ],
+  "documents": [
+    {
+      "localFile": "LICENSE",
+      "sourcePath": "LICENSE",
+      "gitBlobSha": "0cb817174267fbfbc0961b1fbfbc097fe22d4f87",
+      "sha256": "7a22e076b0e1d701c3204a9f86b5827aa0d124eca0876b968000e1b31d3e3f3a",
+      "bytes": 6832,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/LICENSE"
+    },
+    {
+      "localFile": "readme.md",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/readme.md",
+      "gitBlobSha": "dd46396d6022393c146b3e3c51a17d9f52aee650",
+      "sha256": "ab1f06a88cdb6df72f15f6cba5bf666f3d408fa7cedfb8c785a9f01d690019a7",
+      "bytes": 1193,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/readme.md"
+    },
+    {
+      "localFile": "PACK-README.md",
+      "sourcePath": "README.md",
+      "gitBlobSha": "d98379fd5cd801a675339b51fe309e5f0fefa66c",
+      "sha256": "00215a047e8eba6c44c14cba95dbc6e2a59f674466cd25366979f072f442931a",
+      "bytes": 2610,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/README.md"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "sou1.validation.v1",
+  "date": "2026-11-04",
+  "baseCommit": "81db0830231c6a69c55f0003d11ea680f8d46585",
+  "scope": "Opt-in recorded drums in the existing PWA; isolated native pool building block; no release",
+  "nodeSuite": {
+    "command": "node --test tests/*.test.mjs",
+    "passed": 292,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 100575.31565
+  },
+  "nativePool": {
+    "command": "sh tests/run-live-drums.sh",
+    "checksPassed": 27,
+    "jsComparedFrames": 18000,
+    "rates": [
+      8000,
+      44100,
+      48000
+    ],
+    "measuredHotLoopAllocationBytes": 0,
+    "allocationIterations": 1000000,
+    "androidServiceIntegrated": false
+  },
+  "existingJvmSuites": [
+    "tests/run.sh",
+    "tests/run-environment.sh"
+  ],
+  "independentReview": {
+    "blockingFindings": 0,
+    "fixed": [
+      "Cancel frees UI while addModule remains pending; stale result cannot affect new attempt",
+      "Kit changes cannot destroy the graph during a pending MIDI export",
+      "Early Stop clears sample tails when global fade reaches zero before sample release; restart cannot resurrect them"
+    ],
+    "scope": "Read-only code and Node VM/AudioContext doubles; actual bank preparation boundary cases"
+  },
+  "package": {
+    "canonicalFiles": 118,
+    "sourceBytes": 9669430,
+    "sha256Lock": "docs/audio-kit/SOURCE_LOCK.json",
+    "recordedKits": 9,
+    "voicePool": 16,
+    "bankPreparedCapBytes": 16777216
+  },
+  "preserved": [
+    "Default procedural engine PCM",
+    "Continuous EventScore and retained MIDI history",
+    "Original oscillator melodies and macro/weather/control/seed/timer paths",
+    "Three canonical offline composition module hashes",
+    "Existing APK/version and permissions"
+  ],
+  "notVerified": [
+    "Real browser UI, module/worker/AudioWorklet and sound output",
+    "Autoplay, installation/update/offline on a real browser",
+    "Listening quality or hardware deadlines",
+    "Android recorded drum service integration or APK build/device testing",
+    "New finite expressive composer in the main PWA/Android",
+    "Surge or SFZ host in SOU1",
+    "Release signing or public release"
+  ],
+  "blocker": "Available cloud browser cannot reach localhost preview; no connected computer or Android SDK is available. Access restrictions were not bypassed."
+}

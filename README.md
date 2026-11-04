@@ -4,7 +4,7 @@ An original ambient instrument for focus, study and quiet work. ASCII interface,
 
 - **PWA:** dependency-free Web Audio / AudioWorklet, local preferences and offline cache after first load.
 - **Android:** the same bundled interface with native AudioTrack synthesis in a foreground media service. Android8+; no Internet, microphone or storage permissions.
-- **Sound:** generated from oscillators and bounded delay lines, not streamed or sampled from recordings. Start quietly.
+- **Sound:** the original oscillator engine remains the default. This development branch adds optional bundled CC0 recorded drum kits to the PWA; original melodic synthesis, effects and weather remain. Android still uses its original native synthesis. No streamed audio. Start quietly.
 - **Privacy:** no accounts, analytics, recording or uploads.
 
 ## Controls
@@ -71,8 +71,7 @@ Version0.2.0 uses versionCode2. CI produces an **unsigned release APK** for owne
 
 The local rack can select the CC0 Fugue State Audio x0xproc1 kit and render a
 repeatable common-note A/B against the original oscillator drums. See
-[the electronic-drums guide](tools/ELECTRONIC_DRUMS.md). This does not alter the
-production PWA/Android or integrate Surge XT.
+[the electronic-drums guide](tools/ELECTRONIC_DRUMS.md). The standalone CLI remains available. The opt-in PWA path below now also uses these banks; Android and Surge XT hosting are not integrated by this step.
 
 See [five complete CC0 drum kits and aligned stem rendering](tools/FULL_DRUM_KITS.md) for the full 58-sound catalog.
 
@@ -90,3 +89,40 @@ local offline tools only: the live PWA/Android composer and installed version
 are unchanged. Surge XT hosting and REAPER verification are separate work.
 
 See [the separate Guigui acoustic CC0 soft/dynamic presets](tools/ACOUSTIC_DRUMS.md) for a recorded acoustic alternative and its source-quality caveats.
+
+## Recorded drums in the PWA (development branch, not a release)
+
+The existing Voices panel now offers the original procedural drums plus nine
+recorded CC0 banks. Stop playback before changing the bank, enable **Drums**, then
+press Play. Preparation is explicit and cancellable; failure is reported rather
+than silently falling back to synthesis. Native Android hides this web-only choice
+until its own playback implementation is ready. Existing saved settings default to
+procedural drums.
+
+Samples are loaded and checksum-verified in a worker, resampled once to the audio
+context rate and handed to a fixed 16-voice worklet pool. No decoding, sinc filter
+or voice allocation occurs per sample. The recorded mix passes through the same
+layer smoothing, activity gain, shared effects, weather mix, DC blocker and limiter.
+The original EventScore, oscillator melodies, preset/control meanings, live reseed,
+session timer and retained MIDI history are unchanged. This step does **not** wire
+the new finite expressive MIDI composer into the main app or host Surge/SFZ.
+
+Guigui dynamic only selects a hard sample when generated note velocity exceeds
+0.6. The layer-volume knob changes output gain, not that selection threshold; quiet
+generated notes can therefore select exactly the same hits as the soft kit. Source
+hard-hit rail contacts and the non-calibrated dynamics remain documented.
+
+`python3 tools/package-web-drums.py` creates the exact browser dependency package
+and source hash lock under `docs/audio-kit/`. It includes the source license and
+provenance documents. The service worker caches the full approximately 9.6 MB
+package; an incomplete package fails installation without activating the update.
+Then run `python3 tools/version-cache.py` when web assets change. Generated copies
+are checked against their canonical repository sources.
+
+Local validation includes actual banks over HTTP, worker cancellation, the real
+AudioWorklet module under a Node host shim, original-event and disabled-drum PCM
+parity, live controls/FX/weather/reseed/stop, packaging and offline-install contracts.
+These checks are not an actual-browser, device, listening or release qualification.
+The current cloud browser cannot reach the available localhost preview.
+
+See [PWA integration, packaging and acceptance details](tools/PWA_RECORDED_DRUMS.md).

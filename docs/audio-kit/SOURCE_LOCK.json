@@ -1,0 +1,597 @@
+{
+  "schema": "sou1.web-drum-package.v1",
+  "codeLicense": "AGPL-3.0-only",
+  "sampleLicense": "CC0-1.0",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+      "bytes": 34523
+    },
+    {
+      "path": "assets/cc0-mini/VCSL-LICENSE",
+      "sha256": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309",
+      "bytes": 7049
+    },
+    {
+      "path": "assets/cc0-mini/VCSL-README.md",
+      "sha256": "2209b5de5240b357cd5bdb954676b579396cbd19121521cebc1e22e615ddc4bb",
+      "bytes": 4366
+    },
+    {
+      "path": "assets/cc0-mini/hat-rr1.wav",
+      "sha256": "4bb0501f23ddd2909dde48023e44a5afdf6c738451e65f978e671f052e7e37d5",
+      "bytes": 123628
+    },
+    {
+      "path": "assets/cc0-mini/hat-rr2.wav",
+      "sha256": "5926d566438f908489c087e108ee9bcea74c1b8baa910579769abf98aabd6359",
+      "bytes": 125028
+    },
+    {
+      "path": "assets/cc0-mini/kick.wav",
+      "sha256": "64ed586fe05d8c921ef99533a08b9593020b90fa8041b00a32a6ed2b2a1e6c95",
+      "bytes": 183584
+    },
+    {
+      "path": "assets/cc0-mini/manifest.json",
+      "sha256": "d1ec6ce110a9a0806a561ac0a0744453019b3f9dd5dc9459bf027e1b300f4cca",
+      "bytes": 13870
+    },
+    {
+      "path": "assets/cc0-mini/marimba-c.wav",
+      "sha256": "489d8ea15632c50806b33101706d64b36f04bfb6dafc06981d4bf261ecf7b2be",
+      "bytes": 218444
+    },
+    {
+      "path": "assets/cc0-mini/marimba-g.wav",
+      "sha256": "20839c828f2cfe0c99ff0fea54826341a247b4c674a4b1622e8908e8b815d12a",
+      "bytes": 193450
+    },
+    {
+      "path": "assets/cc0-mini/shaker-double.wav",
+      "sha256": "448cfc481f6047cd5eab2b7a6f4349f1312ea0091f9a402d4f6f7b93d748b38d",
+      "bytes": 23442
+    },
+    {
+      "path": "assets/cc0-mini/short-clash.wav",
+      "sha256": "64947ec975bf6e8711fd12854a7a1a908bc14cb1f103b98b8a59684cc685e4d4",
+      "bytes": 210494
+    },
+    {
+      "path": "assets/cc0-mini/snare.wav",
+      "sha256": "a194e2153eedaf75e8e59aa76460e072e38ec54bc63d35a92a7e4e4608130633",
+      "bytes": 120270
+    },
+    {
+      "path": "assets/cc0-mini/tom-high.wav",
+      "sha256": "d90a957428ad1d6c175f2b825135c139e66a98577ba28855cc9f41990b156df0",
+      "bytes": 212346
+    },
+    {
+      "path": "assets/cc0-mini/tom-low.wav",
+      "sha256": "a5893935ad6931f2b05c98d628a7c58b07aa72e3d1bc9afa212c98aba9320ccb",
+      "bytes": 254282
+    },
+    {
+      "path": "assets/cc0-mini/upstream.json",
+      "sha256": "a500f6317c4ad6bee72ffd2b5b2dc07bf5f77cbd527d95132a8031cd74654bd0",
+      "bytes": 4040
+    },
+    {
+      "path": "assets/fsa-drums/LICENSE-CC0.txt",
+      "sha256": "7a22e076b0e1d701c3204a9f86b5827aa0d124eca0876b968000e1b31d3e3f3a",
+      "bytes": 6832
+    },
+    {
+      "path": "assets/fsa-drums/UPSTREAM-README.md",
+      "sha256": "ab1f06a88cdb6df72f15f6cba5bf666f3d408fa7cedfb8c785a9f01d690019a7",
+      "bytes": 1193
+    },
+    {
+      "path": "assets/fsa-drums/catalog.json",
+      "sha256": "907c76a555bafc542dd3af758947ac3036d2c3148c479de908a9699505c1cf39",
+      "bytes": 2857
+    },
+    {
+      "path": "assets/fsa-drums/distkit/clap.wav",
+      "sha256": "3aafb73b420a3b1295f28a78f6c531d12d0dcc9aa427f64fb3174010ce2f24fa",
+      "bytes": 25212
+    },
+    {
+      "path": "assets/fsa-drums/distkit/claves.wav",
+      "sha256": "0dce81961dcacee45fda1da7eb574fa2e40ae8487e7660e0bfbc4b22b9b03611",
+      "bytes": 3686
+    },
+    {
+      "path": "assets/fsa-drums/distkit/closed-hat.wav",
+      "sha256": "95682e1a0adfc67c97506bcdf8d8bf40152e63508d7e4b799b237104769d1f0c",
+      "bytes": 34802
+    },
+    {
+      "path": "assets/fsa-drums/distkit/cowbell.wav",
+      "sha256": "df97b45640b39843c81f0e8e86ac14e4d61e4eae57b68b7151b99d069ff97df0",
+      "bytes": 79208
+    },
+    {
+      "path": "assets/fsa-drums/distkit/crash.wav",
+      "sha256": "54d0739750d985ee2e8b2e96ffd2d98fe15b421880f6d9da73f21d9f54501e5b",
+      "bytes": 469314
+    },
+    {
+      "path": "assets/fsa-drums/distkit/kick.wav",
+      "sha256": "c4d769f600648c01a83a4639ea53522f8a08b68034378cdf59c502f26a7a0b67",
+      "bytes": 125984
+    },
+    {
+      "path": "assets/fsa-drums/distkit/manifest.json",
+      "sha256": "1852c0142942ccc24da0689a381e13d1a3e73aae9ed37f5da20b30c95d550210",
+      "bytes": 21153
+    },
+    {
+      "path": "assets/fsa-drums/distkit/open-hat.wav",
+      "sha256": "24d3979e4036bbc03ed8c751622183b31aff601a7b3288ea2a9e14023ad3df3b",
+      "bytes": 166068
+    },
+    {
+      "path": "assets/fsa-drums/distkit/ride.wav",
+      "sha256": "e37a9a7253118a1aec1644245725a084d3fe6acb0375eb89c8f5ad72fbf4e823",
+      "bytes": 333066
+    },
+    {
+      "path": "assets/fsa-drums/distkit/snare.wav",
+      "sha256": "7aeb153c40e2edd3426eb3eafaade9b4e27f060e9a6181dfcbfa05257c5d76ac",
+      "bytes": 34070
+    },
+    {
+      "path": "assets/fsa-drums/distkit/tom-high.wav",
+      "sha256": "0579a2b45cd2d48c0a289e9383cf62cf7dbc9d0295cfe0aae7794fc70f749add",
+      "bytes": 89738
+    },
+    {
+      "path": "assets/fsa-drums/distkit/tom-low.wav",
+      "sha256": "2de1415a9dadddf9abc09aa4213942bbddde455c7fb930e7a98d5d7edc66f85d",
+      "bytes": 88584
+    },
+    {
+      "path": "assets/fsa-drums/distkit/tom-mid.wav",
+      "sha256": "1bd50926735051bffd42f0357db00652377908769257e748fa9d9189139ee3ef",
+      "bytes": 100958
+    },
+    {
+      "path": "assets/fsa-drums/distkit/zap.wav",
+      "sha256": "ef0bac0ede048471c21dfff5e7ee110a5237ed1e4fc3c97f6ba7c5857200255f",
+      "bytes": 71282
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/clap.wav",
+      "sha256": "2ad595cffea3085445bd5295778fff6f62701e0083d81ee085e8ab68e589a2b1",
+      "bytes": 137934
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/closed-hat.wav",
+      "sha256": "f13655d50ae68783382a2b7baa6677944ad507e3bc3140c4414185d924f10f54",
+      "bytes": 26430
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/fmperc.wav",
+      "sha256": "988ba9bd963b2a1992e44717c5721affa204d323f0eecf1d1ca919409065689f",
+      "bytes": 58302
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/kick.wav",
+      "sha256": "b21ceb132c5282db9e17ccfbad8efd3f1c45c7fcbd3b1f334f3811d443250a90",
+      "bytes": 26022
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/manifest.json",
+      "sha256": "b54ead1dba0f021219655922236875f7eafb8a9ce278bbd71fe8439ec1bf551f",
+      "bytes": 16299
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/open-hat.wav",
+      "sha256": "0215ae93a0980fb070bc86671b7212c70035debdb391a696a57a3c55936f05d5",
+      "bytes": 142200
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/snare.wav",
+      "sha256": "c28478c3edd9505c34eb48852d0190e1cf27665550c55221ab70757edc00fef6",
+      "bytes": 34644
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/sub-a.wav",
+      "sha256": "a5e269a7815b6cf4189bf2ec51c031ee0db69592ab4b8ab505ffcd0a983f2140",
+      "bytes": 257876
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/tom-high.wav",
+      "sha256": "c890fd879d7a5056eadd71f9c05309cee55f013aa7f489f05ed1ce637968f4b5",
+      "bytes": 81896
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/tom-low.wav",
+      "sha256": "f5833ec3cd5f78edfe79dd9bde156acf153593411e0d004bd04c06f0a8b98319",
+      "bytes": 78794
+    },
+    {
+      "path": "assets/fsa-drums/sdbkit/tom-mid.wav",
+      "sha256": "c9333e414cb4e6b373fc7d22894d9f102b559394cde33f093c3575746df3245a",
+      "bytes": 77346
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/8bit.wav",
+      "sha256": "de4830adb7b9e75e301ec493d228d2924d421e35cf62a0f4a05a64e59ea0de95",
+      "bytes": 33804
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/clap.wav",
+      "sha256": "3a0381ac5c02ed9f81803c6294a480285fda8c4594ef170889459fdcadc969db",
+      "bytes": 27488
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/closed-hat.wav",
+      "sha256": "6e6dea4d375d9003885732bbec6903fc2f9c170654cfba68fe9185231b2409bf",
+      "bytes": 44070
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/crash.wav",
+      "sha256": "1cbc5a0d3873b30382c7a0c954d834d015f6ac734e0833722c836a7c88af29c6",
+      "bytes": 211460
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/kick.wav",
+      "sha256": "1c7f33b327faab3fb5c0de4edcf50ffa0330d16e19265a996985a98b97ee297c",
+      "bytes": 160664
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/manifest.json",
+      "sha256": "1cb587901af984924b0ac727d5949fd712c437f95d429d939176af1024529cd8",
+      "bytes": 18093
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/open-hat.wav",
+      "sha256": "339fe470a0aa885d57ab30b9f8402b93579815fe6d5fd9192ea4ae95c614f71d",
+      "bytes": 147846
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/ride.wav",
+      "sha256": "902c9dae56e37648931002bf630d5b9d44d32cac4fd020934684a4ede19b5916",
+      "bytes": 222680
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/snare.wav",
+      "sha256": "667d5656324162d6c8f3e12966ee22adcbdd88f103f61eb411e4d4855f39963c",
+      "bytes": 30626
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/tom-high.wav",
+      "sha256": "d0665a2f00e5eed8d8f983c82e1dc3ab38005a1a6fd98b77c3b8b209355c053a",
+      "bytes": 77462
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/tom-low.wav",
+      "sha256": "98b4b1c3a58e97ba65d69d9312571865009ba1d85afe79ef95fb2cf783823619",
+      "bytes": 81372
+    },
+    {
+      "path": "assets/fsa-drums/synthkit/tom-mid.wav",
+      "sha256": "da7b0e48282a38950811d387629033f580326eba78caeed159c842018e9c8a79",
+      "bytes": 78980
+    },
+    {
+      "path": "assets/fsa-drums/upstream.json",
+      "sha256": "0ec7175a39a5606f8f4fcd735ecb45fda2247ce9e32762c56ebbf0259177303e",
+      "bytes": 101492
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/clap.wav",
+      "sha256": "edc0f814b77743de656b107c2114bc3ea863aa449f9f1ba681e646456008e665",
+      "bytes": 101666
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/closed-hat.wav",
+      "sha256": "0b2b967f89f3a386c2400fc11801053532174df8df27046798b8ed72ce3720b8",
+      "bytes": 25472
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/crash.wav",
+      "sha256": "cf415092055b86632329ddf7168cf7509c7c0e5ad9877424daaaeb96ecbde48e",
+      "bytes": 137198
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/kick.wav",
+      "sha256": "a763324d7dd1641122887572ca85e3d87da57fb19164a0013d9fd2ff10f8136e",
+      "bytes": 54968
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/manifest.json",
+      "sha256": "e546dbf26b5016f959fb4257f2d086a2dc339cc1aa1557de2b806dd7ad0f4b0e",
+      "bytes": 18118
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/open-hat.wav",
+      "sha256": "0593bbe372b3ffcf908e616ac2b2619636ef52cbac08234e1a77b75dcd84831a",
+      "bytes": 69714
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/ride.wav",
+      "sha256": "2ee0755f28ac863dc3a126378f6978e7c01c5bab925ce954f1b9bdb965bca6b0",
+      "bytes": 127134
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/rimshot.wav",
+      "sha256": "0d2422c30820827b9b5e6763bfd6202f7e683c8653914382b263c6bffbd12043",
+      "bytes": 19424
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/snare.wav",
+      "sha256": "b86c7e8c0ab963292d585a58c25002f2fe44b3226ec7d6377dd34fdd3f675398",
+      "bytes": 55242
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/tom-high.wav",
+      "sha256": "b44f77817ec5c69f2d172866912b9bfef081db6990d4f73b63f0ddbbd11e0853",
+      "bytes": 79364
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/tom-low.wav",
+      "sha256": "75c68e131cbc3739b81dd7e4b65041262809030cc61539fd5699dfd4aedc061c",
+      "bytes": 110204
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc1/tom-mid.wav",
+      "sha256": "4f79aa869107770ce00c0d02bf248a3efbf0a92056f7211d014f1b57cb51ccc8",
+      "bytes": 103980
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/clap.wav",
+      "sha256": "075b6e46ee1c5e68c44642d56155d17ebc33d98157e560137f87f2eed878d970",
+      "bytes": 128528
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/claves.wav",
+      "sha256": "a3895fcda050b471a6cd0f21271a79f37fc5db809cb0cc158efa6f2a53924b1d",
+      "bytes": 13548
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/closed-hat.wav",
+      "sha256": "3518ee8911e975670b1394a611222550b09ba9499978c34b189b2f7ab609880f",
+      "bytes": 16268
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/cowbell.wav",
+      "sha256": "bfc4435a49e452f009d235887a5026cba148638c7c5a70f8e2366a4bab5a22f6",
+      "bytes": 73728
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/cymbal.wav",
+      "sha256": "b9508a5527dfb9db06cdeb96dbb8bfecc966f4239df01f7dfc92b871e8ac0ad9",
+      "bytes": 361770
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/kick.wav",
+      "sha256": "78af397ac478f22b493defa4a7bab8ecd3cff4dc0edbab1017247f501b453c8e",
+      "bytes": 190950
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/manifest.json",
+      "sha256": "a4ae3bb635afb108fadbe99f6e66a0277b971a204933fd3a16f9302b38c26982",
+      "bytes": 21230
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/maracas.wav",
+      "sha256": "8026261dd2c542b2ddfa7c28177754b902cd1bc92f6e1f4be830a7ffdc5d7ad7",
+      "bytes": 9662
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/open-hat.wav",
+      "sha256": "5f845206e5cefcd65ae2847b295c31814b2ede40d8e7d84a6a34dd14b0a29d68",
+      "bytes": 164448
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/rimshot.wav",
+      "sha256": "af22d9f461aa4b6f78343f5e42038c825d221a07a1d7720617d5da8a94e516c9",
+      "bytes": 6944
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/snare.wav",
+      "sha256": "bc31356f90f82013b4ceb2e03e66cb5ce8f008ba47fa76f284f2ff1a55960a71",
+      "bytes": 42548
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/tom-high.wav",
+      "sha256": "fd5ace5807d2bd728c997382a27d83cb3cc9ed6ca3d58d449b6b1dd7563fe760",
+      "bytes": 49818
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/tom-low.wav",
+      "sha256": "68faabf29b1863e160a1729d8e271ab90af20f1d04cb5d98008156fa4bfaf68f",
+      "bytes": 138344
+    },
+    {
+      "path": "assets/fsa-drums/x0xproc2/tom-mid.wav",
+      "sha256": "8e8559d0975a754c645a88a7ec1ea28f1acd5d3c1a7c4bfeefc53741dfb7abea",
+      "bytes": 63872
+    },
+    {
+      "path": "assets/fsa-electronic/LICENSE-CC0.txt",
+      "sha256": "7a22e076b0e1d701c3204a9f86b5827aa0d124eca0876b968000e1b31d3e3f3a",
+      "bytes": 6832
+    },
+    {
+      "path": "assets/fsa-electronic/UPSTREAM-README.md",
+      "sha256": "ab1f06a88cdb6df72f15f6cba5bf666f3d408fa7cedfb8c785a9f01d690019a7",
+      "bytes": 1193
+    },
+    {
+      "path": "assets/fsa-electronic/clap.wav",
+      "sha256": "edc0f814b77743de656b107c2114bc3ea863aa449f9f1ba681e646456008e665",
+      "bytes": 101666
+    },
+    {
+      "path": "assets/fsa-electronic/closed-hat.wav",
+      "sha256": "0b2b967f89f3a386c2400fc11801053532174df8df27046798b8ed72ce3720b8",
+      "bytes": 25472
+    },
+    {
+      "path": "assets/fsa-electronic/kick.wav",
+      "sha256": "a763324d7dd1641122887572ca85e3d87da57fb19164a0013d9fd2ff10f8136e",
+      "bytes": 54968
+    },
+    {
+      "path": "assets/fsa-electronic/manifest.json",
+      "sha256": "7e989d54d23b69d8c8d8b0d2e5a7323a125ad6a0718217a8621bb3865380ddd3",
+      "bytes": 8042
+    },
+    {
+      "path": "assets/fsa-electronic/open-hat.wav",
+      "sha256": "0593bbe372b3ffcf908e616ac2b2619636ef52cbac08234e1a77b75dcd84831a",
+      "bytes": 69714
+    },
+    {
+      "path": "assets/fsa-electronic/snare.wav",
+      "sha256": "b86c7e8c0ab963292d585a58c25002f2fe44b3226ec7d6377dd34fdd3f675398",
+      "bytes": 55242
+    },
+    {
+      "path": "assets/fsa-electronic/upstream.json",
+      "sha256": "4689a946d476ea746726fa4993b7e12d138b47dd67707120ac6a63f3bf2fdb92",
+      "bytes": 8379
+    },
+    {
+      "path": "assets/guigui-drums/UPSTREAM-LICENSE.md",
+      "sha256": "def8251f2c07e50807ee5486c1891ff8d2ab3478d9b897dd157e12e55e0acacf",
+      "bytes": 15981
+    },
+    {
+      "path": "assets/guigui-drums/UPSTREAM-SAMPLES-README.md",
+      "sha256": "8f0bf923d8669fa3c9b04d84224285583aa7f98023e2ab8bfcafb6cbf3f7e2e2",
+      "bytes": 16160
+    },
+    {
+      "path": "assets/guigui-drums/closed-hat.wav",
+      "sha256": "25abe1441c911c64213359fbe0317d655f217fbfe6450401deac4d45cb118aaa",
+      "bytes": 18296
+    },
+    {
+      "path": "assets/guigui-drums/half-cymbal.wav",
+      "sha256": "2b0ce993d5aea8fb807d26acf4c8278fda18bef059ae8227e6afcc38065d1780",
+      "bytes": 24052
+    },
+    {
+      "path": "assets/guigui-drums/kick-hard.wav",
+      "sha256": "13223f92180ebc390814636749b7aa8d3fc75b6174da7809057a2ad95b59ef5f",
+      "bytes": 61360
+    },
+    {
+      "path": "assets/guigui-drums/kick-soft.wav",
+      "sha256": "3d78660af0cae3849bc2b9b28f61ce6a16486831d49c7cb338d3ebe4f6820b48",
+      "bytes": 49652
+    },
+    {
+      "path": "assets/guigui-drums/manifest-dynamic.json",
+      "sha256": "e77884a2f6a8bcb6150abadbbbaac4fdc011fffcd092c3f47296ef9467596f64",
+      "bytes": 39328
+    },
+    {
+      "path": "assets/guigui-drums/manifest-soft.json",
+      "sha256": "fbdd94e40a8de21b0955bb3b011192acf40980f2830d6d63e16eba0af662c2ef",
+      "bytes": 36405
+    },
+    {
+      "path": "assets/guigui-drums/open-hat.wav",
+      "sha256": "8f142f17958ac06c1598a61898bea2081de97724bea9ebfeb099e3dd37eec8a4",
+      "bytes": 159190
+    },
+    {
+      "path": "assets/guigui-drums/ride-hard.wav",
+      "sha256": "1699107f47ff5e3a707c262dcab195c2ba7174e5b53669bce445c1f2d9c1aca0",
+      "bytes": 144588
+    },
+    {
+      "path": "assets/guigui-drums/ride-soft.wav",
+      "sha256": "7cd23ff70a23766919cc5d92a8ce345e9d56dbfc4fb50ff0bd4f2547d2108268",
+      "bytes": 83810
+    },
+    {
+      "path": "assets/guigui-drums/snare-hard.wav",
+      "sha256": "7b53c811bade2b3899a3f37b5f0f769368afd579d03885e3a7f07eae3ed4f73d",
+      "bytes": 39286
+    },
+    {
+      "path": "assets/guigui-drums/snare-soft.wav",
+      "sha256": "200ed4c42627e96cc991a1e71c73eda5fd74aea2f742ddbe1f1da75f6896c79e",
+      "bytes": 27808
+    },
+    {
+      "path": "assets/guigui-drums/source-qc.json",
+      "sha256": "a54f7407b4ae709ccdc71663a8dae9e52c141ae29b8513b391857c30179f8c72",
+      "bytes": 31806
+    },
+    {
+      "path": "assets/guigui-drums/splash-hard.wav",
+      "sha256": "3e30b5258b18785d76d2fc18370a1012d40b793e867c6d43dffc616735220204",
+      "bytes": 229028
+    },
+    {
+      "path": "assets/guigui-drums/splash-soft.wav",
+      "sha256": "8ac0f1ecf2a3edbc3c698368d1a70e65c1bfc343c730fc66027646cd4581adf8",
+      "bytes": 163918
+    },
+    {
+      "path": "assets/guigui-drums/tom-high-hard.wav",
+      "sha256": "cfc5e34f9b82a2680e01ee57ace60df9d0f55c456fc06cb2e6440beb6517482e",
+      "bytes": 65106
+    },
+    {
+      "path": "assets/guigui-drums/tom-high-soft.wav",
+      "sha256": "28ea80e8677056329fa6e9fc16d42e4c5428472ca5594522e5b84313739a3139",
+      "bytes": 55524
+    },
+    {
+      "path": "assets/guigui-drums/tom-low-hard.wav",
+      "sha256": "7898298efc4713ca29def89713e857792df6e178b8b1e6d11b3d6553a9c61143",
+      "bytes": 88264
+    },
+    {
+      "path": "assets/guigui-drums/tom-low-soft.wav",
+      "sha256": "ce946323787cf848ec5b866135397528391fac7783a9e94d58aee7c625bcf05a",
+      "bytes": 76196
+    },
+    {
+      "path": "assets/guigui-drums/tom-mid-hard.wav",
+      "sha256": "18150930c506a703dcb8d97c3705661984a58a92285c7774bc3e325202f4b083",
+      "bytes": 64802
+    },
+    {
+      "path": "assets/guigui-drums/tom-mid-soft.wav",
+      "sha256": "b574e7e9df1b3d3d276134d70e480c56fc647c1f175d7009bf7f73983096358a",
+      "bytes": 59326
+    },
+    {
+      "path": "assets/guigui-drums/upstream.json",
+      "sha256": "09675740c7ef1d91769adeeeed36d04db671af09964ca19bf2bf929085502cb7",
+      "bytes": 31246
+    },
+    {
+      "path": "experiments/rack-browser/bank.mjs",
+      "sha256": "5e76cd1fbf0290f67f174feeb323e1e41df29e2c1ecd8911242f6bd113d4152e",
+      "bytes": 4543
+    },
+    {
+      "path": "tools/instruments/drum-kits.mjs",
+      "sha256": "463b05f4edd073110d6228bbfa4907da47ebefc19f8c534030282aee92e7ef95",
+      "bytes": 1397
+    },
+    {
+      "path": "tools/instruments/rack.mjs",
+      "sha256": "e564577d744810037b8111b2c98311e48ff44e9aad727a9f548ba0189b52d556",
+      "bytes": 7842
+    },
+    {
+      "path": "tools/instruments/wav.mjs",
+      "sha256": "52389c160f2ecc1aaea0fa0e119d1eb11300dafa2a80c8f63b400ec241f38a4c",
+      "bytes": 2263
+    }
+  ]
+}
