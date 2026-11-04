@@ -71,3 +71,5 @@ No download/install takes place. Inventory and every source hash are checked bef
 - [AVL Drumkits](https://www.bandshed.net/avldrumkits/): compact alternatives, but **CC BY-SA 3.0**, not CC0, with a music-output exception. Not bundled in the CC0 selector.
 
 No production PWA/Android change, desktop VST host, Surge installation, release or subjective listening approval is claimed by this work. Browser playback remains a separate unqualified integration.
+
+See [the separate Guigui acoustic CC0 soft/dynamic presets](ACOUSTIC_DRUMS.md) for a recorded acoustic alternative and its source-quality caveats.

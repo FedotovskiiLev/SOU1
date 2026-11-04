@@ -75,3 +75,5 @@ repeatable common-note A/B against the original oscillator drums. See
 production PWA/Android or integrate Surge XT.
 
 See [five complete CC0 drum kits and aligned stem rendering](tools/FULL_DRUM_KITS.md) for the full 58-sound catalog.
+
+See [the separate Guigui acoustic CC0 soft/dynamic presets](tools/ACOUSTIC_DRUMS.md) for a recorded acoustic alternative and its source-quality caveats.
