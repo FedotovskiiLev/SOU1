@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-03T22:11:00Z",
+  "baseline": "70bf98168b1c854f8ce79676e02acc4bc44bac93",
+  "node": "v24.22.1",
+  "prototypeTests": {
+    "passed": 28,
+    "failed": 0
+  },
+  "baselineSuites": [
+    "JS DSP and AudioWorklet contract PASS",
+    "MIDI export independent SMF parser PASS"
+  ],
+  "previews": [
+    {
+      "profile": "documentary",
+      "duration": 30,
+      "rate": 48000,
+      "bits": 24,
+      "peakDbfs": -8.417010145424777,
+      "rmsDbfs": -20.136652189145522,
+      "acceptedNotes": 58,
+      "droppedNotes": 0,
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0,
+      "sha256": "10720154e190411c010b681cd7b38ab04bcd33f0e30e0a42fad1b358c989ba19"
+    },
+    {
+      "profile": "pulse",
+      "duration": 20,
+      "rate": 48000,
+      "bits": 24,
+      "peakDbfs": -7.530485063619066,
+      "rmsDbfs": -24.859731584484138,
+      "acceptedNotes": 195,
+      "droppedNotes": 0,
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0,
+      "sha256": "2d0e6644353c55d6505505d5832361c626ee93f3115657b4111ec4ee8b3926f8"
+    }
+  ],
+  "notChecked": [
+    "Subjective listening review",
+    "Physical Android hardware",
+    "Browser UI integration",
+    "External synth or sample-pack integration",
+    "GitHub CI"
+  ]
+}

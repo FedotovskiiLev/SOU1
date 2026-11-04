@@ -1,0 +1,7 @@
+{
+  "style": "motor",
+  "seed": 7311,
+  "bars": 16,
+  "sampleRate": 48000,
+  "outputGainDb": 4
+}

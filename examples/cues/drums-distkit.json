@@ -1,0 +1,11 @@
+{
+  "source": "fsa",
+  "kit": "fsa-distkit",
+  "fills": true,
+  "pattern": "broken-beat",
+  "bars": 8,
+  "bpm": 112,
+  "sampleRate": 48000,
+  "extended": true,
+  "outputGainDb": 0
+}

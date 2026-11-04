@@ -9,8 +9,9 @@ import android.media.session.*;
 import android.os.*;
 import android.util.Log;
 import org.sou1.audio.AmbientEngine;
+import org.sou1.audio.DevelopmentConfig;
 
-/** Owns synthesis independently of the Activity. No network or recorded audio. */
+/** Owns local synthesis and optional bundled instruments independently of the Activity. */
 public final class PlaybackService extends Service {
     public static final String ACTION_PLAY = "org.sou1.PLAY";
     public static final String ACTION_STOP = "org.sou1.STOP";
@@ -43,11 +44,39 @@ public final class PlaybackService extends Service {
     public static final String EXTRA_THUNDER = "thunder";
     public static final String EXTRA_WIND = "wind";
     public static final String EXTRA_VOLUME = "volume";
+    public static final String EXTRA_DRUM_KIT = "drumKit", EXTRA_REQUEST_ID = "requestId";
+    public static final String EXTRA_SCORE_MODE = "scoreMode";
+    public static final String EXTRA_SCORE_CONFIG = "scoreConfig", EXTRA_MELODIC_PRESET = "melodicPreset";
+    static boolean isSupportedScoreMode(String mode) { return NativeAudioSelection.isSupportedScoreMode(mode); }
+    static boolean isSupportedMelodicPreset(String preset) { return NativeAudioSelection.isSupportedMelodicPreset(preset); }
+    /** Reject coercion, arrays, null, unknown fields and invalid scalar types before dispatch. */
+    static DevelopmentConfig scoreConfigFromJson(Object raw) throws org.json.JSONException {
+        if (!(raw instanceof org.json.JSONObject)) throw new org.json.JSONException("scoreConfig must be an object");
+        org.json.JSONObject object = (org.json.JSONObject) raw;
+        java.util.Map<String, Object> values = new java.util.LinkedHashMap<>();
+        java.util.Iterator<String> keys = object.keys();
+        while (keys.hasNext()) { String key = keys.next(); values.put(key, object.get(key)); }
+        try { return DevelopmentConfig.fromMap(values); }
+        catch (IllegalArgumentException invalid) { throw new org.json.JSONException(invalid.getMessage()); }
+    }
+    public static final String EXTRA_TIMER_MINUTES = "timerMinutes";
+    private static final long MAX_REQUEST_ID = 9007199254740991L;
+    static boolean isSupportedDrumKit(String kit) {
+        return NativeAudioSelection.isSupportedDrumKit(kit);
+    }
     private static final String CHANNEL = "sou1_playback";
     private static final String PREFERENCES = "sou1_audio";
     private static final String PREFERENCE_CONTROLS = "controls";
     private static volatile boolean playing;
-    private static volatile String statusJson = "{\"playing\":false}";
+    private static volatile String statusJson = "{\"playing\":false,\"preparing\":false,\"requestId\":0,\"drumKit\":\"procedural\","
+            + "\"scoreMode\":\"original\",\"melodicPreset\":\"procedural\",\"scoreConfig\":"
+            + DevelopmentConfig.DEFAULT.toJson() + ",\"audioError\":\"\"}";
+    // Survive stopSelf/onDestroy so the bridge can match the accepted request.
+    private static long requestId;
+    private static String audioError = "";
+    private NativeAudioSelection selection = NativeAudioSelection.DEFAULT;
+    private long preparingSeed;
+    private DrumPreparation<NativeAudioSelection.Banks> preparation;
     private long sessionStartedAt, sessionSeed, timerDeadline;
     private int timerMinutes;
     public static String getStatus() { return statusJson; }
@@ -67,15 +96,27 @@ public final class PlaybackService extends Service {
                 .put("toms", parameters.toms).put("cymbal", parameters.cymbal)
                 .put("ambient", parameters.ambient).put("counterpoint", parameters.counterpoint)
                 .put("rhythmic", parameters.rhythmic).put("arpeggio", parameters.arpeggio)
-                .put("density", parameters.density).put("complexity", parameters.complexity).put("swing", parameters.swing);
+                .put("density", parameters.density).put("complexity", parameters.complexity).put("swing", parameters.swing)
+                .put(EXTRA_DRUM_KIT, selection.drumKit).put(EXTRA_SCORE_MODE, selection.scoreMode)
+                .put(EXTRA_SCORE_CONFIG, new org.json.JSONObject(selection.scoreConfig.toJson()))
+                .put(EXTRA_MELODIC_PRESET, selection.melodicPreset);
     }
     private void publishStatus() {
         try {
             org.json.JSONObject value = controlSnapshot();
             value.put("playing", playing).put("startedAt", sessionStartedAt).put("seed", sessionSeed)
-                    .put("timerMinutes", timerMinutes).put("deadline", timerDeadline);
+                    .put("timerMinutes", timerMinutes).put("deadline", timerDeadline)
+                    .put(EXTRA_REQUEST_ID, requestId).put("preparing", isPreparing()).put("audioError", audioError);
             statusJson = value.toString();
-        } catch (org.json.JSONException impossible) { statusJson = "{\"playing\":false}"; }
+        } catch (org.json.JSONException invalidControl) {
+            // Never lose request correlation or report a fabricated stopped session.
+            statusJson = "{\"playing\":" + playing + ",\"preparing\":" + isPreparing()
+                    + ",\"requestId\":" + requestId + ",\"drumKit\":" + org.json.JSONObject.quote(selection.drumKit)
+                    + ",\"scoreMode\":" + org.json.JSONObject.quote(selection.scoreMode)
+                    + ",\"scoreConfig\":" + selection.scoreConfig.toJson()
+                    + ",\"melodicPreset\":" + org.json.JSONObject.quote(selection.melodicPreset)
+                    + ",\"audioError\":" + org.json.JSONObject.quote(audioError) + "}";
+        }
     }
     private void restoreControls() {
         try {
@@ -114,6 +155,18 @@ public final class PlaybackService extends Service {
                     savedStyle(saved, EXTRA_ARPEGGIO, 3, parameters.arpeggio),
                     saved.optDouble(EXTRA_DENSITY, parameters.density),
                     saved.optDouble(EXTRA_COMPLEXITY, parameters.complexity), saved.optDouble(EXTRA_SWING, parameters.swing));
+            // Restore each valid saved component; malformed fields retain safe legacy defaults.
+            String savedKit = saved.optString(EXTRA_DRUM_KIT, selection.drumKit);
+            String savedScore = saved.optString(EXTRA_SCORE_MODE, selection.scoreMode);
+            String savedMelody = saved.optString(EXTRA_MELODIC_PRESET, selection.melodicPreset);
+            DevelopmentConfig savedConfig = DevelopmentConfig.DEFAULT;
+            if (saved.has(EXTRA_SCORE_CONFIG)) {
+                try { savedConfig = scoreConfigFromJson(saved.get(EXTRA_SCORE_CONFIG)); }
+                catch (org.json.JSONException invalid) { Log.w("SOU1", "Ignoring invalid saved score configuration", invalid); }
+            }
+            selection = new NativeAudioSelection(isSupportedDrumKit(savedKit) ? savedKit : selection.drumKit,
+                    isSupportedScoreMode(savedScore) ? savedScore : selection.scoreMode, savedConfig,
+                    isSupportedMelodicPreset(savedMelody) ? savedMelody : selection.melodicPreset);
             double savedVolume = saved.optDouble(EXTRA_VOLUME, volume);
             if (Double.isFinite(savedVolume)) volume = Math.max(0, Math.min(1, savedVolume));
         } catch (org.json.JSONException | ClassCastException invalidPreferences) {
@@ -187,6 +240,9 @@ public final class PlaybackService extends Service {
 
     @Override public void onCreate() {
         super.onCreate();
+        final android.content.res.AssetManager assets = getAssets();
+        preparation = new DrumPreparation<>(key -> NativeAudioSelection.prepare(key, 48000, assets::open, assets::open),
+                callback -> main.post(callback));
         restoreControls();
         publishStatus();
         audioManager = getSystemService(AudioManager.class);
@@ -194,7 +250,11 @@ public final class PlaybackService extends Service {
                 new NotificationChannel(CHANNEL, "Ambient playback", NotificationManager.IMPORTANCE_LOW));
         mediaSession = new MediaSession(this, "SOU1");
         mediaSession.setCallback(new MediaSession.Callback() {
-            @Override public void onPlay() { safeStart(System.nanoTime()); }
+            @Override public void onPlay() {
+                if (destroyed || current != null || isPreparing()) return;
+                if (!assignFreshRequestId()) { failPlayback("Playback request id exhausted", null); return; }
+                safeStart(System.nanoTime());
+            }
             @Override public void onPause() { stopPlayback(); }
             @Override public void onStop() { stopPlayback(); }
         }, main);
@@ -222,21 +282,22 @@ public final class PlaybackService extends Service {
     @Override public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) { stopPlayback(); return START_NOT_STICKY; }
         String action = intent.getAction();
-        if("org.sou1.CLEAR_SCORE".equals(action)){stoppedScore="{\"frame\":0,\"rate\":48000,\"events\":[]}";if(current==null)stopSelf();return START_NOT_STICKY;}
+        if("org.sou1.CLEAR_SCORE".equals(action)){stoppedScore="{\"frame\":0,\"rate\":48000,\"events\":[]}";if(current==null && !isPreparing())stopSelf();return START_NOT_STICKY;}
         if ("org.sou1.TIMER".equals(action)) {
             main.removeCallbacks(endSession);
             int minutes = intent.getIntExtra("minutes", 0);
             timerMinutes = minutes > 0 && minutes <= 180 ? minutes : 0;
-            timerDeadline = timerMinutes > 0 ? System.currentTimeMillis() + timerMinutes * 60000L : 0;
+            timerDeadline = timerMinutes > 0 && current != null ? System.currentTimeMillis() + timerMinutes * 60000L : 0;
             publishStatus();
             if (minutes > 0 && minutes <= 180 && current != null) main.postDelayed(endSession, minutes * 60000L);
-            if (current == null) stopSelf();
+            if (current == null && !isPreparing()) stopSelf();
             return START_NOT_STICKY;
         }
         if (ACTION_STOP.equals(action)) { stopPlayback(); return START_NOT_STICKY; }
         if (ACTION_RESEED.equals(action)) {
             sessionSeed = intent.getLongExtra(EXTRA_SEED, sessionSeed) & 0xffffffffL;
             if (current != null) current.queueReseed(sessionSeed);
+            else if (isPreparing()) preparingSeed = sessionSeed;
             else stopSelf();
             publishStatus();
             return START_NOT_STICKY;
@@ -276,36 +337,108 @@ public final class PlaybackService extends Service {
                 control(intent, EXTRA_COMPLEXITY, parameters.complexity), control(intent, EXTRA_SWING, parameters.swing));
         double requestedVolume = intent.getDoubleExtra(EXTRA_VOLUME, volume);
         if (Double.isFinite(requestedVolume)) volume = Math.max(0, Math.min(1, requestedVolume));
+        if (ACTION_PLAY.equals(action)) {
+            if (intent.hasExtra(EXTRA_REQUEST_ID)) {
+                long requestedId = intent.getLongExtra(EXTRA_REQUEST_ID, -1);
+                if (requestedId < 0 || requestedId > MAX_REQUEST_ID) {
+                    failPlayback("Invalid play request id", null); return START_NOT_STICKY;
+                }
+                requestId = requestedId;
+            } else if (!assignFreshRequestId()) {
+                failPlayback("Playback request id exhausted", null); return START_NOT_STICKY;
+            }
+            // Atomically freeze all selections only for a stopped new PLAY.
+            // UPDATE and repeated PLAY may change knobs, never active/preparing instruments or score.
+            if (current == null && !isPreparing()) {
+                try {
+                    NativeAudioSelection next = new NativeAudioSelection(
+                            intent.hasExtra(EXTRA_DRUM_KIT) ? intent.getStringExtra(EXTRA_DRUM_KIT) : selection.drumKit,
+                            intent.hasExtra(EXTRA_SCORE_MODE) ? intent.getStringExtra(EXTRA_SCORE_MODE) : selection.scoreMode,
+                            intent.hasExtra(EXTRA_SCORE_CONFIG) ? DevelopmentConfig.parseKey(intent.getStringExtra(EXTRA_SCORE_CONFIG)) : selection.scoreConfig,
+                            intent.hasExtra(EXTRA_MELODIC_PRESET) ? intent.getStringExtra(EXTRA_MELODIC_PRESET) : selection.melodicPreset);
+                    selection = next;
+                } catch (IllegalArgumentException invalid) {
+                    failPlayback("Unsupported audio selection", invalid); return START_NOT_STICKY;
+                }
+            }
+            // requestId is published below with preparing/playing in the same command,
+            // before preparation can deliver a completion on this main thread.
+        }
         saveControls();
         if (current != null) current.engine.setParameters(parameters);
-        if (ACTION_PLAY.equals(action)) safeStart(intent.getLongExtra(EXTRA_SEED, System.nanoTime()));
-        else if (current == null) stopSelf();
+        if (ACTION_PLAY.equals(action)) safeStart(intent.getLongExtra(EXTRA_SEED, System.nanoTime()),
+                intent.getIntExtra(EXTRA_TIMER_MINUTES, 0));
+        else if (current == null && !isPreparing()) stopSelf();
         publishStatus();
         return START_NOT_STICKY;
     }
 
-    private void safeStart(long seed) {
-        if (destroyed) return;
-        try { startPlayback(seed); }
-        catch (RuntimeException failure) {
-            Log.e("SOU1", "Playback could not start", failure);
-            stopPlayback();
-        }
+    private boolean assignFreshRequestId() {
+        if (requestId >= MAX_REQUEST_ID) return false;
+        long clockId = Math.max(0L, Math.min(MAX_REQUEST_ID / 1024, System.currentTimeMillis())) * 1024;
+        requestId = Math.max(requestId + 1, clockId);
+        return true;
     }
 
-    private void startPlayback(long seed) {
-        if (current != null) return;
-        Notification notification = notification();
+    private boolean isPreparing() { return preparation != null && preparation.isPreparing(); }
+
+    private void safeStart(long seed) { safeStart(seed, 0); }
+
+    private void safeStart(long seed, int requestedTimer) {
+        seed &= 0xffffffffL; // Engine and JSON telemetry share the same exact seed.
+        if (destroyed || current != null || isPreparing()) return;
+        audioError = "";
+        sessionStartedAt = 0;
+        sessionSeed = preparingSeed = seed;
+        timerMinutes = requestedTimer > 0 && requestedTimer <= 180 ? requestedTimer : 0;
+        timerDeadline = 0;
+        try {
+            final NativeAudioSelection selected = selection;
+            // Satisfy the foreground-service deadline before any asset preparation.
+            showForeground(selected.needsPreparation());
+            if (!selected.needsPreparation()) startPlayback(seed, NativeAudioSelection.Banks.PROCEDURAL, selected);
+            else {
+                preparation.prepare(selected.preparationKey(), (ready, failure) -> {
+                    if (destroyed || selection != selected) return;
+                    if (failure != null || ready == null) {
+                        failPlayback("Could not prepare selected local instruments", failure);
+                        return;
+                    }
+                    try { startPlayback(preparingSeed, ready, selected); }
+                    catch (RuntimeException failed) { failPlayback("Playback could not start", failed); }
+                });
+                publishStatus();
+            }
+        } catch (RuntimeException failure) { failPlayback("Playback could not start", failure); }
+    }
+
+    private void failPlayback(String message, Throwable failure) {
+        audioError = message;
+        if (failure != null) Log.e("SOU1", message, failure);
+        stopPlayback();
+    }
+
+    private void showForeground(boolean preparing) {
+        Notification notification = notification(preparing);
         if (Build.VERSION.SDK_INT >= 29) startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
         else startForeground(1, notification);
+    }
+
+    /** Called only on the main thread with completely prepared immutable banks and frozen selections. */
+    private void startPlayback(long seed, NativeAudioSelection.Banks banks, NativeAudioSelection selected) {
+        seed &= 0xffffffffL;
+        if (destroyed || current != null || selection != selected) return;
         if (audioManager.requestAudioFocus(focus) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            stopPlayback(); return;
+            failPlayback("Audio focus unavailable", null); return;
         }
-        Session session = new Session(seed);
+        Session session = new Session(seed, banks, selected);
         current = session;
         playing = true;
-        sessionStartedAt = System.currentTimeMillis(); sessionSeed = seed; timerMinutes = 0; timerDeadline = 0;
+        sessionStartedAt = System.currentTimeMillis(); sessionSeed = seed;
+        timerDeadline = timerMinutes > 0 ? sessionStartedAt + timerMinutes * 60000L : 0;
+        if (timerMinutes > 0) main.postDelayed(endSession, timerMinutes * 60000L);
         publishStatus();
+        showForeground(false);
         mediaSession.setPlaybackState(new PlaybackState.Builder().setActions(
                 PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP)
                 .setState(PlaybackState.STATE_PLAYING, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1f).build());
@@ -313,13 +446,13 @@ public final class PlaybackService extends Service {
         session.thread.start();
     }
 
-    private Notification notification() {
+    private Notification notification(boolean preparing) {
         PendingIntent stop = PendingIntent.getService(this, 1,
                 new Intent(this, PlaybackService.class).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE);
         PendingIntent open = PendingIntent.getActivity(this, 2,
                 new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), PendingIntent.FLAG_IMMUTABLE);
         return new Notification.Builder(this, CHANNEL).setSmallIcon(android.R.drawable.ic_media_play)
-                .setContentTitle("SOU1").setContentText("Ambient sound is playing")
+                .setContentTitle("SOU1").setContentText(preparing ? "Preparing local instruments" : "Ambient sound is playing")
                 .setContentIntent(open).setOngoing(true).setOnlyAlertOnce(true)
                 .setCategory(Notification.CATEGORY_TRANSPORT)
                 .addAction(new Notification.Action.Builder(android.R.drawable.ic_media_pause, "Stop", stop).build())
@@ -328,6 +461,7 @@ public final class PlaybackService extends Service {
     }
 
     private void stopPlayback() {
+        if (preparation != null) preparation.cancel();
         main.removeCallbacks(endSession);
         Session old = current;
         if(old!=null)stoppedScore=old.engine.getScoreSnapshot();
@@ -363,8 +497,9 @@ public final class PlaybackService extends Service {
                 if (reseedQueued) { engine.reseed(queuedSeed); reseedQueued = false; }
             }
         }
-        Session(long seed) {
-            engine = new AmbientEngine(48000, seed);
+        Session(long seed, NativeAudioSelection.Banks banks, NativeAudioSelection selected) {
+            engine = new AmbientEngine(48000, seed, banks.drums, banks.melodies,
+                    "developing".equals(selected.scoreMode), selected.scoreConfig);
             scoreEngine = engine;
             engine.setParameters(parameters);
             thread = new Thread(this, "SOU1-audio");
@@ -435,6 +570,7 @@ public final class PlaybackService extends Service {
     }
     @Override public void onDestroy() {
         destroyed = true;
+        if (preparation != null) preparation.close();
         stopPlayback(); unregisterReceiver(noisy); mediaSession.release(); super.onDestroy();
     }
     @Override public IBinder onBind(Intent intent) { return null; }

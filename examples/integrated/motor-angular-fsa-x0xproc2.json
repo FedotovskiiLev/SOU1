@@ -1,0 +1,16 @@
+{
+  "score": {
+    "style": "motor",
+    "seed": 9182,
+    "bars": 16,
+    "bpm": 126,
+    "mode": "phrygian",
+    "root": 64
+  },
+  "phrasing": "angular",
+  "dynamics": 0.8,
+  "humanize": 0.1,
+  "articulation": 0.85,
+  "phraseBars": 2,
+  "drumKit": "fsa-x0xproc2"
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "path": "Membranophones/Struck Membranophones/Bass Drum 1/BDrumNew_hit_v3_rr1_Sum.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "5f068b40b13f887c170d574b916dd21927f545ca",
+    "size": 367124,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/5f068b40b13f887c170d574b916dd21927f545ca",
+    "sha256": "a2d8829e8b2b59e8afb12fa396b01758827059339c2a84ad066d17b36c82d1ff"
+  },
+  {
+    "path": "Membranophones/Struck Membranophones/Snare Drum, Modern 1/Snare2_HitSN_v5_rr1_Mid.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "7439fbcbbce4e29decc5220808799615ce15c22b",
+    "size": 240496,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/7439fbcbbce4e29decc5220808799615ce15c22b",
+    "sha256": "6ec8445cb207df8f1178d8c3894f47969fd53fb2b81c404317e466de4598dc3e"
+  },
+  {
+    "path": "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitC_v2_rr1_Mid.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "6855f948794d15bbc636996256cab0a14839e6a1",
+    "size": 247272,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/6855f948794d15bbc636996256cab0a14839e6a1",
+    "sha256": "e1fb54c9a030800038abcebbed1c056fb74bdeec627315f3cd5fd893c6e6b031"
+  },
+  {
+    "path": "Idiophones/Struck Idiophones/Hi-Hat Cymbal/HiHat_HitC_v2_rr2_Mid.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "7c01881e59793e38511450ff217fb7eee60809fa",
+    "size": 250072,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/7c01881e59793e38511450ff217fb7eee60809fa",
+    "sha256": "72830eafed387f4b4b5904d4d6f1da23e13b48986fa1bc09d7c5771eafbb3a1a"
+  },
+  {
+    "path": "Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_C4_med_01.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "85c657dd0a8f58808efad5e9184d5b9124285512",
+    "size": 655244,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/85c657dd0a8f58808efad5e9184d5b9124285512",
+    "sha256": "3e88c006eef05e8f7891f8f6027042006199a4ec3b53a0ad7308f9782a52d4df"
+  },
+  {
+    "path": "Idiophones/Struck Idiophones/Marimba/Marimba_hit_Outrigger_G4_med_01.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "be84c27de4fea671b78c82591aa6d6f98c06619e",
+    "size": 580262,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/be84c27de4fea671b78c82591aa6d6f98c06619e",
+    "sha256": "278e738d8214cdc192e63c3350b1e464a72c86dc135ddf0c5ce035569be66c71"
+  },
+  {
+    "path": "Idiophones/Struck Idiophones/Shaker, Small/Mid_ShakerDouble_Down_rr1.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "f99341479f355a909f0cee16880e8a60d6bf925b",
+    "size": 46844,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/f99341479f355a909f0cee16880e8a60d6bf925b",
+    "sha256": "0df7c271e1dba4de7304f7df81886390dd9ae698bfdd6df570026af4f2223574"
+  },
+  {
+    "path": "Membranophones/Struck Membranophones/Tom 1/Stick/TomH_HitS_v3_rr1_Mid.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "c9709d5bdaddaf3bd93a6b2c87cbc3cd6f148f8f",
+    "size": 424648,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/c9709d5bdaddaf3bd93a6b2c87cbc3cd6f148f8f",
+    "sha256": "40bd5cf904ed20eb8e7bba6298e356b66cedd313b4f459c5a5884c054bf447a4"
+  },
+  {
+    "path": "Membranophones/Struck Membranophones/Tom 2/Stick/TomL_HitS_v3_rr1_Mid.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "5f088286ca22b0f736e3d475bb68609bb90b2fcd",
+    "size": 508520,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/5f088286ca22b0f736e3d475bb68609bb90b2fcd",
+    "sha256": "bdc312f2f4c799cb43319a7aa0e664bf6194c6f8b14151051b375968df55eab4"
+  },
+  {
+    "path": "Idiophones/Struck Idiophones/Clash Cymbals 1/cymbal_crash1_short1.wav",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "0c673c045f65656bec9b09d68473718bd9a5b0dc",
+    "size": 420946,
+    "url": "https://api.github.com/repos/sgossner/VCSL/git/blobs/0c673c045f65656bec9b09d68473718bd9a5b0dc",
+    "sha256": "7ac4afb439b7c1279e3280f60b1e25fb0865fc6b7e59d09c78c6e97bc987195d"
+  }
+]

@@ -1,0 +1,133 @@
+{
+  "schema": "sou1.drum-catalog.v1",
+  "license": "CC0-1.0",
+  "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+  "sampleCount": 58,
+  "kits": [
+    {
+      "id": "fsa-distkit",
+      "bankId": "fsa-distkit-full-v1",
+      "manifest": "distkit/manifest.json",
+      "sampleCount": 13,
+      "articulations": [
+        "clap",
+        "crash",
+        "ride",
+        "closed-hat",
+        "open-hat",
+        "kick",
+        "claves",
+        "cowbell",
+        "zap",
+        "snare",
+        "tom-high",
+        "tom-low",
+        "tom-mid"
+      ],
+      "sourceBytes": 3253028,
+      "encodedBytes": 1621972,
+      "decodedBytes": 2161860,
+      "scoreCymbal": "crash",
+      "missing": []
+    },
+    {
+      "id": "fsa-sdbkit",
+      "bankId": "fsa-sdbkit-full-v1",
+      "manifest": "sdbkit/manifest.json",
+      "sampleCount": 10,
+      "articulations": [
+        "clap",
+        "closed-hat",
+        "open-hat",
+        "kick",
+        "sub-a",
+        "fmperc",
+        "snare",
+        "tom-high",
+        "tom-low",
+        "tom-mid"
+      ],
+      "sourceBytes": 1849862,
+      "encodedBytes": 921444,
+      "decodedBytes": 1227996,
+      "scoreCymbal": null,
+      "missing": [
+        "cymbal"
+      ]
+    },
+    {
+      "id": "fsa-synthkit",
+      "bankId": "fsa-synthkit-full-v1",
+      "manifest": "synthkit/manifest.json",
+      "sampleCount": 11,
+      "articulations": [
+        "clap",
+        "crash",
+        "ride",
+        "closed-hat",
+        "open-hat",
+        "kick",
+        "8bit",
+        "snare",
+        "tom-high",
+        "tom-low",
+        "tom-mid"
+      ],
+      "sourceBytes": 2240590,
+      "encodedBytes": 1116452,
+      "decodedBytes": 1487952,
+      "scoreCymbal": "crash",
+      "missing": []
+    },
+    {
+      "id": "fsa-x0xproc1",
+      "bankId": "fsa-x0xproc1-full-v1",
+      "manifest": "x0xproc1/manifest.json",
+      "sampleCount": 11,
+      "articulations": [
+        "clap",
+        "crash",
+        "ride",
+        "closed-hat",
+        "open-hat",
+        "kick",
+        "rimshot",
+        "snare",
+        "tom-high",
+        "tom-low",
+        "tom-mid"
+      ],
+      "sourceBytes": 1776418,
+      "encodedBytes": 884366,
+      "decodedBytes": 1178504,
+      "scoreCymbal": "crash",
+      "missing": []
+    },
+    {
+      "id": "fsa-x0xproc2",
+      "bankId": "fsa-x0xproc2-full-v1",
+      "manifest": "x0xproc2/manifest.json",
+      "sampleCount": 13,
+      "articulations": [
+        "clap",
+        "cymbal",
+        "closed-hat",
+        "open-hat",
+        "kick",
+        "claves",
+        "cowbell",
+        "maracas",
+        "rimshot",
+        "snare",
+        "tom-high",
+        "tom-low",
+        "tom-mid"
+      ],
+      "sourceBytes": 2529938,
+      "encodedBytes": 1260428,
+      "decodedBytes": 1679800,
+      "scoreCymbal": "cymbal",
+      "missing": []
+    }
+  ]
+}

@@ -1,3 +1,8 @@
+import {nativeSelectionCapabilities} from '../docs/native-drum-session.js';
+import {normalizeDevelopmentConfig,deterministicRandomConfig,DEVELOPMENT_CONFIG_DEFAULTS} from '../docs/development-config.js';
+import {CUSTOM_DRUM_ROLES,customDrumSelectionKey,parseCustomDrumSelection,deterministicRandomDrumOverrides} from '../docs/custom-drum-selection.js';
+import {MELODIC_PRESETS,DEVELOPMENT_KEYS,normalizedDrumOverrides,normalizedLocks,isSupportedAudioDrumKey} from '../docs/audio-selection.js';
+import {NativeDrumSession,nativeDrumCapabilities} from '../docs/native-drum-session.js';
 // SPDX-License-Identifier: AGPL-3.0-only
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -8,7 +13,7 @@ function element(id=''){const e={id,value:'0',textContent:'',style:{setProperty(
 const html=fs.readFileSync(new URL('../docs/index.html',import.meta.url),'utf8');
 for(const m of html.matchAll(/id="([^"]+)"/g))elements.set(m[1],element(m[1]));
 elements.get('rain-type').value='1';
-const context={console,drawAsciiGrid(){},createPianoRoll(){return {update(){},refresh(){}}},setInterval(){},document:{getElementById:id=>elements.get(id),documentElement:{},querySelectorAll:()=>[],createElement:()=>element(),body:{classList:{toggle(){}}},addEventListener(){}},window:{addEventListener(){}},navigator:{language:'en'},localStorage:{getItem:()=>null,setItem(){}},crypto:{getRandomValues:a=>{a[0]=1;return a}},performance:{now:()=>0},matchMedia:()=>({matches:false}),requestAnimationFrame(){},fetch:()=>Promise.resolve({json:()=>Promise.resolve({apk:null})}),setTimeout,clearTimeout};
+const context={nativeSelectionCapabilities,normalizeDevelopmentConfig,deterministicRandomConfig,DEVELOPMENT_CONFIG_DEFAULTS,CUSTOM_DRUM_ROLES,customDrumSelectionKey,parseCustomDrumSelection,deterministicRandomDrumOverrides,MELODIC_PRESETS,DEVELOPMENT_KEYS,normalizedDrumOverrides,normalizedLocks,isSupportedAudioDrumKey,NativeDrumSession,nativeDrumCapabilities,console,drawAsciiGrid(){},createPianoRoll(){return {update(){},refresh(){}}},setInterval(){},document:{getElementById:id=>elements.get(id),documentElement:{},querySelectorAll:()=>[],createElement:()=>element(),body:{classList:{toggle(){}}},addEventListener(){}},window:{addEventListener(){}},navigator:{language:'en'},localStorage:{getItem:()=>null,setItem(){}},crypto:{getRandomValues:a=>{a[0]=1;return a}},performance:{now:()=>0},matchMedia:()=>({matches:false}),requestAnimationFrame(){},fetch:()=>Promise.resolve({json:()=>Promise.resolve({apk:null})}),setTimeout,clearTimeout};
 vm.createContext(context);
 vm.runInContext(appSource,context);
 assert.equal(vm.runInContext("t('quiet')",context),'');

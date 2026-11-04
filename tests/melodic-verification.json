@@ -1,0 +1,78 @@
+{
+  "schema": "sou1.melodic-validation.v1",
+  "scope": "Node/JVM actual recorded PCM only. NOT browser/AudioWorklet, Android, device or listening approval.",
+  "results": [
+    {
+      "preset": "chamber",
+      "rate": 44100,
+      "decodedBytes": 23127028,
+      "kernelBytes": 82560,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 2.506617095,
+      "elapsedSeconds": 3.520551525,
+      "maxAbsolutePcmDelta": 1.3877787807814457e-17,
+      "nodeRenderSeconds": 0.8681199849999993,
+      "frames": 529200
+    },
+    {
+      "preset": "chamber",
+      "rate": 48000,
+      "decodedBytes": 23127028,
+      "kernelBytes": 82560,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.976873688,
+      "elapsedSeconds": 2.746576578,
+      "maxAbsolutePcmDelta": 2.0816681711721685e-17,
+      "nodeRenderSeconds": 0.9849030899999998,
+      "frames": 576000
+    },
+    {
+      "preset": "chamber-flute",
+      "rate": 44100,
+      "decodedBytes": 26327028,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.628640256,
+      "elapsedSeconds": 2.178443669,
+      "maxAbsolutePcmDelta": 1.3877787807814457e-17,
+      "nodeRenderSeconds": 0.5762202459999971,
+      "frames": 529200
+    },
+    {
+      "preset": "chamber-flute",
+      "rate": 48000,
+      "decodedBytes": 26327028,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.287852319,
+      "elapsedSeconds": 1.724307723,
+      "maxAbsolutePcmDelta": 1.0408340855860843e-17,
+      "nodeRenderSeconds": 0.5279980109999997,
+      "frames": 576000
+    },
+    {
+      "preset": "piano-room",
+      "rate": 44100,
+      "decodedBytes": 32297680,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.334028416,
+      "elapsedSeconds": 1.758913353,
+      "maxAbsolutePcmDelta": 8.326672684688674e-17,
+      "nodeRenderSeconds": 0.4775675459999984,
+      "frames": 529200
+    },
+    {
+      "preset": "piano-room",
+      "rate": 48000,
+      "decodedBytes": 32297680,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.379951815,
+      "elapsedSeconds": 1.760125297,
+      "maxAbsolutePcmDelta": 5.551115123125783e-17,
+      "nodeRenderSeconds": 0.4672779759999976,
+      "frames": 576000
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "score": {
+    "style": "waltz",
+    "seed": 33,
+    "bars": 16,
+    "bpm": 118,
+    "mode": "major",
+    "root": 65
+  },
+  "phrasing": "lyrical",
+  "dynamics": 0.7,
+  "humanize": 0.15,
+  "articulation": 0.2,
+  "phraseBars": 8
+}

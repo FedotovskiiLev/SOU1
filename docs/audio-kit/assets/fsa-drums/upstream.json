@@ -1,0 +1,3122 @@
+{
+  "schemaVersion": 1,
+  "repository": "stargatedaw/stargate-sample-pack",
+  "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+  "sourcePrefix": "stargate-sample-pack/fugue-state-audio/drums/",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/LICENSE",
+  "author": "Kevin B. / Fugue State Audio",
+  "scope": "Complete Fugue State Audio drums directory at the pinned commit. No other contributors, found-sounds, loops, guitar or synth-fx directories included.",
+  "description": "Five kits of prepared electronic drum one-shots. Author describes synthesized, rather than acoustic-recorded, sounds. The x0x names are not treated as proof of hardware 808/909 recordings.",
+  "completeness": {
+    "treeTruncated": false,
+    "sourceWavCount": 58,
+    "materializedWavCount": 58,
+    "excludedWavFiles": [],
+    "sourceAudioBytes": 11649836,
+    "decodedFloat32StereoBytes": 15472224,
+    "decodedFloat32MonoBytes": 7736112,
+    "minimumDurationSeconds": 0.027528344671201813,
+    "maximumDurationSeconds": 3.5470068027210884
+  },
+  "audioAuditioned": false,
+  "transformations": [],
+  "kits": {
+    "distkit": {
+      "count": 13,
+      "sourceBytes": 3253028,
+      "durationSeconds": 12.255442176870748,
+      "articulations": [
+        "clap",
+        "crash",
+        "ride",
+        "hatclsd",
+        "hatopen",
+        "kick",
+        "claves",
+        "cowbell",
+        "zap",
+        "snare",
+        "hitom",
+        "lotom",
+        "midtom"
+      ]
+    },
+    "sdbkit": {
+      "count": 10,
+      "sourceBytes": 1849862,
+      "durationSeconds": 6.961428571428572,
+      "articulations": [
+        "clap",
+        "hatclsd",
+        "hatopen",
+        "kick",
+        "sub-a",
+        "fmperc",
+        "snare",
+        "hitom",
+        "lotom",
+        "midtom"
+      ]
+    },
+    "synthkit": {
+      "count": 11,
+      "sourceBytes": 2240590,
+      "durationSeconds": 8.435102040816327,
+      "articulations": [
+        "clap",
+        "crash",
+        "ride",
+        "hatclsd",
+        "hatopen",
+        "kick",
+        "8bit",
+        "snare",
+        "hitom",
+        "lotom",
+        "midtom"
+      ]
+    },
+    "x0xproc1": {
+      "count": 11,
+      "sourceBytes": 1776418,
+      "durationSeconds": 6.680861678004535,
+      "articulations": [
+        "clap",
+        "crash",
+        "ride",
+        "hatclsd",
+        "hatopen",
+        "kick",
+        "rimshot",
+        "snare",
+        "hitom",
+        "lotom",
+        "midtom"
+      ]
+    },
+    "x0xproc2": {
+      "count": 13,
+      "sourceBytes": 2529938,
+      "durationSeconds": 9.522675736961451,
+      "articulations": [
+        "clap",
+        "cymbal",
+        "hatclsd",
+        "hatopen",
+        "kick",
+        "claves",
+        "cowbell",
+        "maracas",
+        "rimshot",
+        "snare",
+        "hitom",
+        "lotom",
+        "midtom"
+      ]
+    }
+  },
+  "categories": {
+    "claps": 5,
+    "cymbals": 7,
+    "hihats": 10,
+    "kicks": 6,
+    "percussion": 10,
+    "snares": 5,
+    "toms": 15
+  },
+  "audio": [
+    {
+      "localFile": "claps/distkit-clap.wav",
+      "kit": "distkit",
+      "category": "claps",
+      "articulation": "clap",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/claps/distkit-clap.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/claps/distkit-clap.wav",
+      "gitBlobSha": "44e4f84201f472fab632285a07894ddd2d40904c",
+      "sha256": "cce0b2d65bcde1c0444408cb7e6a4d34b3a42583d5dce24141e62671fb0cbba4",
+      "bytes": 51122,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 8389,
+        "durationSeconds": 0.1902267573696145
+      },
+      "decodedFloat32StereoBytes": 67112,
+      "decodedFloat32MonoBytes": 33556,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 50334
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.278748248752514,
+        "sampleMean": -0.0001463743497566808,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8453195691108704,
+        "monoFirstFrame": -7.49826431274414e-05,
+        "monoLastFrame": -5.364418029785156e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "claps/sdbkit-clap.wav",
+      "kit": "sdbkit",
+      "category": "claps",
+      "articulation": "clap",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/claps/sdbkit-clap.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/claps/sdbkit-clap.wav",
+      "gitBlobSha": "77dee4a2f250e7b1f80efe6a9a44a62c991c05ff",
+      "sha256": "2c2963df4d5f2d6dca10224812dc107c375811291f0721b7274bcd58b812dc00",
+      "bytes": 276566,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 45963,
+        "durationSeconds": 1.0422448979591836
+      },
+      "decodedFloat32StereoBytes": 367704,
+      "decodedFloat32MonoBytes": 183852,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 275778
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.149215606634033,
+        "sampleMean": -0.000329706022686138,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8575917482376099,
+        "monoFirstFrame": -0.0002567172050476074,
+        "monoLastFrame": 4.172325134277344e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "claps/synthkit-clap.wav",
+      "kit": "synthkit",
+      "category": "claps",
+      "articulation": "clap",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/claps/synthkit-clap.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/claps/synthkit-clap.wav",
+      "gitBlobSha": "cd6eec008e3bc8fe7a0a0dab52e74ee17017d79f",
+      "sha256": "460a3df47807708de89e8f9a7f845993e05dfec9f16416b1f86603301067bd06",
+      "bytes": 55676,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 9148,
+        "durationSeconds": 0.20743764172335602
+      },
+      "decodedFloat32StereoBytes": 73184,
+      "decodedFloat32MonoBytes": 36592,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 54888
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.08829139933653783,
+        "sampleMean": -0.0003888593342401182,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.6975496411323547,
+        "monoFirstFrame": 0.00016188621520996094,
+        "monoLastFrame": -7.152557373046875e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "claps/x0xproc1-clap.wav",
+      "kit": "x0xproc1",
+      "category": "claps",
+      "articulation": "clap",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc1-clap.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc1-clap.wav",
+      "gitBlobSha": "21e18f627c8265633d6d4f05cfb42fd7e7dec662",
+      "sha256": "dcd9ccb8d2f860deadd57f82206f9621d24ce1d0db8020842f609a889e236965",
+      "bytes": 204032,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 33874,
+        "durationSeconds": 0.7681179138321995
+      },
+      "decodedFloat32StereoBytes": 270992,
+      "decodedFloat32MonoBytes": 135496,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 203244
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.0820372017130115,
+        "sampleMean": -0.0014381721600834733,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8782193660736084,
+        "monoFirstFrame": -9.018182754516602e-05,
+        "monoLastFrame": -1.0728836059570312e-06
+      },
+      "retrieval": "Verified local copy of previously fetched source WAV",
+      "transformations": []
+    },
+    {
+      "localFile": "claps/x0xproc2-clap.wav",
+      "kit": "x0xproc2",
+      "category": "claps",
+      "articulation": "clap",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc2-clap.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc2-clap.wav",
+      "gitBlobSha": "b5097708704413a467644a6286d405396d91e939",
+      "sha256": "0c7ae21c528fbabc7f45ea6d503f2944e8704674c767766a5993281bd412bef1",
+      "bytes": 257756,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 42828,
+        "durationSeconds": 0.971156462585034
+      },
+      "decodedFloat32StereoBytes": 342624,
+      "decodedFloat32MonoBytes": 171312,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 256968
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.089888224489974,
+        "sampleMean": 0.002683733057004904,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8092193007469177,
+        "monoFirstFrame": -0.0006161928176879883,
+        "monoLastFrame": 7.748603820800781e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "cymbals/distkit-crash.wav",
+      "kit": "distkit",
+      "category": "cymbals",
+      "articulation": "crash",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/cymbals/distkit-crash.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/cymbals/distkit-crash.wav",
+      "gitBlobSha": "82107d91da49dc7b1cf80c1658ad431325985918",
+      "sha256": "21451524d334fae532d469b0babce0f642595738dec8bf8af2f17b254580ee8e",
+      "bytes": 939326,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 156423,
+        "durationSeconds": 3.5470068027210884
+      },
+      "decodedFloat32StereoBytes": 1251384,
+      "decodedFloat32MonoBytes": 625692,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 938538
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.12112419099303273,
+        "sampleMean": 0.004541999310338691,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.7898696064949036,
+        "monoFirstFrame": -6.4373016357421875e-06,
+        "monoLastFrame": 1.7881393432617188e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "cymbals/distkit-ride.wav",
+      "kit": "distkit",
+      "category": "cymbals",
+      "articulation": "ride",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/cymbals/distkit-ride.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/cymbals/distkit-ride.wav",
+      "gitBlobSha": "3802eb699de19cd2dec2a076f1301a1f1f9691c6",
+      "sha256": "adca149b2efe52c44355c979bd3fd444ef3ab33664a6c2515fafb9665be57121",
+      "bytes": 666830,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 111007,
+        "durationSeconds": 2.517165532879819
+      },
+      "decodedFloat32StereoBytes": 888056,
+      "decodedFloat32MonoBytes": 444028,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 666042
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.06791367605185335,
+        "sampleMean": 0.00017710457285690208,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.4947875142097473,
+        "monoFirstFrame": -7.474422454833984e-05,
+        "monoLastFrame": -5.960464477539063e-08
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "cymbals/synthkit-crash.wav",
+      "kit": "synthkit",
+      "category": "cymbals",
+      "articulation": "crash",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/cymbals/synthkit-crash.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/cymbals/synthkit-crash.wav",
+      "gitBlobSha": "6f8bc177f8ca2ee221a3275ada5e9ade939046a3",
+      "sha256": "4550ca9bb38c6517db5d9fed0a6a639b8b5c6f4824efa17e1c77b38703535a38",
+      "bytes": 423620,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 70472,
+        "durationSeconds": 1.5980045351473924
+      },
+      "decodedFloat32StereoBytes": 563776,
+      "decodedFloat32MonoBytes": 281888,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 422832
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.07338103016920912,
+        "sampleMean": 0.000974116410701902,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.6178598403930664,
+        "monoFirstFrame": -7.18832015991211e-05,
+        "monoLastFrame": 5.960464477539063e-08
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "cymbals/synthkit-ride.wav",
+      "kit": "synthkit",
+      "category": "cymbals",
+      "articulation": "ride",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/cymbals/synthkit-ride.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/cymbals/synthkit-ride.wav",
+      "gitBlobSha": "704bf65cec008bd1fb203dd07460b6cdd4b62a58",
+      "sha256": "3c376437da6cf49c045f9849622b1ee9f7c88e55fdac9ed0476cd7502fa84b33",
+      "bytes": 446060,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 74212,
+        "durationSeconds": 1.68281179138322
+      },
+      "decodedFloat32StereoBytes": 593696,
+      "decodedFloat32MonoBytes": 296848,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 445272
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.05021209646960116,
+        "sampleMean": 4.824857528541362e-05,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.5028846859931946,
+        "monoFirstFrame": -6.794929504394531e-06,
+        "monoLastFrame": 2.980232238769531e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "cymbals/x0xproc1-crash.wav",
+      "kit": "x0xproc1",
+      "category": "cymbals",
+      "articulation": "crash",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/cymbals/x0xproc1-crash.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/cymbals/x0xproc1-crash.wav",
+      "gitBlobSha": "a42c1d97427eff11adda994241b585674bafc303",
+      "sha256": "df1f91e5bdc418a2d9441385ca12e9e1e9703992e5c3d1b1e9f9eca88878301f",
+      "bytes": 275096,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 45718,
+        "durationSeconds": 1.036689342403628
+      },
+      "decodedFloat32StereoBytes": 365744,
+      "decodedFloat32MonoBytes": 182872,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 274308
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.17967819214208455,
+        "sampleMean": -0.0044223159333894955,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.886222243309021,
+        "monoFirstFrame": 0.00021439790725708008,
+        "monoLastFrame": -1.3113021850585938e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "cymbals/x0xproc1-ride.wav",
+      "kit": "x0xproc1",
+      "category": "cymbals",
+      "articulation": "ride",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/cymbals/x0xproc1-ride.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/cymbals/x0xproc1-ride.wav",
+      "gitBlobSha": "b2c0924b1f0aa688a3d44af8e2d6396ce89eaa3a",
+      "sha256": "2bfd5db6fdc170f9282d718a462f8eeb206a9644e9aca74dcde4ac6f1b891bc3",
+      "bytes": 254960,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 42363,
+        "durationSeconds": 0.9606122448979592
+      },
+      "decodedFloat32StereoBytes": 338904,
+      "decodedFloat32MonoBytes": 169452,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 254178
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        },
+        {
+          "id": "junk",
+          "bytes": 74
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.14587476934030022,
+        "sampleMean": -0.0038587137600536053,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8861243724822998,
+        "monoFirstFrame": -0.00032901763916015625,
+        "monoLastFrame": -2.9802322387695312e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "cymbals/x0xproc2-cymbal.wav",
+      "kit": "x0xproc2",
+      "category": "cymbals",
+      "articulation": "cymbal",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/cymbals/x0xproc2-cymbal.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/cymbals/x0xproc2-cymbal.wav",
+      "gitBlobSha": "79a23c5447f4e4651b46efd2b44e59293c00b889",
+      "sha256": "e70cc580a8d5bdafebe4b684a039a53342eff5bac1df5c08da9efbac7a696f23",
+      "bytes": 724238,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 120575,
+        "durationSeconds": 2.734126984126984
+      },
+      "decodedFloat32StereoBytes": 964600,
+      "decodedFloat32MonoBytes": 482300,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 723450
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.05843736376182245,
+        "sampleMean": -6.308526931500104e-08,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8840939998626709,
+        "monoFirstFrame": 0.0016009211540222168,
+        "monoLastFrame": -1.1324882507324219e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/distkit-hatclsd.wav",
+      "kit": "distkit",
+      "category": "hihats",
+      "articulation": "hatclsd",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/distkit-hatclsd.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/distkit-hatclsd.wav",
+      "gitBlobSha": "1e948f3a71700ecc0b606512bacd75adac05c849",
+      "sha256": "74077a134eb66bc4367f4b8a716956b16d724c5c21030c1d49fdabf0726b0895",
+      "bytes": 70304,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 11586,
+        "durationSeconds": 0.2627210884353742
+      },
+      "decodedFloat32StereoBytes": 92688,
+      "decodedFloat32MonoBytes": 46344,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 69516
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.04470898562735879,
+        "sampleMean": -0.003703904938002273,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.4228721261024475,
+        "monoFirstFrame": 5.125999450683594e-05,
+        "monoLastFrame": -1.7881393432617188e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/distkit-hatopen.wav",
+      "kit": "distkit",
+      "category": "hihats",
+      "articulation": "hatopen",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/distkit-hatopen.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/distkit-hatopen.wav",
+      "gitBlobSha": "3dcfb97d8cb3952028c15682153f40b022841a04",
+      "sha256": "6f47aa3f5755f3c8ad486841760b956d43e7e4f12057c2d3fdb2def300aeb8d7",
+      "bytes": 332828,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 55341,
+        "durationSeconds": 1.2548979591836735
+      },
+      "decodedFloat32StereoBytes": 442728,
+      "decodedFloat32MonoBytes": 221364,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 332046
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        },
+        {
+          "id": "junk",
+          "bytes": 74
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.06129521457592829,
+        "sampleMean": -0.008513358369504917,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.5475690364837646,
+        "monoFirstFrame": -0.00011783838272094727,
+        "monoLastFrame": -1.1920928955078125e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/sdbkit-hatclsd.wav",
+      "kit": "sdbkit",
+      "category": "hihats",
+      "articulation": "hatclsd",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/sdbkit-hatclsd.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/sdbkit-hatclsd.wav",
+      "gitBlobSha": "9c453a1f5a704408edefa340276c6b5db78fab53",
+      "sha256": "f85a1a670067253f86bcd33a190242a95b474a9973f716d031e8a704cd40744a",
+      "bytes": 53558,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 8795,
+        "durationSeconds": 0.19943310657596372
+      },
+      "decodedFloat32StereoBytes": 70360,
+      "decodedFloat32MonoBytes": 35180,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 52770
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.09683740675749435,
+        "sampleMean": 0.00031650466224969687,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.887610137462616,
+        "monoFirstFrame": -0.003691732883453369,
+        "monoLastFrame": -5.960464477539063e-08
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/sdbkit-hatopen.wav",
+      "kit": "sdbkit",
+      "category": "hihats",
+      "articulation": "hatopen",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/sdbkit-hatopen.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/sdbkit-hatopen.wav",
+      "gitBlobSha": "ddeae93a7813c70bf716891343c6adebdd129909",
+      "sha256": "ec460260b8f8ff8335788f0e3c9f1a1f2160327cfcd224053ae7d4321ea50171",
+      "bytes": 285098,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 47385,
+        "durationSeconds": 1.0744897959183672
+      },
+      "decodedFloat32StereoBytes": 379080,
+      "decodedFloat32MonoBytes": 189540,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 284310
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.12850872650296025,
+        "sampleMean": -0.0006607176923696484,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8871272206306458,
+        "monoFirstFrame": -0.006123483180999756,
+        "monoLastFrame": 5.960464477539063e-08
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/synthkit-hatclsd.wav",
+      "kit": "synthkit",
+      "category": "hihats",
+      "articulation": "hatclsd",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/synthkit-hatclsd.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/synthkit-hatclsd.wav",
+      "gitBlobSha": "e9e23aee7e7287ed7be57c0e6b311c330184a280",
+      "sha256": "3ae9ebd65f2b4deb7a655be5a2bbcd6b4d43df7ee32efd635e864372e868e063",
+      "bytes": 88838,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 14675,
+        "durationSeconds": 0.33276643990929705
+      },
+      "decodedFloat32StereoBytes": 117400,
+      "decodedFloat32MonoBytes": 58700,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 88050
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.04130632652071155,
+        "sampleMean": -0.002915876431603245,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.4350437521934509,
+        "monoFirstFrame": -0.0010496973991394043,
+        "monoLastFrame": -3.516674041748047e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/synthkit-hatopen.wav",
+      "kit": "synthkit",
+      "category": "hihats",
+      "articulation": "hatopen",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/synthkit-hatopen.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/synthkit-hatopen.wav",
+      "gitBlobSha": "b5047ad0049d12475c249e95aeea100913730f0c",
+      "sha256": "8a0c8019c88fab848bfab5370331414b9372e3127e2867246ea756a42700cc5e",
+      "bytes": 296384,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 49267,
+        "durationSeconds": 1.1171655328798187
+      },
+      "decodedFloat32StereoBytes": 394136,
+      "decodedFloat32MonoBytes": 197068,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 295602
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        },
+        {
+          "id": "junk",
+          "bytes": 74
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.08142956543158962,
+        "sampleMean": -0.008416642718921298,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.5175885558128357,
+        "monoFirstFrame": 0.0002537965774536133,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/x0xproc1-hatclsd.wav",
+      "kit": "x0xproc1",
+      "category": "hihats",
+      "articulation": "hatclsd",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatclsd.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatclsd.wav",
+      "gitBlobSha": "df5d83f3a33b0bd4dc4efb637f0bc2b261caa98e",
+      "sha256": "a43d2df5a21845c5256fb09ff3f1b97105514ef18b2a57bbc33d80c8892efc11",
+      "bytes": 51644,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 8476,
+        "durationSeconds": 0.19219954648526077
+      },
+      "decodedFloat32StereoBytes": 67808,
+      "decodedFloat32MonoBytes": 33904,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 50856
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1998908236495535,
+        "sampleMean": -0.006980121374805337,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8880399465560913,
+        "monoFirstFrame": -0.00034314393997192383,
+        "monoLastFrame": -1.5854835510253906e-05
+      },
+      "retrieval": "Verified local copy of previously fetched source WAV",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/x0xproc1-hatopen.wav",
+      "kit": "x0xproc1",
+      "category": "hihats",
+      "articulation": "hatopen",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatopen.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatopen.wav",
+      "gitBlobSha": "dc8056feaf1b47667541b0599334dae6ae469953",
+      "sha256": "c6a17e715380911a708f6a2ce9b15dea5eac78a3a2ffc89404dfd04aef9e1c05",
+      "bytes": 140126,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 23223,
+        "durationSeconds": 0.5265986394557823
+      },
+      "decodedFloat32StereoBytes": 185784,
+      "decodedFloat32MonoBytes": 92892,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 139338
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.13243565339689578,
+        "sampleMean": 0.0064598952969834155,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8812748193740845,
+        "monoFirstFrame": -0.0007492899894714355,
+        "monoLastFrame": 9.119510650634766e-06
+      },
+      "retrieval": "Verified local copy of previously fetched source WAV",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/x0xproc2-hatclsd.wav",
+      "kit": "x0xproc2",
+      "category": "hihats",
+      "articulation": "hatclsd",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc2-hatclsd.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc2-hatclsd.wav",
+      "gitBlobSha": "cfac00a4fc8a7bd781ed2d862246f46ef1b4ddba",
+      "sha256": "49e1268f26e2a90c492049a5d89e85478e03419fb166bb11b751a8ba4c2c196e",
+      "bytes": 33236,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 5408,
+        "durationSeconds": 0.12263038548752835
+      },
+      "decodedFloat32StereoBytes": 43264,
+      "decodedFloat32MonoBytes": 21632,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 32448
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.12243036973263577,
+        "sampleMean": 3.200634961297526e-05,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8193041086196899,
+        "monoFirstFrame": -0.00539243221282959,
+        "monoLastFrame": -1.0728836059570312e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "hihats/x0xproc2-hatopen.wav",
+      "kit": "x0xproc2",
+      "category": "hihats",
+      "articulation": "hatopen",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc2-hatopen.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc2-hatopen.wav",
+      "gitBlobSha": "5648d766746c5f61499934862e736aed4f77320f",
+      "sha256": "2d60e6765c607af31a6e246c248f446cbefead8610be88a20bb61630584b8aa6",
+      "bytes": 329594,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 54801,
+        "durationSeconds": 1.2426530612244897
+      },
+      "decodedFloat32StereoBytes": 438408,
+      "decodedFloat32MonoBytes": 219204,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 328806
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.09520961250048189,
+        "sampleMean": 1.6879879648029685e-07,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.734931230545044,
+        "monoFirstFrame": -0.0004864931106567383,
+        "monoLastFrame": -7.152557373046875e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "kicks/distkit-kick.wav",
+      "kit": "distkit",
+      "category": "kicks",
+      "articulation": "kick",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/distkit-kick.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/distkit-kick.wav",
+      "gitBlobSha": "94448a823cca128523e61eb5c00aa6825034dd59",
+      "sha256": "80f029e56cb0cf8e8df6b180f02af380e0410a43376e3c2d8f2efd81b9d1e8ab",
+      "bytes": 252668,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 41980,
+        "durationSeconds": 0.9519274376417234
+      },
+      "decodedFloat32StereoBytes": 335840,
+      "decodedFloat32MonoBytes": 167920,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 251880
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.20102585574099377,
+        "sampleMean": 0.0005429720838845713,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8843467235565186,
+        "monoFirstFrame": -1.6093254089355469e-06,
+        "monoLastFrame": -2.384185791015625e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "kicks/sdbkit-kick.wav",
+      "kit": "sdbkit",
+      "category": "kicks",
+      "articulation": "kick",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/sdbkit-kick.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/sdbkit-kick.wav",
+      "gitBlobSha": "750c627d1387926933b3f1174353e469c1cc8e22",
+      "sha256": "ae1694fbba73717d459009283c1c942d07d3db46d84358282175ecec060d8fd1",
+      "bytes": 52742,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 8659,
+        "durationSeconds": 0.19634920634920636
+      },
+      "decodedFloat32StereoBytes": 69272,
+      "decodedFloat32MonoBytes": 34636,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 51954
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.3787902942916295,
+        "sampleMean": 0.006372691935459837,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.881773054599762,
+        "monoFirstFrame": -1.811981201171875e-05,
+        "monoLastFrame": -7.152557373046875e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "kicks/sdbkit-sub-a.wav",
+      "kit": "sdbkit",
+      "category": "kicks",
+      "articulation": "sub-a",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/sdbkit-sub-a.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/sdbkit-sub-a.wav",
+      "gitBlobSha": "c05e307e23a1379e71b0ae6d67e3b321dc2f6f13",
+      "sha256": "2ccab3dc777b7ce607bdb7dec396bb6feed658edb6b016b7068240c8f8780a51",
+      "bytes": 516446,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 85944,
+        "durationSeconds": 1.948843537414966
+      },
+      "decodedFloat32StereoBytes": 687552,
+      "decodedFloat32MonoBytes": 343776,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 515664
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        },
+        {
+          "id": "junk",
+          "bytes": 74
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.33432612735539224,
+        "sampleMean": -0.0005530341759214496,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.89112389087677,
+        "monoFirstFrame": -4.470348358154297e-06,
+        "monoLastFrame": -0.0004068613052368164
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "kicks/synthkit-kick.wav",
+      "kit": "synthkit",
+      "category": "kicks",
+      "articulation": "kick",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/synthkit-kick.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/synthkit-kick.wav",
+      "gitBlobSha": "1e0408f83d64db3d3425e2ac3c223937364df144",
+      "sha256": "faef5e7dd5a08e70927ba3d1e45a8c6a825f187c9eea11d01d947f191ec4c331",
+      "bytes": 322028,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 53540,
+        "durationSeconds": 1.2140589569160998
+      },
+      "decodedFloat32StereoBytes": 428320,
+      "decodedFloat32MonoBytes": 214160,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 321240
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.19854787542302432,
+        "sampleMean": 0.0004901438650908558,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.884650468826294,
+        "monoFirstFrame": 4.887580871582031e-06,
+        "monoLastFrame": -2.384185791015625e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "kicks/x0xproc1-kick.wav",
+      "kit": "x0xproc1",
+      "category": "kicks",
+      "articulation": "kick",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc1-kick.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc1-kick.wav",
+      "gitBlobSha": "1a74196d16009d8ce1b3a38ed163c1bbe4fc1357",
+      "sha256": "debd64498f2912701f9d7b1948a00840a5ca3ee424111945d2be5601c7cf735e",
+      "bytes": 110636,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 18308,
+        "durationSeconds": 0.41514739229024944
+      },
+      "decodedFloat32StereoBytes": 146464,
+      "decodedFloat32MonoBytes": 73232,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 109848
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.32397108350259046,
+        "sampleMean": -0.0011984403148498602,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8911072015762329,
+        "monoFirstFrame": 1.6689300537109375e-06,
+        "monoLastFrame": -0.00013136863708496094
+      },
+      "retrieval": "Verified local copy of previously fetched source WAV",
+      "transformations": []
+    },
+    {
+      "localFile": "kicks/x0xproc2-kick.wav",
+      "kit": "x0xproc2",
+      "category": "kicks",
+      "articulation": "kick",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc2-kick.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc2-kick.wav",
+      "gitBlobSha": "1043dec6541117acb16efbaca2fbf5dc6ffdbc37",
+      "sha256": "1a60f67895ae09f6a7bef418d0ec6dfc2f4c5b25123d55988cef2195a90a4694",
+      "bytes": 382598,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 63635,
+        "durationSeconds": 1.4429705215419502
+      },
+      "decodedFloat32StereoBytes": 509080,
+      "decodedFloat32MonoBytes": 254540,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 381810
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.2139570769393179,
+        "sampleMean": 0.0011506700652500086,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8911510109901428,
+        "monoFirstFrame": -9.5367431640625e-07,
+        "monoLastFrame": -8.344650268554688e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/distkit-claves.wav",
+      "kit": "distkit",
+      "category": "percussion",
+      "articulation": "claves",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/distkit-claves.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/distkit-claves.wav",
+      "gitBlobSha": "277781094039f8ffb96eb0cba06970a9825e644f",
+      "sha256": "3be640e2234b19464afadcfe76101bd7e38e1a7edab5faeae454d0ab205e3e11",
+      "bytes": 8072,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 1214,
+        "durationSeconds": 0.027528344671201813
+      },
+      "decodedFloat32StereoBytes": 9712,
+      "decodedFloat32MonoBytes": 4856,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 7284
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1975395509533095,
+        "sampleMean": 0.00023673791469027222,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8694673776626587,
+        "monoFirstFrame": -0.00030112266540527344,
+        "monoLastFrame": 1.3709068298339844e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/distkit-cowbell.wav",
+      "kit": "distkit",
+      "category": "percussion",
+      "articulation": "cowbell",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/distkit-cowbell.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/distkit-cowbell.wav",
+      "gitBlobSha": "1f9119400a2465ae46013f65b203d705c005bf00",
+      "sha256": "becad8bdf672c1a417ca7dc2583197504780c93cf162725818bd37f74bcc0569",
+      "bytes": 159116,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 26388,
+        "durationSeconds": 0.5983673469387755
+      },
+      "decodedFloat32StereoBytes": 211104,
+      "decodedFloat32MonoBytes": 105552,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 158328
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.07991077157684628,
+        "sampleMean": 0.00020516645154827233,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.49015283584594727,
+        "monoFirstFrame": 3.11732292175293e-05,
+        "monoLastFrame": -2.384185791015625e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/distkit-zap.wav",
+      "kit": "distkit",
+      "category": "percussion",
+      "articulation": "zap",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/distkit-zap.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/distkit-zap.wav",
+      "gitBlobSha": "3e09fe731b352b845ebea9506f06e3c07f407a84",
+      "sha256": "448e90e52c7dd2f454c16717688d0c285d62fdc823b92fb2a5c98c3f70d8d1c2",
+      "bytes": 143264,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 23746,
+        "durationSeconds": 0.5384580498866213
+      },
+      "decodedFloat32StereoBytes": 189968,
+      "decodedFloat32MonoBytes": 94984,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 142476
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1021457676581085,
+        "sampleMean": 0.00016488078760436097,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8789985179901123,
+        "monoFirstFrame": 3.5762786865234375e-07,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/sdbkit-fmperc.wav",
+      "kit": "sdbkit",
+      "category": "percussion",
+      "articulation": "fmperc",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/sdbkit-fmperc.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/sdbkit-fmperc.wav",
+      "gitBlobSha": "11ead9bcbac81a40adfeea02b26f85d07f3846e5",
+      "sha256": "4525380378a65866f917185b8f4d2ea9910bc7212799b740a4febf572562435d",
+      "bytes": 117296,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 19419,
+        "durationSeconds": 0.4403401360544218
+      },
+      "decodedFloat32StereoBytes": 155352,
+      "decodedFloat32MonoBytes": 77676,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 116514
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        },
+        {
+          "id": "junk",
+          "bytes": 74
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.22163012519274947,
+        "sampleMean": 0.0008008210885794242,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8858126401901245,
+        "monoFirstFrame": -6.973743438720703e-06,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/synthkit-8bit.wav",
+      "kit": "synthkit",
+      "category": "percussion",
+      "articulation": "8bit",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/synthkit-8bit.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/synthkit-8bit.wav",
+      "gitBlobSha": "fe8d64397e9257404dab5fc54cabad4574971e4b",
+      "sha256": "e35addceeeeda390f25ca0eef0e23d3efed287f4fb2b3e296b3bdf302922c9e2",
+      "bytes": 68306,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 11253,
+        "durationSeconds": 0.2551700680272109
+      },
+      "decodedFloat32StereoBytes": 90024,
+      "decodedFloat32MonoBytes": 45012,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 67518
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.21875495278749976,
+        "sampleMean": 0.00013032525123664668,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8722201585769653,
+        "monoFirstFrame": -2.9027462005615234e-05,
+        "monoLastFrame": -0.0003103017807006836
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/x0xproc1-rimshot.wav",
+      "kit": "x0xproc1",
+      "category": "percussion",
+      "articulation": "rimshot",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc1-rimshot.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc1-rimshot.wav",
+      "gitBlobSha": "312c218c40b738b8c281364906cc7c62a3455d43",
+      "sha256": "eb6206d6b5a510121f45091fa7a5b87a5c968c0db97fa514c05cee1ba62b5413",
+      "bytes": 39548,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 6460,
+        "durationSeconds": 0.14648526077097507
+      },
+      "decodedFloat32StereoBytes": 51680,
+      "decodedFloat32MonoBytes": 25840,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 38760
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.12028409978954614,
+        "sampleMean": 0.006132309789258998,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8207721710205078,
+        "monoFirstFrame": -1.0848045349121094e-05,
+        "monoLastFrame": 0.004278242588043213
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/x0xproc2-claves.wav",
+      "kit": "x0xproc2",
+      "category": "percussion",
+      "articulation": "claves",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-claves.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-claves.wav",
+      "gitBlobSha": "ffdb1507e4cd67a1864fbd590769778ad88a3733",
+      "sha256": "5b29e8fc66ea6253bf54602178d96743a70108f47e5eb9fb2cc1ea16fd4c56a3",
+      "bytes": 27794,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 4501,
+        "durationSeconds": 0.10206349206349206
+      },
+      "decodedFloat32StereoBytes": 36008,
+      "decodedFloat32MonoBytes": 18004,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 27006
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.14467617487882603,
+        "sampleMean": -8.980967261690056e-06,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.814386785030365,
+        "monoFirstFrame": -9.769201278686523e-05,
+        "monoLastFrame": 0.00013083219528198242
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/x0xproc2-cowbell.wav",
+      "kit": "x0xproc2",
+      "category": "percussion",
+      "articulation": "cowbell",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-cowbell.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-cowbell.wav",
+      "gitBlobSha": "2d17ca700251a229eecf6e4033fc3a8ed191cc4d",
+      "sha256": "450d5fa056a9a3865154c404ff727473c73a15792fb7284562748b6ae572d82e",
+      "bytes": 148148,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 24561,
+        "durationSeconds": 0.5569387755102041
+      },
+      "decodedFloat32StereoBytes": 196488,
+      "decodedFloat32MonoBytes": 98244,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 147366
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        },
+        {
+          "id": "junk",
+          "bytes": 74
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.06811809361391577,
+        "sampleMean": 6.856366383476563e-07,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.7178500890731812,
+        "monoFirstFrame": -0.0029540657997131348,
+        "monoLastFrame": 1.1920928955078125e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/x0xproc2-maracas.wav",
+      "kit": "x0xproc2",
+      "category": "percussion",
+      "articulation": "maracas",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-maracas.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-maracas.wav",
+      "gitBlobSha": "01310159df770b7c81bd4aee1a4d9f25764b33ec",
+      "sha256": "4730d893f35c3699f0d1a3b3cf379d11353a23bd42c3c4758e864bb358599bd4",
+      "bytes": 20024,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 3206,
+        "durationSeconds": 0.07269841269841269
+      },
+      "decodedFloat32StereoBytes": 25648,
+      "decodedFloat32MonoBytes": 12824,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 19236
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.9232361316680908,
+        "peakDbFS": -0.6937441470897998,
+        "rms": 0.14177926651187203,
+        "sampleMean": -2.4408213585076e-05,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.7600536346435547,
+        "monoFirstFrame": -0.0001671314239501953,
+        "monoLastFrame": -0.0002688169479370117
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "percussion/x0xproc2-rimshot.wav",
+      "kit": "x0xproc2",
+      "category": "percussion",
+      "articulation": "rimshot",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-rimshot.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/percussion/x0xproc2-rimshot.wav",
+      "gitBlobSha": "6510cb820c7b59d57d1e0f42f8ae78061d059f70",
+      "sha256": "7c4ba10005d5e73dd9055b6c9aeea53b3cfbd57def961cf591a9638591cf7dae",
+      "bytes": 14588,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 2300,
+        "durationSeconds": 0.05215419501133787
+      },
+      "decodedFloat32StereoBytes": 18400,
+      "decodedFloat32MonoBytes": 9200,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 13800
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.17397099211753303,
+        "sampleMean": -0.012971958621688512,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8402557373046875,
+        "monoFirstFrame": -0.003960132598876953,
+        "monoLastFrame": -8.404254913330078e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "snares/distkit-snare.wav",
+      "kit": "distkit",
+      "category": "snares",
+      "articulation": "snare",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/snares/distkit-snare.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/snares/distkit-snare.wav",
+      "gitBlobSha": "d545e0633bdfd2218236a497c8c6a889d8253d9d",
+      "sha256": "bca873444c1a07f1aaaa79ed304faf593d375a4330c73b2aaadb563947fe4422",
+      "bytes": 68840,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 11342,
+        "durationSeconds": 0.25718820861678005
+      },
+      "decodedFloat32StereoBytes": 90736,
+      "decodedFloat32MonoBytes": 45368,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 68052
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.20192615679949916,
+        "sampleMean": 0.0016171906312250667,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.890805721282959,
+        "monoFirstFrame": 1.043081283569336e-05,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "snares/sdbkit-snare.wav",
+      "kit": "sdbkit",
+      "category": "snares",
+      "articulation": "snare",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/snares/sdbkit-snare.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/snares/sdbkit-snare.wav",
+      "gitBlobSha": "428a010f42773a55d9dc65aaccc4600da01db972",
+      "sha256": "163d8942e804f5f81ed62d541fa1985332af891cc84b0e3bc6237374698a223f",
+      "bytes": 69986,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 11533,
+        "durationSeconds": 0.26151927437641725
+      },
+      "decodedFloat32StereoBytes": 92264,
+      "decodedFloat32MonoBytes": 46132,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 69198
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.24785862786408436,
+        "sampleMean": 0.0030043465477382694,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8880159258842468,
+        "monoFirstFrame": -0.0004857778549194336,
+        "monoLastFrame": 1.6093254089355469e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "snares/synthkit-snare.wav",
+      "kit": "synthkit",
+      "category": "snares",
+      "articulation": "snare",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/snares/synthkit-snare.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/snares/synthkit-snare.wav",
+      "gitBlobSha": "7b003a436949fe918cf9b849477ec410bc6d7e0e",
+      "sha256": "177549cd845ecccef1a4a8d89bfa0ff3df7279e1e6016ff05534db0b3e1f541e",
+      "bytes": 61952,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 10194,
+        "durationSeconds": 0.231156462585034
+      },
+      "decodedFloat32StereoBytes": 81552,
+      "decodedFloat32MonoBytes": 40776,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 61164
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.12914389771367105,
+        "sampleMean": 0.0011366381115695413,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8822495937347412,
+        "monoFirstFrame": -1.3768672943115234e-05,
+        "monoLastFrame": 1.5497207641601562e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "snares/x0xproc1-snare.wav",
+      "kit": "x0xproc1",
+      "category": "snares",
+      "articulation": "snare",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc1-snare.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc1-snare.wav",
+      "gitBlobSha": "56390a0a0093619ad84ac49930391956fbc9904e",
+      "sha256": "5c5b35d9565e53500a6bc5524ab1d4f249fe3d91878b1d1c103d95c87acdfe6b",
+      "bytes": 111182,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 18399,
+        "durationSeconds": 0.4172108843537415
+      },
+      "decodedFloat32StereoBytes": 147192,
+      "decodedFloat32MonoBytes": 73596,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 110394
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.11602955764174823,
+        "sampleMean": 0.01908261061712506,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8822572231292725,
+        "monoFirstFrame": -0.0003355741500854492,
+        "monoLastFrame": 2.086162567138672e-06
+      },
+      "retrieval": "Verified local copy of previously fetched source WAV",
+      "transformations": []
+    },
+    {
+      "localFile": "snares/x0xproc2-snare.wav",
+      "kit": "x0xproc2",
+      "category": "snares",
+      "articulation": "snare",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc2-snare.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc2-snare.wav",
+      "gitBlobSha": "169c7d28f7507ce92f9f3bcf23ff019bc31635d2",
+      "sha256": "161cfe4121a2340edec75eb228a5754684c25a4999ca3477542e7d895e128246",
+      "bytes": 85796,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 14168,
+        "durationSeconds": 0.32126984126984126
+      },
+      "decodedFloat32StereoBytes": 113344,
+      "decodedFloat32MonoBytes": 56672,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 85008
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.14481474335436956,
+        "sampleMean": -0.01369494270430252,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.886959433555603,
+        "monoFirstFrame": -0.00017470121383666992,
+        "monoLastFrame": -5.4836273193359375e-06
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/distkit-hitom.wav",
+      "kit": "distkit",
+      "category": "toms",
+      "articulation": "hitom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/distkit-hitom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/distkit-hitom.wav",
+      "gitBlobSha": "d3a957ddc55b933fd5d52131291b830c2f9278fe",
+      "sha256": "4ca8f4daf4b55d61d8f0a48f95268329852877c10bb40864a82f67f3774a421d",
+      "bytes": 180176,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 29898,
+        "durationSeconds": 0.6779591836734694
+      },
+      "decodedFloat32StereoBytes": 239184,
+      "decodedFloat32MonoBytes": 119592,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 179388
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.13855862701508126,
+        "sampleMean": 0.0004489663847553841,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8829217553138733,
+        "monoFirstFrame": -9.000301361083984e-06,
+        "monoLastFrame": -5.960464477539063e-08
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/distkit-lotom.wav",
+      "kit": "distkit",
+      "category": "toms",
+      "articulation": "lotom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/distkit-lotom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/distkit-lotom.wav",
+      "gitBlobSha": "fca45480c4a21db0f7e1c9c862b4eb91b8582c7b",
+      "sha256": "1c37f8720881f3530f39c6f33a749a7e81fffb9d9d331bfb63ef8c85f19bd1d2",
+      "bytes": 177866,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 29513,
+        "durationSeconds": 0.6692290249433107
+      },
+      "decodedFloat32StereoBytes": 236104,
+      "decodedFloat32MonoBytes": 118052,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 177078
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1474553554621555,
+        "sampleMean": 0.0005243830156880474,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8826812505722046,
+        "monoFirstFrame": 0.0,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/distkit-midtom.wav",
+      "kit": "distkit",
+      "category": "toms",
+      "articulation": "midtom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/distkit-midtom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/distkit-midtom.wav",
+      "gitBlobSha": "dbda1c27c38c009e0eb2ded3dcd9d6d5ef047daa",
+      "sha256": "7ccd033c24fdf8722086aef255cb022d6fec618f2939221d8704a3e0b03fbb1c",
+      "bytes": 202616,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 33638,
+        "durationSeconds": 0.762766439909297
+      },
+      "decodedFloat32StereoBytes": 269104,
+      "decodedFloat32MonoBytes": 134552,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 201828
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.12348042991984566,
+        "sampleMean": 0.0003958163118807539,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8726385831832886,
+        "monoFirstFrame": 3.039836883544922e-06,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/sdbkit-hitom.wav",
+      "kit": "sdbkit",
+      "category": "toms",
+      "articulation": "hitom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/sdbkit-hitom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/sdbkit-hitom.wav",
+      "gitBlobSha": "5ac8dbbc4791e3a6a8499c7ea28a33ae8ea2b5b1",
+      "sha256": "afa13190e549d8a984d70209449194699cd2c9412874cfbaf89a14443b6a6328",
+      "bytes": 164492,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 27284,
+        "durationSeconds": 0.6186848072562359
+      },
+      "decodedFloat32StereoBytes": 218272,
+      "decodedFloat32MonoBytes": 109136,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 163704
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.2073477393890166,
+        "sampleMean": 0.00043245536799375623,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8910917043685913,
+        "monoFirstFrame": -1.239776611328125e-05,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/sdbkit-lotom.wav",
+      "kit": "sdbkit",
+      "category": "toms",
+      "articulation": "lotom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/sdbkit-lotom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/sdbkit-lotom.wav",
+      "gitBlobSha": "a4cb49abef7ecdf3ceaafa3b4f719489fd4e997d",
+      "sha256": "80b5dcec5a5be0cddfef0bc2bfb49f4594868ee38b31453e8a456fdf4ebf86a8",
+      "bytes": 158288,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 26250,
+        "durationSeconds": 0.5952380952380952
+      },
+      "decodedFloat32StereoBytes": 210000,
+      "decodedFloat32MonoBytes": 105000,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 157500
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.21685575171685764,
+        "sampleMean": 0.00046338645617167155,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8909486532211304,
+        "monoFirstFrame": -1.9073486328125e-06,
+        "monoLastFrame": 9.5367431640625e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/sdbkit-midtom.wav",
+      "kit": "sdbkit",
+      "category": "toms",
+      "articulation": "midtom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/sdbkit-midtom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/sdbkit-midtom.wav",
+      "gitBlobSha": "2dd488e3ca598ad3267535118909208457bc9857",
+      "sha256": "9848e353e6f21047f578baf4b4f4eab5e92835d6237a26cd03122c8f8107f911",
+      "bytes": 155390,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 25767,
+        "durationSeconds": 0.5842857142857143
+      },
+      "decodedFloat32StereoBytes": 206136,
+      "decodedFloat32MonoBytes": 103068,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 154602
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.21794084808643416,
+        "sampleMean": 0.00044292994324993595,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.891188383102417,
+        "monoFirstFrame": -0.0002606511116027832,
+        "monoLastFrame": -6.556510925292969e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/synthkit-hitom.wav",
+      "kit": "synthkit",
+      "category": "toms",
+      "articulation": "hitom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/synthkit-hitom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/synthkit-hitom.wav",
+      "gitBlobSha": "435904067d08387b8b987c5936d477b632ab6391",
+      "sha256": "2c6966492d2bf868e24abac0af4f5fcb025b59b2d9023cbb0134392fbd535fc6",
+      "bytes": 155624,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 25806,
+        "durationSeconds": 0.5851700680272108
+      },
+      "decodedFloat32StereoBytes": 206448,
+      "decodedFloat32MonoBytes": 103224,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 154836
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.171685627577134,
+        "sampleMean": 0.00048505387998759944,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.874541163444519,
+        "monoFirstFrame": 0.00025731325149536133,
+        "monoLastFrame": -1.1920928955078125e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/synthkit-lotom.wav",
+      "kit": "synthkit",
+      "category": "toms",
+      "articulation": "lotom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/synthkit-lotom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/synthkit-lotom.wav",
+      "gitBlobSha": "6df5ffc11b3eb26e642a3e7a0a4a49894fda68dd",
+      "sha256": "b213f21bfc9e40586d1d3a1d2e9388dccfb26079517c576c27bb8d00e3402e2e",
+      "bytes": 163442,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 27109,
+        "durationSeconds": 0.6147165532879818
+      },
+      "decodedFloat32StereoBytes": 216872,
+      "decodedFloat32MonoBytes": 108436,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 162654
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.16525709187190962,
+        "sampleMean": 0.0004112087262983258,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8845659494400024,
+        "monoFirstFrame": 9.495019912719727e-05,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/synthkit-midtom.wav",
+      "kit": "synthkit",
+      "category": "toms",
+      "articulation": "midtom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/synthkit-midtom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/synthkit-midtom.wav",
+      "gitBlobSha": "300bc932ff4feda24f655ea3a28981baf86394ce",
+      "sha256": "aac853f578e39e45ef440ba13db76c40dc57bafc104fce208a79bb5753cb28b5",
+      "bytes": 158660,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 26312,
+        "durationSeconds": 0.5966439909297052
+      },
+      "decodedFloat32StereoBytes": 210496,
+      "decodedFloat32MonoBytes": 105248,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 157872
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1613403723600814,
+        "sampleMean": 0.0005499838437125037,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8714147806167603,
+        "monoFirstFrame": 3.904104232788086e-05,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/x0xproc1-hitom.wav",
+      "kit": "x0xproc1",
+      "category": "toms",
+      "articulation": "hitom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc1-hitom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc1-hitom.wav",
+      "gitBlobSha": "7b22da3f43fdac73881d6d9bd40b544d602f3f72",
+      "sha256": "71bf275586cb7698c2325378d617a4770f9faca09d8f770d12b34eeb6bf0e756",
+      "bytes": 159428,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 26440,
+        "durationSeconds": 0.5995464852607709
+      },
+      "decodedFloat32StereoBytes": 211520,
+      "decodedFloat32MonoBytes": 105760,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 158640
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1499278156986242,
+        "sampleMean": -0.0013415506360390183,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.889828085899353,
+        "monoFirstFrame": 1.4483928680419922e-05,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/x0xproc1-lotom.wav",
+      "kit": "x0xproc1",
+      "category": "toms",
+      "articulation": "lotom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc1-lotom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc1-lotom.wav",
+      "gitBlobSha": "4eb4ae26262bcd0143816c8e173af5f2caf728b4",
+      "sha256": "e5544cb873a6bcbdd11d38033249037b9a1953816b3c77dd552d81ee9ff8f7fb",
+      "bytes": 221108,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 36720,
+        "durationSeconds": 0.8326530612244898
+      },
+      "decodedFloat32StereoBytes": 293760,
+      "decodedFloat32MonoBytes": 146880,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 220320
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.13800294479562483,
+        "sampleMean": 0.0009119591454535009,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8894882202148438,
+        "monoFirstFrame": -9.238719940185547e-06,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/x0xproc1-midtom.wav",
+      "kit": "x0xproc1",
+      "category": "toms",
+      "articulation": "midtom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc1-midtom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc1-midtom.wav",
+      "gitBlobSha": "d3239303882f2ce04655d05900701055c12f18af",
+      "sha256": "ebc2f45ee7337d48d156c71706dff3889d23f7f823b37b0bc65d33e0139f7535",
+      "bytes": 208658,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 34645,
+        "durationSeconds": 0.7856009070294785
+      },
+      "decodedFloat32StereoBytes": 277160,
+      "decodedFloat32MonoBytes": 138580,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 207870
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.1373291161455082,
+        "sampleMean": 6.0951508455831156e-05,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8910796642303467,
+        "monoFirstFrame": 2.205371856689453e-06,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/x0xproc2-hitom.wav",
+      "kit": "x0xproc2",
+      "category": "toms",
+      "articulation": "hitom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc2-hitom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc2-hitom.wav",
+      "gitBlobSha": "6c2744826c2f265366f558f328f5d704928a3788",
+      "sha256": "35dc012905e980babca66c5d8af395b192bdc17ac5803aadf130b205ac4f1628",
+      "bytes": 100334,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 16591,
+        "durationSeconds": 0.37621315192743765
+      },
+      "decodedFloat32StereoBytes": 132728,
+      "decodedFloat32MonoBytes": 66364,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 99546
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.18866820209804994,
+        "sampleMean": 0.00016899551781095697,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8903295993804932,
+        "monoFirstFrame": 7.68899917602539e-06,
+        "monoLastFrame": -8.344650268554688e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/x0xproc2-lotom.wav",
+      "kit": "x0xproc2",
+      "category": "toms",
+      "articulation": "lotom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc2-lotom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc2-lotom.wav",
+      "gitBlobSha": "96ab0a380f707efacc420d705ecb68ebf2b48a46",
+      "sha256": "e6d49e70e4fd6a5b2b02367283ef9e68991f38e61067d27a14d748a7d7641570",
+      "bytes": 277388,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 46100,
+        "durationSeconds": 1.0453514739229024
+      },
+      "decodedFloat32StereoBytes": 368800,
+      "decodedFloat32MonoBytes": 184400,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 276600
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.14066123298807798,
+        "sampleMean": -7.756368457107378e-05,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8907299637794495,
+        "monoFirstFrame": -0.00014859437942504883,
+        "monoLastFrame": 0.0
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    },
+    {
+      "localFile": "toms/x0xproc2-midtom.wav",
+      "kit": "x0xproc2",
+      "category": "toms",
+      "articulation": "midtom",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc2-midtom.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/toms/x0xproc2-midtom.wav",
+      "gitBlobSha": "6180f0689bb1cdfe7153eb1fd2dc331754f39c9a",
+      "sha256": "1f6a79bdedc4f438d4875d267e530eed0cc4c197607c4349f951df87ab7ca6af",
+      "bytes": 128444,
+      "pcm": {
+        "format": "PCM signed integer",
+        "bitsPerSample": 24,
+        "channels": 2,
+        "sampleRate": 44100,
+        "frames": 21276,
+        "durationSeconds": 0.48244897959183675
+      },
+      "decodedFloat32StereoBytes": 170208,
+      "decodedFloat32MonoBytes": 85104,
+      "chunks": [
+        {
+          "id": "fmt ",
+          "bytes": 16
+        },
+        {
+          "id": "data",
+          "bytes": 127656
+        },
+        {
+          "id": "LIST",
+          "bytes": 80
+        },
+        {
+          "id": "bext",
+          "bytes": 648
+        }
+      ],
+      "numericalQc": {
+        "peak": 0.8912508487701416,
+        "peakDbFS": -1.0000008709134622,
+        "rms": 0.17082423607107536,
+        "sampleMean": 0.00012458756938646737,
+        "fullScaleSampleCount": 0,
+        "monoAveragePeak": 0.8909156322479248,
+        "monoFirstFrame": -6.556510925292969e-07,
+        "monoLastFrame": -4.76837158203125e-07
+      },
+      "retrieval": "GitHub fetch_file encoding=base64 at pinned commit",
+      "transformations": []
+    }
+  ],
+  "documents": [
+    {
+      "localFile": "LICENSE",
+      "sourcePath": "LICENSE",
+      "gitBlobSha": "0cb817174267fbfbc0961b1fbfbc097fe22d4f87",
+      "sha256": "7a22e076b0e1d701c3204a9f86b5827aa0d124eca0876b968000e1b31d3e3f3a",
+      "bytes": 6832,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/LICENSE"
+    },
+    {
+      "localFile": "readme.md",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/readme.md",
+      "gitBlobSha": "dd46396d6022393c146b3e3c51a17d9f52aee650",
+      "sha256": "ab1f06a88cdb6df72f15f6cba5bf666f3d408fa7cedfb8c785a9f01d690019a7",
+      "bytes": 1193,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/readme.md"
+    },
+    {
+      "localFile": "PACK-README.md",
+      "sourcePath": "README.md",
+      "gitBlobSha": "d98379fd5cd801a675339b51fe309e5f0fefa66c",
+      "sha256": "00215a047e8eba6c44c14cba95dbc6e2a59f674466cd25366979f072f442931a",
+      "bytes": 2610,
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/README.md"
+    }
+  ],
+  "integrationNotes": [
+    "sdbkit has no cymbal file; do not silently label another kit cymbal as sdbkit.",
+    "x0xproc2 has one generic cymbal, not separately labelled crash and ride.",
+    "Every kit includes separate high, mid and low tom files; filename labels do not assert concert MIDI pitches.",
+    "Preserve source hashes and document any downmix, bit-depth conversion, resampling, trimming or gain changes in a derived bank.",
+    "Numerical QC is not a listening or sound-quality approval.",
+    "Sample mean over a finite percussive clip is not by itself proof of an audible DC offset defect."
+  ]
+}

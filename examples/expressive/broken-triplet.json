@@ -1,0 +1,15 @@
+{
+  "score": {
+    "style": "broken",
+    "seed": 97011,
+    "bars": 16,
+    "bpm": 112,
+    "mode": "dorian",
+    "root": 62
+  },
+  "phrasing": "triplet",
+  "dynamics": 0.8,
+  "humanize": 0.12,
+  "articulation": 0.55,
+  "phraseBars": 4
+}

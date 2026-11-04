@@ -1,0 +1,52 @@
+{
+  "checkedAtUtc": "2026-11-03T22:27:00Z",
+  "baseCommit": "120cd307e85866c45e337529bce3cd243f802fbb",
+  "node": "24.22.1",
+  "samplerTests": {
+    "passed": 34,
+    "failed": 0
+  },
+  "offlineRendererTests": {
+    "passed": 28,
+    "failed": 0
+  },
+  "originalDspWorkletTests": "PASS",
+  "originalMidiTests": "PASS",
+  "sampleProvenance": "All 7 original SHA256 and Git blob SHA1, processed SHA256 verified; independent review matched all hashes.",
+  "conversionRebuild": "Two independent directories byte-identical for all 7 WAVs and manifest; python optimized mode also matched.",
+  "ffmpegDecode": "PASS WAV and MP3",
+  "scope": "Offline Node/core prototype only; PWA/Android/main unchanged; no installation, real-time browser/mobile QA, listening judgment or release.",
+  "githubCi": "Not yet checked for new commit; local tests are not GitHub CI.",
+  "audio": {
+    "schema": "sou1.sample-cue.v1",
+    "sampleRate": 48000,
+    "seed": 20261103,
+    "duration": 16,
+    "outputGainDb": 10,
+    "frames": 768000,
+    "channels": 2,
+    "bitDepth": 24,
+    "peak": 0.23795046096040112,
+    "peakDbfs": -12.470268990881724,
+    "rmsDbfs": -21.428501480232477,
+    "bankId": "vcsl-mini-v1",
+    "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+    "bankEncodedBytes": 987846,
+    "bankDecodedBytes": 1975076,
+    "sha256": "1219610cc34d9b86899ad185d046f023b2e11f815ce528fb814a9a1823ee56c6",
+    "accepted": 90,
+    "dropped": 0,
+    "unmapped": 0,
+    "choked": 41,
+    "activeVoices": 0,
+    "clippedSamples": 0,
+    "nonfiniteSamples": 0,
+    "limitations": [
+      "Offline prototype, not integrated into the shipping PWA or Android app.",
+      "Single velocity layer; only the closed hi-hat has two round robins.",
+      "Mono derived samples; 16-tap preview resampler is not mastering-grade.",
+      "Marimba root MIDI notes 72 and 79 correspond to measured ~525/783 Hz despite source filenames C4/G4.",
+      "No desktop VST host, subjective listening approval, browser/mobile qualification or release claim."
+    ]
+  }
+}

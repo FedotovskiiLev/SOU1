@@ -1,0 +1,228 @@
+{
+  "schema": "sou1.cc0-bank.v1",
+  "id": "fsa-x0xproc1-v1",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/LICENSE",
+  "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+  "samples": [
+    {
+      "id": "kick",
+      "file": "kick.wav",
+      "license": "CC0-1.0",
+      "author": "Kevin B. / Fugue State Audio",
+      "sourceRepository": "stargatedaw/stargate-sample-pack",
+      "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc1-kick.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/kicks/x0xproc1-kick.wav",
+      "sourceGitBlobSha1": "1a74196d16009d8ce1b3a38ed163c1bbe4fc1357",
+      "sourceSha256": "debd64498f2912701f9d7b1948a00840a5ca3ee424111945d2be5601c7cf735e",
+      "sourceBytes": 110636,
+      "sha256": "a763324d7dd1641122887572ca85e3d87da57fb19164a0013d9fd2ff10f8136e",
+      "bytes": 54968,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 18308,
+      "decodedBytes": 73232,
+      "rootNote": 60,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "dcBlocker": "y[n]=x[n]-x[n-1]+exp(-2*pi*15/44100)*y[n-1]; zero state",
+        "endFadeFrames": 88,
+        "quantization": "PCM24 ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "peakDbfs": -0.43114767872304827
+    },
+    {
+      "id": "snare",
+      "file": "snare.wav",
+      "license": "CC0-1.0",
+      "author": "Kevin B. / Fugue State Audio",
+      "sourceRepository": "stargatedaw/stargate-sample-pack",
+      "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc1-snare.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/snares/x0xproc1-snare.wav",
+      "sourceGitBlobSha1": "56390a0a0093619ad84ac49930391956fbc9904e",
+      "sourceSha256": "5c5b35d9565e53500a6bc5524ab1d4f249fe3d91878b1d1c103d95c87acdfe6b",
+      "sourceBytes": 111182,
+      "sha256": "b86c7e8c0ab963292d585a58c25002f2fe44b3226ec7d6377dd34fdd3f675398",
+      "bytes": 55242,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 18399,
+      "decodedBytes": 73596,
+      "rootNote": 60,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "dcBlocker": "y[n]=x[n]-x[n-1]+exp(-2*pi*15/44100)*y[n-1]; zero state",
+        "endFadeFrames": 88,
+        "quantization": "PCM24 ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "peakDbfs": -1.112997174051892
+    },
+    {
+      "id": "closed-hat",
+      "file": "closed-hat.wav",
+      "license": "CC0-1.0",
+      "author": "Kevin B. / Fugue State Audio",
+      "sourceRepository": "stargatedaw/stargate-sample-pack",
+      "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatclsd.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatclsd.wav",
+      "sourceGitBlobSha1": "df5d83f3a33b0bd4dc4efb637f0bc2b261caa98e",
+      "sourceSha256": "a43d2df5a21845c5256fb09ff3f1b97105514ef18b2a57bbc33d80c8892efc11",
+      "sourceBytes": 51644,
+      "sha256": "0b2b967f89f3a386c2400fc11801053532174df8df27046798b8ed72ce3720b8",
+      "bytes": 25472,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 8476,
+      "decodedBytes": 33904,
+      "rootNote": 60,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "dcBlocker": "y[n]=x[n]-x[n-1]+exp(-2*pi*15/44100)*y[n-1]; zero state",
+        "endFadeFrames": 88,
+        "quantization": "PCM24 ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "peakDbfs": -0.9028048243389368
+    },
+    {
+      "id": "open-hat",
+      "file": "open-hat.wav",
+      "license": "CC0-1.0",
+      "author": "Kevin B. / Fugue State Audio",
+      "sourceRepository": "stargatedaw/stargate-sample-pack",
+      "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatopen.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/hihats/x0xproc1-hatopen.wav",
+      "sourceGitBlobSha1": "dc8056feaf1b47667541b0599334dae6ae469953",
+      "sourceSha256": "c6a17e715380911a708f6a2ce9b15dea5eac78a3a2ffc89404dfd04aef9e1c05",
+      "sourceBytes": 140126,
+      "sha256": "0593bbe372b3ffcf908e616ac2b2619636ef52cbac08234e1a77b75dcd84831a",
+      "bytes": 69714,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 23223,
+      "decodedBytes": 92892,
+      "rootNote": 60,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "dcBlocker": "y[n]=x[n]-x[n-1]+exp(-2*pi*15/44100)*y[n-1]; zero state",
+        "endFadeFrames": 88,
+        "quantization": "PCM24 ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "peakDbfs": -1.1749361762873636
+    },
+    {
+      "id": "clap",
+      "file": "clap.wav",
+      "license": "CC0-1.0",
+      "author": "Kevin B. / Fugue State Audio",
+      "sourceRepository": "stargatedaw/stargate-sample-pack",
+      "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+      "sourcePath": "stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc1-clap.wav",
+      "sourceUrl": "https://github.com/stargatedaw/stargate-sample-pack/blob/dbfd6ec52d4ed53b60bdbea5fc6adf295127c027/stargate-sample-pack/fugue-state-audio/drums/claps/x0xproc1-clap.wav",
+      "sourceGitBlobSha1": "21e18f627c8265633d6d4f05cfb42fd7e7dec662",
+      "sourceSha256": "dcd9ccb8d2f860deadd57f82206f9621d24ce1d0db8020842f609a889e236965",
+      "sourceBytes": 204032,
+      "sha256": "edc0f814b77743de656b107c2114bc3ea863aa449f9f1ba681e646456008e665",
+      "bytes": 101666,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 33874,
+      "decodedBytes": 135496,
+      "rootNote": 60,
+      "transforms": {
+        "downmix": "(L+R)/2",
+        "dcBlocker": "y[n]=x[n]-x[n-1]+exp(-2*pi*15/44100)*y[n-1]; zero state",
+        "endFadeFrames": 88,
+        "quantization": "PCM24 ties-to-even; no dither",
+        "gainDb": 0,
+        "trim": false,
+        "resample": false
+      },
+      "peakDbfs": -1.1287332321006738
+    }
+  ],
+  "instruments": [
+    {
+      "id": "kick",
+      "gain": 0.6,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "kick",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "snare",
+      "gain": 0.38,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "snare",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "closed-hat",
+      "gain": 0.25,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "closed-hat",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "chokeGroup": "hat"
+    },
+    {
+      "id": "open-hat",
+      "gain": 0.25,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "open-hat",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "chokeGroup": "hat"
+    },
+    {
+      "id": "clap",
+      "gain": 0.38,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "clap",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    }
+  ]
+}

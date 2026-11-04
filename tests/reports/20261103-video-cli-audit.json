@@ -1,0 +1,73 @@
+{
+  "checkedAtUtc": "2026-11-03T23:37:00Z",
+  "baseCommit": "909061a1cebb342d39c56e25b4cc2b9c0012910f",
+  "foundDefect": {
+    "entrypoints": [
+      "tools/render-cue.mjs",
+      "tools/render-score-cue.mjs"
+    ],
+    "input": "FIFO with no writer",
+    "before": "Both processes timed out after 2 seconds, with no error or output.",
+    "after": "Both promptly exit 1 with bounded regular JSON error and no result files.",
+    "fix": "All three JSON-reading CLI paths share nonblocking, bounded, regular-file readJson. Renderer fingerprint covers the new helper."
+  },
+  "tests": {
+    "total": 130,
+    "pass": 130,
+    "fail": 0,
+    "skipped": 0,
+    "cli": 15,
+    "originalOfflineRenderer": 28,
+    "percussion": 8,
+    "eventScore": 20,
+    "browserNodeHttp": 25,
+    "sampler": 34,
+    "originalDspAudioWorklet": "PASS",
+    "originalMidi": "PASS"
+  },
+  "independentAudit": {
+    "pass": 105,
+    "additionalCases": [
+      "synth 8/96k and cc0 44.1/48k",
+      "seed zero and fractional 4.0001s duration",
+      "independently parsed PCM24 headers/frames/hash/peak/RMS",
+      "fresh-process byte-identical replay",
+      "8 concurrent CLI processes with different seeds: exactly one consistent output pair",
+      "existing broken-symlink outputs preserved",
+      "unsupported parameter rejected"
+    ]
+  },
+  "fullRender": {
+    "engine": "cc0",
+    "sha256": "0b70381206b1072b1a64f249533a4ca7da50706e07796a429e886d00aeb4b82c",
+    "frames": 1728000,
+    "duration": 36,
+    "sampleRate": 48000,
+    "channels": 2,
+    "bitDepth": 24
+  },
+  "audioUnchangedFromPriorDemo": true,
+  "videoContainerCheck": {
+    "status": "PASS; test-only black visual, not user-facing video",
+    "video": "H.264, 36 seconds",
+    "audio": "AAC, stereo 48k, 36 seconds, encoded from the identical WAV",
+    "probeAndCompleteDecode": "PASS",
+    "qualification": "FFmpeg mux/decode check, not a GUI editor import or subjective listening test."
+  },
+  "licenseReview": {
+    "vcsl": "Selected pinned recordings are declared CC0, including commercial software/media use. Source LICENSE and README retained.",
+    "code": "AGPL-3.0-only is separate from the sample license. Output is not automatically covered solely because the tool is AGPL; rights in any included content still matter.",
+    "boundaries": "No copyright/title warranty, exclusivity, endorsement or freedom from automated platform claims is implied. Distribution of modified software/network service is a separate compliance question.",
+    "sources": [
+      "https://github.com/sgossner/VCSL/blob/c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e/README.md",
+      "https://creativecommons.org/publicdomain/zero/1.0/legalcode.en",
+      "https://www.gnu.org/licenses/gpl-faq.en.html#WhatCaseIsOutputGPL"
+    ]
+  },
+  "limits": [
+    "Not crash-atomic; no automatic musical cadence, mastering or LUFS target.",
+    "Browser/device playback, GUI video-editor import and subjective listening are not verified.",
+    "No production, Android, hosting or release changes."
+  ],
+  "githubCi": "Not yet checked for new commit; local tests are not GitHub CI."
+}

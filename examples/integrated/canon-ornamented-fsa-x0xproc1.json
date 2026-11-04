@@ -1,0 +1,16 @@
+{
+  "score": {
+    "style": "canon",
+    "seed": 71,
+    "bars": 16,
+    "bpm": 92,
+    "mode": "harmonic-minor",
+    "root": 62
+  },
+  "phrasing": "ornamented",
+  "dynamics": 0.75,
+  "humanize": 0.1,
+  "articulation": 0.65,
+  "phraseBars": 4,
+  "drumKit": "fsa-x0xproc1"
+}

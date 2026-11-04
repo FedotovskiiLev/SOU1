@@ -10,6 +10,8 @@ import android.util.Base64;
 import android.webkit.*;
 import android.graphics.Color;
 import org.json.*;
+import org.sou1.audio.NativeDrumBankLoader;
+import org.sou1.audio.DevelopmentConfig;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -43,8 +45,8 @@ public final class MainActivity extends Activity {
                 String path=uri.getPath();
                 if (path==null || path.equals("/")) path="/index.html";
                 if(path.contains("..") || path.contains("\\") || path.indexOf('\0')>=0) return denied();
-                String type=path.endsWith(".js")?"text/javascript":path.endsWith(".css")?"text/css":path.endsWith(".svg")?"image/svg+xml":path.endsWith(".json")||path.endsWith(".webmanifest")?"application/json":"text/html";
-                try { return new WebResourceResponse(type,"UTF-8",getAssets().open(path.substring(1))); }
+                String type=(path.endsWith(".js")||path.endsWith(".mjs"))?"text/javascript":path.endsWith(".wav")?"audio/wav":path.endsWith(".css")?"text/css":path.endsWith(".svg")?"image/svg+xml":path.endsWith(".json")||path.endsWith(".webmanifest")?"application/json":"text/html";
+                try { return new WebResourceResponse(type,"audio/wav".equals(type)?null:"UTF-8",getAssets().open(path.substring(1))); }
                 catch(IOException missing){ return denied(); }
             }
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -92,6 +94,49 @@ public final class MainActivity extends Activity {
         if (json.has("polyphony")) intent.putExtra(PlaybackService.EXTRA_POLYPHONY,json.optInt("polyphony",16));
         if (json.has("melodyEnabled")) intent.putExtra(PlaybackService.EXTRA_MELODY_ENABLED,json.optBoolean("melodyEnabled",true));
         if (json.has("drumsEnabled")) intent.putExtra(PlaybackService.EXTRA_DRUMS_ENABLED,json.optBoolean("drumsEnabled",false));
+        if (json.has("scoreMode")) {
+            Object mode = json.get("scoreMode");
+            if (!(mode instanceof String) || !PlaybackService.isSupportedScoreMode((String) mode))
+                throw new JSONException("Unsupported score mode");
+            intent.putExtra(PlaybackService.EXTRA_SCORE_MODE, (String) mode);
+        }
+        if (json.has("scoreConfig")) {
+            intent.putExtra(PlaybackService.EXTRA_SCORE_CONFIG,
+                    PlaybackService.scoreConfigFromJson(json.get("scoreConfig")).canonicalKey());
+        }
+        if (json.has("melodicPreset")) {
+            Object preset = json.get("melodicPreset");
+            if (!(preset instanceof String) || !PlaybackService.isSupportedMelodicPreset((String) preset))
+                throw new JSONException("Unsupported melodic preset");
+            intent.putExtra(PlaybackService.EXTRA_MELODIC_PRESET, (String) preset);
+        }
+        if (json.has("drumKit")) {
+            Object kit = json.get("drumKit");
+            if (!(kit instanceof String) || !PlaybackService.isSupportedDrumKit((String) kit))
+                throw new JSONException("Unsupported drum kit");
+            intent.putExtra(PlaybackService.EXTRA_DRUM_KIT, (String) kit);
+        }
+        // A legacy bridge PLAY must not inherit settings it cannot acknowledge.
+        // MediaSession Play intentionally uses the service's restored selection instead.
+        if (PlaybackService.ACTION_PLAY.equals(action)) {
+            if (!json.has("scoreMode")) intent.putExtra(PlaybackService.EXTRA_SCORE_MODE, "original");
+            if (!json.has("scoreConfig")) intent.putExtra(PlaybackService.EXTRA_SCORE_CONFIG, DevelopmentConfig.DEFAULT.canonicalKey());
+            if (!json.has("melodicPreset")) intent.putExtra(PlaybackService.EXTRA_MELODIC_PRESET, "procedural");
+        }
+        if (PlaybackService.ACTION_PLAY.equals(action) && json.has("requestId")) {
+            Object rawId = json.get("requestId");
+            double id = rawId instanceof Number ? ((Number) rawId).doubleValue() : Double.NaN;
+            if (!Double.isFinite(id) || id < 0 || id > 9007199254740991d || id != Math.rint(id))
+                throw new JSONException("Invalid play requestId");
+            intent.putExtra(PlaybackService.EXTRA_REQUEST_ID, (long) id);
+        }
+        if (PlaybackService.ACTION_PLAY.equals(action) && json.has("timerMinutes")) {
+            Object rawMinutes = json.get("timerMinutes");
+            double minutes = rawMinutes instanceof Number ? ((Number) rawMinutes).doubleValue() : Double.NaN;
+            if (!Double.isFinite(minutes) || minutes < 0 || minutes > 180 || minutes != Math.rint(minutes))
+                throw new JSONException("Invalid session timer");
+            intent.putExtra(PlaybackService.EXTRA_TIMER_MINUTES, (int) minutes);
+        }
         intent.putExtra(PlaybackService.EXTRA_SEED,json.optLong("seed",1));
         return intent;
     }
@@ -120,6 +165,17 @@ public final class MainActivity extends Activity {
         }, "sou1-midi-save").start();
     }
     private final class Bridge {
+        @JavascriptInterface public String audioCapabilities() {
+            try {
+                JSONArray kits = new JSONArray().put("procedural");
+                for (String kit : NativeDrumBankLoader.supportedKits()) kits.put(kit);
+                return new JSONObject().put("schema", "sou1.native-audio.v1").put("drumKits", kits)
+                        .put("scoreModes", new JSONArray().put("original").put("developing"))
+                        .put("scoreConfigSchema", "sou1.development-config.v1").put("customDrums", "custom-v1")
+                        .put("melodicPresets", new JSONArray().put("procedural").put("chamber")
+                                .put("piano-room").put("chamber-flute")).toString();
+            } catch (JSONException impossible) { return "{}"; }
+        }
         @JavascriptInterface public String midiExportStatus() { return midiStatus; }
         @JavascriptInterface public boolean exportMidi(String encoded, String filename) {
             if (encoded == null || encoded.length() > ((MIDI_MAX_BYTES+2)/3)*4 || filename == null || !filename.matches("SOU1-[0-9a-f]{8}\\.mid")) return false;

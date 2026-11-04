@@ -1,0 +1,195 @@
+{
+  "schema": "sou1.acoustic-composition-integration-check.v1",
+  "checkedAt": "2026-11-04T09:39:00Z",
+  "parents": {
+    "priorIntegration": "55a038d2958a91f6cb2a9565c8f8a9b93a127ae8",
+    "acousticKit": "5dd9fbcac0edb751b71cd9b1682cbbf9342d6507"
+  },
+  "merge": "Only README overlapped, and both sections are retained. Existing renderer, composer, MIDI and provenance behavior is preserved; the explicit MIDI selector uses PREPARED_DRUM_KITS.",
+  "verification": {
+    "command": "node --test --test-reporter=tap tests/*.test.mjs",
+    "tests": 221,
+    "passed": 221,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 78307.552614,
+    "fsaRenderMatrix": {
+      "combinations": 150,
+      "drumVelocityScale": 1
+    },
+    "acousticRenderMatrix": {
+      "combinations": 60,
+      "drumVelocityScale": 1.6
+    },
+    "wholeMatrix": "6 forms x 5 phrasing strategies x 7 full kits, no lost/unmapped events, clipping or nonfinite samples. Each matrix case uses 2 bars, 180 BPM, 48kHz.",
+    "regressions": [
+      "Three full-length FSA renders remain byte-identical to 55a038d2.",
+      "The same recipe produces identical MIDI bytes across VCSL, five full FSA kits and both Guigui presets.",
+      "Acoustic rendering replays exactly across block sizes and refuses a substituted manifest.",
+      "Both full-length acoustic examples preserve the exact same 229 source events, with 16 of 83 percussion notes above velocity 0.6."
+    ],
+    "independentReview": "90 style/phrasing/seed combinations preserve default score values and exact MIDI bytes. Scaling changes drum velocity only, without changing onset, gate, pitch or pitched parts. Four targeted repository tests passed. Fresh-process acoustic replay and MIDI receipts retain scale1.6 and kit; eight invalid kit selectors rejected without output; one FSA render PCM unchanged. Scaled CLI replay/receipt check is now a permanent regression."
+  },
+  "velocityControl": {
+    "name": "drumVelocityScale",
+    "range": [
+      0.25,
+      2
+    ],
+    "default": 1,
+    "stage": "After expressive phrase dynamics and seeded humanization, before final velocity clamp to [0,1].",
+    "compatibility": "Unspecified/default1 preserves prior score velocities, MIDI and PCM. The scale applies to percussion only.",
+    "reason": "Ordinary quiet composition recipes stay below 0.6 and correctly render identical soft/dynamic PCM. The explicit 1.6 acoustic examples cross the authored layer threshold; the threshold and recordings are unchanged.",
+    "discoveredDuringIntegration": "An initial assertion expecting different PCM without stronger velocities failed. The final opt-in control is covered by strict validation, determinism and unchanged-default regressions."
+  },
+  "fullLengthRenders": [
+    {
+      "options": {
+        "seed": 33,
+        "sampleRate": 48000,
+        "bars": 16,
+        "bpm": 118,
+        "root": 65,
+        "mode": "major",
+        "density": 0.72,
+        "variation": 0.65,
+        "drums": true,
+        "melody": true,
+        "outputGainDb": 4,
+        "style": "waltz"
+      },
+      "expression": {
+        "phrasing": "lyrical",
+        "phraseBars": 8,
+        "dynamics": 0.7,
+        "humanize": 0.15,
+        "articulation": 0.2,
+        "drumVelocityScale": 1.6
+      },
+      "drumKit": "guigui-dynamic",
+      "duration": 26.406770833333333,
+      "frames": 1267525,
+      "sha256": "ef54c663b8226ad44b4b0a397dff23e74cdf785037a19fc744d80f59164f5cce",
+      "peakDbfs": -3.6381743781447353,
+      "rmsDbfs": -19.07845624235202,
+      "rack": {
+        "accepted": 229,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 0,
+        "activeVoices": 0
+      },
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0,
+      "instrumentBanks": {
+        "kick": "guigui-dynamic-v1",
+        "snare": "guigui-dynamic-v1",
+        "closed-hat": "guigui-dynamic-v1",
+        "marimba": "vcsl-mini-v2",
+        "shaker-double": "vcsl-mini-v2",
+        "toms": "guigui-dynamic-v1",
+        "short-clash": "guigui-dynamic-v1",
+        "kick-hard": "guigui-dynamic-v1",
+        "kick-soft": "guigui-dynamic-v1",
+        "ride-hard": "guigui-dynamic-v1",
+        "open-hat": "guigui-dynamic-v1",
+        "half-cymbal": "guigui-dynamic-v1",
+        "ride-soft": "guigui-dynamic-v1",
+        "snare-hard": "guigui-dynamic-v1",
+        "snare-soft": "guigui-dynamic-v1",
+        "splash-hard": "guigui-dynamic-v1",
+        "splash-soft": "guigui-dynamic-v1",
+        "tom-high-hard": "guigui-dynamic-v1",
+        "tom-high-soft": "guigui-dynamic-v1",
+        "tom-low-hard": "guigui-dynamic-v1",
+        "tom-low-soft": "guigui-dynamic-v1",
+        "tom-mid-hard": "guigui-dynamic-v1",
+        "tom-mid-soft": "guigui-dynamic-v1",
+        "tom-high": "guigui-dynamic-v1",
+        "tom-mid": "guigui-dynamic-v1",
+        "tom-low": "guigui-dynamic-v1",
+        "ride": "guigui-dynamic-v1",
+        "splash": "guigui-dynamic-v1"
+      },
+      "percussionNotes": 83,
+      "notesAboveSoftHardBoundary": 16
+    },
+    {
+      "options": {
+        "seed": 33,
+        "sampleRate": 48000,
+        "bars": 16,
+        "bpm": 118,
+        "root": 65,
+        "mode": "major",
+        "density": 0.72,
+        "variation": 0.65,
+        "drums": true,
+        "melody": true,
+        "outputGainDb": 4,
+        "style": "waltz"
+      },
+      "expression": {
+        "phrasing": "lyrical",
+        "phraseBars": 8,
+        "dynamics": 0.7,
+        "humanize": 0.15,
+        "articulation": 0.2,
+        "drumVelocityScale": 1.6
+      },
+      "drumKit": "guigui-soft",
+      "duration": 26.406770833333333,
+      "frames": 1267525,
+      "sha256": "3df685248781bc0bc28903bfb548328275244af0affb0a306150e14bba371b32",
+      "peakDbfs": -3.9792007698753644,
+      "rmsDbfs": -23.13883263455513,
+      "rack": {
+        "accepted": 229,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 0,
+        "activeVoices": 0
+      },
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0,
+      "instrumentBanks": {
+        "kick": "guigui-soft-v1",
+        "snare": "guigui-soft-v1",
+        "closed-hat": "guigui-soft-v1",
+        "marimba": "vcsl-mini-v2",
+        "shaker-double": "vcsl-mini-v2",
+        "toms": "guigui-soft-v1",
+        "short-clash": "guigui-soft-v1",
+        "kick-hard": "guigui-soft-v1",
+        "kick-soft": "guigui-soft-v1",
+        "ride-hard": "guigui-soft-v1",
+        "open-hat": "guigui-soft-v1",
+        "half-cymbal": "guigui-soft-v1",
+        "ride-soft": "guigui-soft-v1",
+        "snare-hard": "guigui-soft-v1",
+        "snare-soft": "guigui-soft-v1",
+        "splash-hard": "guigui-soft-v1",
+        "splash-soft": "guigui-soft-v1",
+        "tom-high-hard": "guigui-soft-v1",
+        "tom-high-soft": "guigui-soft-v1",
+        "tom-low-hard": "guigui-soft-v1",
+        "tom-low-soft": "guigui-soft-v1",
+        "tom-mid-hard": "guigui-soft-v1",
+        "tom-mid-soft": "guigui-soft-v1",
+        "tom-high": "guigui-soft-v1",
+        "tom-mid": "guigui-soft-v1",
+        "tom-low": "guigui-soft-v1",
+        "ride": "guigui-soft-v1",
+        "splash": "guigui-soft-v1"
+      },
+      "percussionNotes": 83,
+      "notesAboveSoftHardBoundary": 16
+    }
+  ],
+  "limitations": [
+    "Offline Node rendering and MIDI validation, not listening, live PWA/Android, actual REAPER or device qualification.",
+    "Soft/hard threshold 0.6 is an explicit mapping choice, not calibrated drum dynamics or round robin.",
+    "17 lossless Guigui source recordings include documented source full-scale sample hits. No fabricated clap, crash or pedal/chick recording is claimed.",
+    "New head CI is separate from the successful earlier 55a038d2 Android workflow. No merge or release is included."
+  ]
+}

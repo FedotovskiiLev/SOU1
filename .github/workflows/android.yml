@@ -50,6 +50,19 @@ jobs:
           node tests/composition-parity.test.mjs
           node tests/weather-parity.mjs
           node tests/layer-balance.test.mjs
+      - name: Verify recorded percussion and composition integration
+        run: |
+          node --test tests/*.test.mjs
+          sh tests/run-recorded-engine.sh
+          sh tests/run-native-drum-banks.sh
+          sh tests/run-native-drum-service.sh
+          sh tests/run-development-score.sh
+          sh tests/run-developing-engine.sh
+          sh tests/run-development-config.sh
+          sh tests/run-custom-drum-banks.sh
+          sh tests/run-native-selection.sh
+          sh tests/run-recorded-melodic-engine.sh
+          sh tests/run-recorded-melodic-parity.sh
       - name: Compile APK and run Android lint
         run: gradle --no-daemon :app:assembleDebug :app:lintDebug :app:assembleRelease :app:lintRelease
       - name: Verify APK signing and package
@@ -67,7 +80,7 @@ jobs:
       - name: Upload unsigned release APK for owner signing
         uses: actions/upload-artifact@v7
         with:
-          name: SOU1-0.2.0-unsigned-release
+          name: SOU1-0.3.0-unsigned-release
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           if-no-files-found: error
           retention-days: 14

@@ -1,0 +1,59 @@
+{
+  "schema": "sou1.test-report.v1",
+  "date": "2026-11-04",
+  "baseCommit": "4f003687ae87780caea5d189786ececbf418dfd2",
+  "scope": "Guigui acoustic CC0 soft/dynamic offline presets",
+  "testCommand": "node --test tests/*.test.mjs",
+  "tests": 165,
+  "passed": 165,
+  "failed": 0,
+  "samples": 17,
+  "encodedWavBytes": 1410206,
+  "uniqueDecodedFloat32Bytes": 2818916,
+  "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+  "checks": [
+    "Every lossless PCM MD5 equals original FLAC STREAMINFO",
+    "17 WAVs and two manifests rebuild byte-identically",
+    "IEEE-neighbor velocity boundaries at 0.6 do not overlap or leave gaps",
+    "Soft/dynamic replay exact at 44100 and 48000 Hz",
+    "FSA baseline WAV unchanged",
+    "Full EventScore instrument set fits 32-slot rack",
+    "No missing/unmapped/dropped events in accepted renders",
+    "Independent read-only review passed"
+  ],
+  "sourceQuality": "Five hard sources touch PCM rails with runs of 1-2 samples, not proof of sustained clipping or listening quality. Raw source PCM preserved.",
+  "licenseEvidence": {
+    "originalCc0DirectlyVerified": 8,
+    "pinnedOfficialSonicPiDeclaration": 9
+  },
+  "preview": {
+    "schema": "sou1.drum-preview.v1",
+    "timeline": [
+      {
+        "kit": "guigui-soft",
+        "startSeconds": 0,
+        "durationSeconds": 10.5714375,
+        "inputLUFS": -28.53,
+        "gainDb": 5.53,
+        "sourceWavSha256": "fd32ac8d936bae9cff0008838a32be12696eadffba9cdff3f51fd515e38f4edd"
+      },
+      {
+        "kit": "guigui-dynamic",
+        "startSeconds": 10.5714375,
+        "durationSeconds": 10.5714375,
+        "inputLUFS": -20.44,
+        "gainDb": -2.56,
+        "sourceWavSha256": "236635aa9f399bc1c6e4db5dd0290963a37cb40f7af8056142654fe9f52caca7"
+      }
+    ],
+    "processing": "Two identical-note acoustic renders; constant gain toward measured -23 LUFS, no compressor/limiter. Seven soft/hard authored sample pairs with fixed velocity 0.6 threshold in dynamic; soft aliases never switch.",
+    "durationSeconds": 21.142875,
+    "bytes": 320204,
+    "sha256": "6d6f631eb5a7210f94488adfbfb20ac5e8d297a6518dfda4d665f3fd2ea1c700"
+  },
+  "productionChanged": false,
+  "browserTested": false,
+  "releasePublished": false,
+  "listeningApproved": false,
+  "githubCi": "No GitHub CI pass is asserted; this is local evidence."
+}

@@ -1,0 +1,207 @@
+{
+  "schema": "sou1.test-report.v1",
+  "date": "2026-11-04",
+  "baseCommit": "84cc6a4dd09857ec7d325d8dc617f7845f511155",
+  "scope": "Five complete FSA drum banks and aligned offline drum stems",
+  "testCommand": "node --test tests/*.test.mjs",
+  "tests": 156,
+  "passed": 156,
+  "failed": 0,
+  "catalog": {
+    "schema": "sou1.drum-catalog.v1",
+    "license": "CC0-1.0",
+    "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+    "sampleCount": 58,
+    "kits": [
+      {
+        "id": "fsa-distkit",
+        "bankId": "fsa-distkit-full-v1",
+        "manifest": "distkit/manifest.json",
+        "sampleCount": 13,
+        "articulations": [
+          "clap",
+          "crash",
+          "ride",
+          "closed-hat",
+          "open-hat",
+          "kick",
+          "claves",
+          "cowbell",
+          "zap",
+          "snare",
+          "tom-high",
+          "tom-low",
+          "tom-mid"
+        ],
+        "sourceBytes": 3253028,
+        "encodedBytes": 1621972,
+        "decodedBytes": 2161860,
+        "scoreCymbal": "crash",
+        "missing": []
+      },
+      {
+        "id": "fsa-sdbkit",
+        "bankId": "fsa-sdbkit-full-v1",
+        "manifest": "sdbkit/manifest.json",
+        "sampleCount": 10,
+        "articulations": [
+          "clap",
+          "closed-hat",
+          "open-hat",
+          "kick",
+          "sub-a",
+          "fmperc",
+          "snare",
+          "tom-high",
+          "tom-low",
+          "tom-mid"
+        ],
+        "sourceBytes": 1849862,
+        "encodedBytes": 921444,
+        "decodedBytes": 1227996,
+        "scoreCymbal": null,
+        "missing": [
+          "cymbal"
+        ]
+      },
+      {
+        "id": "fsa-synthkit",
+        "bankId": "fsa-synthkit-full-v1",
+        "manifest": "synthkit/manifest.json",
+        "sampleCount": 11,
+        "articulations": [
+          "clap",
+          "crash",
+          "ride",
+          "closed-hat",
+          "open-hat",
+          "kick",
+          "8bit",
+          "snare",
+          "tom-high",
+          "tom-low",
+          "tom-mid"
+        ],
+        "sourceBytes": 2240590,
+        "encodedBytes": 1116452,
+        "decodedBytes": 1487952,
+        "scoreCymbal": "crash",
+        "missing": []
+      },
+      {
+        "id": "fsa-x0xproc1",
+        "bankId": "fsa-x0xproc1-full-v1",
+        "manifest": "x0xproc1/manifest.json",
+        "sampleCount": 11,
+        "articulations": [
+          "clap",
+          "crash",
+          "ride",
+          "closed-hat",
+          "open-hat",
+          "kick",
+          "rimshot",
+          "snare",
+          "tom-high",
+          "tom-low",
+          "tom-mid"
+        ],
+        "sourceBytes": 1776418,
+        "encodedBytes": 884366,
+        "decodedBytes": 1178504,
+        "scoreCymbal": "crash",
+        "missing": []
+      },
+      {
+        "id": "fsa-x0xproc2",
+        "bankId": "fsa-x0xproc2-full-v1",
+        "manifest": "x0xproc2/manifest.json",
+        "sampleCount": 13,
+        "articulations": [
+          "clap",
+          "cymbal",
+          "closed-hat",
+          "open-hat",
+          "kick",
+          "claves",
+          "cowbell",
+          "maracas",
+          "rimshot",
+          "snare",
+          "tom-high",
+          "tom-low",
+          "tom-mid"
+        ],
+        "sourceBytes": 2529938,
+        "encodedBytes": 1260428,
+        "decodedBytes": 1679800,
+        "scoreCymbal": "cymbal",
+        "missing": []
+      }
+    ]
+  },
+  "preview": {
+    "schema": "sou1.drum-preview.v1",
+    "timeline": [
+      {
+        "kit": "fsa-distkit",
+        "startSeconds": 0,
+        "durationSeconds": 10.5714375,
+        "gainDb": -1.7,
+        "inputLUFS": -21.3,
+        "sourceWavSha256": "3f02bb6f4bb76fa33c434d2384cfe79c0b1dc72a5902247f05564f9ccb670c71"
+      },
+      {
+        "kit": "fsa-sdbkit",
+        "startSeconds": 10.5714375,
+        "durationSeconds": 10.5714375,
+        "gainDb": -1.67,
+        "inputLUFS": -21.33,
+        "sourceWavSha256": "33bfb956c6a6e985e81fd184a3715b91a5f05ddaec6dd042b60a1c0e1dfee9ea"
+      },
+      {
+        "kit": "fsa-synthkit",
+        "startSeconds": 21.142875,
+        "durationSeconds": 10.5714375,
+        "gainDb": -1.26,
+        "inputLUFS": -21.74,
+        "sourceWavSha256": "7c9c83cddf971628edd0246e98bde1daf2552be2da349dde841018135c1ec1fb"
+      },
+      {
+        "kit": "fsa-x0xproc1",
+        "startSeconds": 31.7143125,
+        "durationSeconds": 10.5714375,
+        "gainDb": -3.84,
+        "inputLUFS": -19.16,
+        "sourceWavSha256": "af5dee54007c87f8fc22caa6bfcbc5a9b48cfc6441c6a7234c9aea35313a5447"
+      },
+      {
+        "kit": "fsa-x0xproc2",
+        "startSeconds": 42.28575,
+        "durationSeconds": 10.5714375,
+        "gainDb": -3.51,
+        "inputLUFS": -19.49,
+        "sourceWavSha256": "1d72e9bce1eabc205b060bfb769a2eab004f3f0da4dc2c05d56af0669296915b"
+      }
+    ],
+    "processing": "Per-segment constant gain to measured target -23 LUFS; no compressor or limiter. MP3 q2. Same 4 bars / 112 BPM common groove; available tom/cymbal fills. sdb has no cymbal.",
+    "durationSeconds": 52.8571875,
+    "sha256": "5fb60d7e3e53cade99ae29347ca622813c79c3b34e816fdfe0c9f6f775a3bf2d",
+    "bytes": 742460
+  },
+  "checks": [
+    "All 58 sources pinned by Git blob SHA1 and SHA256",
+    "All 58 artifacts playable with positive energy and exact event accounting",
+    "All five kits render at 44100 and 48000 Hz",
+    "Legacy VCSL PCM and starter sample bytes unchanged",
+    "Selected manifest and runtime fingerprints included in strict replay",
+    "Python rebuild produces identical 58 WAV files, five manifests and catalog",
+    "SDB missing cymbal is explicit; full kits map three separately authored toms",
+    "Independent read-only full bank/render/replay review passed"
+  ],
+  "productionChanged": false,
+  "browserTested": false,
+  "releasePublished": false,
+  "listeningApproved": false,
+  "githubCi": "Not evaluated as passed: this report contains local Node and offline render evidence only."
+}

@@ -1,0 +1,1035 @@
+{
+  "schema": "sou1.cc0-bank.v1",
+  "id": "guigui-soft-v1",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/LICENSE.md#samples",
+  "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+  "samples": [
+    {
+      "id": "kick-hard",
+      "file": "kick-hard.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_bass_hard.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_bass_hard.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100051/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "9ed00e338657e157e103868da0fb59c5cac30f8f",
+      "sourceSha256": "ed3ac2187d679ca1c3fec533ea1c3576c840c81ba98b8d967eb12a8f27471bc1",
+      "sourceBytes": 33950,
+      "sourcePcmMd5": "83c83fa93eef6241dd76a729385bc865",
+      "sha256": "13223f92180ebc390814636749b7aa8d3fc75b6174da7809057a2ad95b59ef5f",
+      "bytes": 61360,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 30658,
+      "decodedBytes": 122632,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 186,
+        "maximumConsecutivePositiveFullScaleSamples": 2,
+        "maximumConsecutiveNegativeFullScaleSamples": 1
+      },
+      "peakDbfs": 0.0
+    },
+    {
+      "id": "kick-soft",
+      "file": "kick-soft.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_bass_soft.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_bass_soft.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100052/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "06a12c5d495da3ecaea28f896f10793d59574cdc",
+      "sourceSha256": "87bfb846ea7adf747515b1c59602555c2dde5da40ba4cb5a19244df06385ff23",
+      "sourceBytes": 25370,
+      "sourcePcmMd5": "313f12535090b12d7efde2191a784476",
+      "sha256": "3d78660af0cae3849bc2b9b28f61ce6a16486831d49c7cb338d3ebe4f6820b48",
+      "bytes": 49652,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 24804,
+      "decodedBytes": 99216,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -0.15296032480308192
+    },
+    {
+      "id": "closed-hat",
+      "file": "closed-hat.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_cymbal_closed.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_cymbal_closed.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100053/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "8c886e135ec37e3b293112a144b556ef1b545d37",
+      "sourceSha256": "f3b9d6bb14f75ba06ef633baf58b1f75f0e2ea5e07edd491f0a22aedb2480d62",
+      "sourceBytes": 20943,
+      "sourcePcmMd5": "7f67040c6e47e169f2cd0f22bc151c45",
+      "sha256": "25abe1441c911c64213359fbe0317d655f217fbfe6450401deac4d45cb118aaa",
+      "bytes": 18296,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 9126,
+      "decodedBytes": 36504,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -0.8559171335140947
+    },
+    {
+      "id": "ride-hard",
+      "file": "ride-hard.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_cymbal_hard.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_cymbal_hard.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100056/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "4650289911e4f977d1ec8da68265ad7a148c11f0",
+      "sourceSha256": "be18750e383d09d2c3776b98551db5f736a2bf420666788e2900b2b8bf7e530a",
+      "sourceBytes": 91910,
+      "sourcePcmMd5": "d6f11581f37a80682210716a0630d5db",
+      "sha256": "1699107f47ff5e3a707c262dcab195c2ba7174e5b53669bce445c1f2d9c1aca0",
+      "bytes": 144588,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 72272,
+      "decodedBytes": 289088,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -0.02707954460037952
+    },
+    {
+      "id": "open-hat",
+      "file": "open-hat.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_cymbal_open.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_cymbal_open.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100055/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "bcfee94874de2bb239debab5fcad5e47e40fffc6",
+      "sourceSha256": "3a9cf6aacab05003fe3edaa9a9150841e080ecd3b7e6383571bc3570c23c7118",
+      "sourceBytes": 119223,
+      "sourcePcmMd5": "414b0222e53fe078cc3f81c6cb19dc60",
+      "sha256": "8f142f17958ac06c1598a61898bea2081de97724bea9ebfeb099e3dd37eec8a4",
+      "bytes": 159190,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 79573,
+      "decodedBytes": 318292,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -0.1362499476764601
+    },
+    {
+      "id": "half-cymbal",
+      "file": "half-cymbal.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_cymbal_pedal.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_cymbal_pedal.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100054/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "f09d80bb2797305ccdd20720365089bc597c2766",
+      "sourceSha256": "af2cf5e259f3671d9b363418b9d222b742cf6e41dd3e6871b23f2b4ce8b36635",
+      "sourceBytes": 22633,
+      "sourcePcmMd5": "4a11564e281c18395ca9abd56f1df959",
+      "sha256": "2b0ce993d5aea8fb807d26acf4c8278fda18bef059ae8227e6afcc38065d1780",
+      "bytes": 24052,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 12004,
+      "decodedBytes": 48016,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -2.6816423209633946
+    },
+    {
+      "id": "ride-soft",
+      "file": "ride-soft.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_cymbal_soft.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_cymbal_soft.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100057/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "9ae03ee058b79d1115149d13f1bdb327347e66aa",
+      "sourceSha256": "ab4cee3de9beaf99bf658f2ad54e1e9a8e5befbe96958133bdb818dfe348b0dd",
+      "sourceBytes": 59794,
+      "sourcePcmMd5": "2eebbbaf6c5cc8e4974f277381fd5c8e",
+      "sha256": "7cd23ff70a23766919cc5d92a8ce345e9d56dbfc4fb50ff0bd4f2547d2108268",
+      "bytes": 83810,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 41883,
+      "decodedBytes": 167532,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -4.1049069212342495
+    },
+    {
+      "id": "snare-hard",
+      "file": "snare-hard.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_snare_hard.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_snare_hard.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100058/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "d02f1332dcd82afd43fecde00f7ae87c6c496428",
+      "sourceSha256": "1b2325523ed2a93da49df338ef861b4c35bfcbdc2e5e726ce1e873201883ffe4",
+      "sourceBytes": 29657,
+      "sourcePcmMd5": "3187abca18815e0c0ab158876e4ddfe8",
+      "sha256": "7b53c811bade2b3899a3f37b5f0f769368afd579d03885e3a7f07eae3ed4f73d",
+      "bytes": 39286,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 19621,
+      "decodedBytes": 78484,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 33,
+        "maximumConsecutivePositiveFullScaleSamples": 1,
+        "maximumConsecutiveNegativeFullScaleSamples": 1
+      },
+      "peakDbfs": 0.0
+    },
+    {
+      "id": "snare-soft",
+      "file": "snare-soft.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_snare_soft.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_snare_soft.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100059/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "8dc76ce1a03bcbc4d74a0902caea5437841bebf4",
+      "sourceSha256": "3da004f932da94c4a4ccf1066f973c08ebe314875304333c1b257dbd6725ad9e",
+      "sourceBytes": 23031,
+      "sourcePcmMd5": "4113545a37a3f7f6a74b64b1602d05fa",
+      "sha256": "200ed4c42627e96cc991a1e71c73eda5fd74aea2f742ddbe1f1da75f6896c79e",
+      "bytes": 27808,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 13882,
+      "decodedBytes": 55528,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -5.592371950984001
+    },
+    {
+      "id": "splash-hard",
+      "file": "splash-hard.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_splash_hard.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_splash_hard.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100060/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "9e083cddb1590d4f6e3229b95f184a40bb0f702c",
+      "sourceSha256": "4a050000a71b313c449580b98b48d7c3a808eabfeccdffcf8dc35071d665a679",
+      "sourceBytes": 149979,
+      "sourcePcmMd5": "111cbee7418ea671f54e75347bc6ace9",
+      "sha256": "3e30b5258b18785d76d2fc18370a1012d40b793e867c6d43dffc616735220204",
+      "bytes": 229028,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 114492,
+      "decodedBytes": 457968,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -0.13598068873265426
+    },
+    {
+      "id": "splash-soft",
+      "file": "splash-soft.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_splash_soft.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_splash_soft.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100061/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "187d647232e13cb71cfa180031b98715f707b620",
+      "sourceSha256": "30339472b3c399c68b6ca4971f8fddb2d0529468c5f4320fd77149c5e5c909fc",
+      "sourceBytes": 111257,
+      "sourcePcmMd5": "a4bd9232b42ddaf4c51ce3c744a7faa8",
+      "sha256": "8ac0f1ecf2a3edbc3c698368d1a70e65c1bfc343c730fc66027646cd4581adf8",
+      "bytes": 163918,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 81937,
+      "decodedBytes": 327748,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -7.338179481849771
+    },
+    {
+      "id": "tom-high-hard",
+      "file": "tom-high-hard.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_tom_hi_hard.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_tom_hi_hard.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100062/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "c52cd33688b9aae8b1218261843a275813530d2c",
+      "sourceSha256": "18d53d2dac65d1cd2b0b1f23eaa68e6233beb6e84d4352191cc6e6ea5200295c",
+      "sourceBytes": 34839,
+      "sourcePcmMd5": "b295df0650eb4c877da785a380fff621",
+      "sha256": "cfc5e34f9b82a2680e01ee57ace60df9d0f55c456fc06cb2e6440beb6517482e",
+      "bytes": 65106,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 32531,
+      "decodedBytes": 130124,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 18,
+        "maximumConsecutivePositiveFullScaleSamples": 1,
+        "maximumConsecutiveNegativeFullScaleSamples": 1
+      },
+      "peakDbfs": 0.0
+    },
+    {
+      "id": "tom-high-soft",
+      "file": "tom-high-soft.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_tom_hi_soft.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_tom_hi_soft.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100063/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "74bbc3fd68b3d0a9a477afaac6f90ad368104944",
+      "sourceSha256": "33717a5c456c8d7783226a85e4809f298bfec0e1eb2772da41005757ac8e9124",
+      "sourceBytes": 27177,
+      "sourcePcmMd5": "b65561a0846d283f370c0d329c10e369",
+      "sha256": "28ea80e8677056329fa6e9fc16d42e4c5428472ca5594522e5b84313739a3139",
+      "bytes": 55524,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 27740,
+      "decodedBytes": 110960,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -6.037049964247175
+    },
+    {
+      "id": "tom-low-hard",
+      "file": "tom-low-hard.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_tom_lo_hard.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_tom_lo_hard.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100064/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "43f0ca6b483a1b7e58d0fdec5c705d535c08afc6",
+      "sourceSha256": "e8caf199618dfee0d9941446f5e80ef8722ee239def78f5b31bd6ec7c27d597e",
+      "sourceBytes": 43852,
+      "sourcePcmMd5": "3324af2cb7894b54ccc3ff91a40b074a",
+      "sha256": "7898298efc4713ca29def89713e857792df6e178b8b1e6d11b3d6553a9c61143",
+      "bytes": 88264,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 44110,
+      "decodedBytes": 176440,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 30,
+        "maximumConsecutivePositiveFullScaleSamples": 1,
+        "maximumConsecutiveNegativeFullScaleSamples": 1
+      },
+      "peakDbfs": 0.0
+    },
+    {
+      "id": "tom-low-soft",
+      "file": "tom-low-soft.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_tom_lo_soft.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_tom_lo_soft.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100065/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "71c1e616c05b30caad5d3cb38fb53c75504926cb",
+      "sourceSha256": "473adf163ce22285b633d2a7f7c673a9f1d0820b0ea184cb497ee45d66c939c3",
+      "sourceBytes": 32900,
+      "sourcePcmMd5": "6db4f3df964ca767888aa1c03d3fa239",
+      "sha256": "ce946323787cf848ec5b866135397528391fac7783a9e94d58aee7c625bcf05a",
+      "bytes": 76196,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 38076,
+      "decodedBytes": 152304,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -5.40763318482637
+    },
+    {
+      "id": "tom-mid-hard",
+      "file": "tom-mid-hard.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_tom_mid_hard.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_tom_mid_hard.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100066/",
+      "originalLicenseIndependentlyConfirmed": false,
+      "licenseEvidence": "CC0 declared by pinned Sonic Pi LICENSE and per-file README; original per-file license not independently confirmed.",
+      "sourceGitBlobSha1": "bc40cee8e967ad1cf503b4a9ca14d854af79d083",
+      "sourceSha256": "712e960a8107edaf168e6c737eb5729e7c35cad8b0510c48aecf7e24357a2d06",
+      "sourceBytes": 35726,
+      "sourcePcmMd5": "2527d809636beee84b29441a99d7d613",
+      "sha256": "18150930c506a703dcb8d97c3705661984a58a92285c7774bc3e325202f4b083",
+      "bytes": 64802,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 32379,
+      "decodedBytes": 129516,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 27,
+        "maximumConsecutivePositiveFullScaleSamples": 2,
+        "maximumConsecutiveNegativeFullScaleSamples": 1
+      },
+      "peakDbfs": 0.0
+    },
+    {
+      "id": "tom-mid-soft",
+      "file": "tom-mid-soft.wav",
+      "license": "CC0-1.0",
+      "author": "menegass",
+      "sourceRepository": "sonic-pi-net/sonic-pi",
+      "sourceCommit": "df6f17e4625b0451fa2af8accf2e1e641c7ad458",
+      "sourcePath": "etc/samples/drum_tom_mid_soft.flac",
+      "sourceUrl": "https://github.com/sonic-pi-net/sonic-pi/blob/df6f17e4625b0451fa2af8accf2e1e641c7ad458/etc/samples/drum_tom_mid_soft.flac",
+      "originalSourceUrl": "https://freesound.org/people/menegass/sounds/100067/",
+      "originalLicenseIndependentlyConfirmed": true,
+      "licenseEvidence": "CC0 displayed on independently retrieved original Freesound sample page and declared by pinned Sonic Pi.",
+      "sourceGitBlobSha1": "d2c68646742e8f72987ec7b6e38ea0fa3495bf37",
+      "sourceSha256": "01105a7914ae2ee5254f2ae955057a8f90246f7d30a40edb35fcbdc8c85e5119",
+      "sourceBytes": 28852,
+      "sourcePcmMd5": "d9ddb8dfe065a0f05b85fca3228a57ec",
+      "sha256": "b574e7e9df1b3d3d276134d70e480c56fc647c1f175d7009bf7f73983096358a",
+      "bytes": 59326,
+      "sampleRate": 44100,
+      "channels": 1,
+      "frames": 29641,
+      "decodedBytes": 118564,
+      "rootNote": 60,
+      "transforms": {
+        "decode": "Lossless FLAC to PCM16 mono 44100; PCM MD5 verified",
+        "repack": "Canonical WAV header; audio PCM unchanged",
+        "normalization": false,
+        "dcFilter": false,
+        "trim": false,
+        "resample": false,
+        "fade": false
+      },
+      "sourceQc": {
+        "fullScaleSampleCount": 0,
+        "maximumConsecutivePositiveFullScaleSamples": 0,
+        "maximumConsecutiveNegativeFullScaleSamples": 0
+      },
+      "peakDbfs": -3.938967016018618
+    }
+  ],
+  "instruments": [
+    {
+      "id": "kick-hard",
+      "gain": 0.55,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "kick-hard",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "kick-soft",
+      "gain": 0.55,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "kick-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "closed-hat",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "closed-hat",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "chokeGroup": "hat"
+    },
+    {
+      "id": "ride-hard",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "ride-hard",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "open-hat",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "open-hat",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ],
+      "chokeGroup": "hat"
+    },
+    {
+      "id": "half-cymbal",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "half-cymbal",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "ride-soft",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "ride-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "snare-hard",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "snare-hard",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "snare-soft",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "snare-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "splash-hard",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "splash-hard",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "splash-soft",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "splash-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-high-hard",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-high-hard",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-high-soft",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-high-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-low-hard",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-low-hard",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-low-soft",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-low-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-mid-hard",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-mid-hard",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-mid-soft",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-mid-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "kick",
+      "gain": 0.55,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "kick-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "snare",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "snare-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-high",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-high-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-mid",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-mid-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "tom-low",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-low-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "ride",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "ride-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "splash",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "splash-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "toms",
+      "gain": 0.35,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "tom-low-soft",
+          "keyLow": 45,
+          "keyHigh": 45,
+          "pitched": false
+        },
+        {
+          "sample": "tom-mid-soft",
+          "keyLow": 47,
+          "keyHigh": 47,
+          "pitched": false
+        },
+        {
+          "sample": "tom-high-soft",
+          "keyLow": 49,
+          "keyHigh": 49,
+          "pitched": false
+        }
+      ]
+    },
+    {
+      "id": "short-clash",
+      "gain": 0.22,
+      "oneShot": true,
+      "zones": [
+        {
+          "sample": "splash-soft",
+          "keyLow": 0,
+          "keyHigh": 127,
+          "pitched": false
+        }
+      ]
+    }
+  ],
+  "scoreCymbal": "splash",
+  "mode": "soft",
+  "velocitySplit": null,
+  "notes": [
+    "17 source PCM waveforms are losslessly preserved, not repaired or normalized.",
+    "Five hard drum sources touch digital rails in runs of 1-2 samples; not proof of sustained clipping or listening approval.",
+    "Ride is not crash. Half Cymbal retains the author label without a pedal/chick claim.",
+    "Dynamic mode uses soft/hard samples at a fixed velocity threshold, not calibrated continuous dynamics or round robin. Soft mode selects soft samples through aliases; all original articulations remain explicitly addressable."
+  ]
+}

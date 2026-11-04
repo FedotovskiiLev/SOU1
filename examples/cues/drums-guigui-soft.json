@@ -1,0 +1,11 @@
+{
+  "kit": "guigui-soft",
+  "source": "samples",
+  "pattern": "broken-beat",
+  "bars": 8,
+  "bpm": 112,
+  "sampleRate": 48000,
+  "extended": true,
+  "fills": true,
+  "outputGainDb": 0
+}

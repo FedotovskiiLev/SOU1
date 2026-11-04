@@ -1,0 +1,67 @@
+{
+  "schema": "sou1.browser-composition-experiment-check.v1",
+  "checkedAt": "2026-11-04T10:04:00Z",
+  "baseCommit": "bac02cbabc6eabb9a719116adb62f0f92d9cfbd4",
+  "scope": "Isolated existing browser rack only; no production docs/Android/workflow changes.",
+  "canonicalCoreSha256": {
+    "variety-score.mjs": "46b5b4b030d7e4519f8ceca468f668ac28986356ad0d28538e5b6200e8624bb6",
+    "expressive-score.mjs": "7f6bde7a2cf9651e7e374c3aa21e7cae04d32634719f5d31af06102dda37a246",
+    "score-midi.mjs": "77de878b352020953c9932e69cad6a6767906de9c8df0159443700c76b5d7019"
+  },
+  "coreUnchangedFromBase": true,
+  "verification": {
+    "command": "node --test --test-reporter=tap tests/*.test.mjs",
+    "tests": 232,
+    "passed": 232,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 78675.839472,
+    "browserRelatedTests": 36,
+    "bankSelectors": 9,
+    "parityCases": {
+      "sixForms": 6,
+      "fivePhrasingsAtTwoRates": 10,
+      "legacyPaths": 2,
+      "pcmTolerance": 1.3e-07,
+      "description": "Browser modules run under Node with real loopback HTTP. Prepared Float32 is compared with Node PCM24. Canonical MIDI bytes match exactly."
+    },
+    "controllerAndUi": "Mock Worker/AudioContext/DOM exercise click-only download, canonical recipe controls, MIDI ownership/clearing, stale worker rejection, stop, interruption, pagehide and BFCache. No autoplay.",
+    "budgets": "Encoded/decoded bank declarations rejected before any WAV fetch; remaining aggregate budgets passed to the next bank. Five 4MiB padded WAV declarations require one manifest request and zero WAV requests.",
+    "midiBoundary": "Format1, PPQ960, bounded complete MTrk chunks, matching track count, EOT endings and no trailing bytes; not a general MIDI parser.",
+    "independentReview": "Confirmed pre-fetch encoded budget and second-bank remaining-budget enforcement. Canonical/nonzero-offset Uint8Array accepted; eight malformed MIDI forms rejected. Focused 44.1kHz acoustic render and stale/cancel lifecycle checks passed."
+  },
+  "actualBrowser": {
+    "status": "not_qualified",
+    "navigationResult": "ERR_CONNECTION_REFUSED for the local preview URL.",
+    "previewHost": "Server session also unreachable from a separate execution session. Standard local-only preview-host startup outside that isolation failed with a read-only filesystem setup error. Unused server session stopped.",
+    "workarounds": "No browser security flags, access-control changes or alternate publication used.",
+    "notVerified": [
+      "actual DOM/CSP/Worker",
+      "Web Audio device playback",
+      "MIDI download from a real browser",
+      "visual layout/accessibility on target devices",
+      "subjective listening",
+      "production PWA or Android background playback"
+    ]
+  },
+  "limits": {
+    "totalSeconds": 30,
+    "releaseTailSeconds": 2,
+    "sampleRates": [
+      44100,
+      48000
+    ],
+    "combinedEncodedBytes": 12582912,
+    "combinedDecodedBytes": 16777216,
+    "combinedMappedBytes": 16777216,
+    "sampledInstrumentSlots": 28,
+    "totalRackSlots": 32,
+    "midiBytes": 2097152
+  },
+  "limitations": [
+    "Pitched sounds remain VCSL marimba and sine pad/bass/texture; no Surge/SFZ hosting in this page.",
+    "The worker pre-renders a finite buffer. The current rack is not asserted realtime-safe.",
+    "The rendered buffers and sample counters are not a browser peak-memory measurement.",
+    "No release, production deployment or readiness claim."
+  ]
+}
