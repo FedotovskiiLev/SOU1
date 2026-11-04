@@ -216,3 +216,24 @@ New expressive receipts include their own recipe and fingerprint. Legacy
 audio recipes still produce the same audio, but old receipts must be replayed
 with their matching code version because source fingerprints intentionally
 change when the renderer gains a new module.
+
+### Recorded acoustic drums
+
+The same top-level `drumKit` selector also accepts `guigui-soft` and
+`guigui-dynamic`. Both use the 17 lossless CC0 source recordings. Soft keeps
+the authored softer kick/snare/tom/ride/splash recordings; dynamic selects the
+authored soft/hard layers at the explicit velocity boundary 0.6. These are not
+calibrated dynamics or round-robin recordings. Splash and half-cymbal are not
+claimed as crash or pedal/chick, and clap is absent. Source full-scale sample
+hits and provenance limits are documented in [Acoustic drums](ACOUSTIC_DRUMS.md).
+
+MIDI records the requested kit ID as metadata and preserves the same notes; it
+does not embed the recordings or configure an external sampler automatically.
+
+`drumVelocityScale` is an optional expressive-recipe multiplier (0.25..2,
+default 1). It changes percussion note velocities only, never pitch or timing.
+The acoustic examples use 1.6 so some accents cross 0.6 and actually select the
+hard recordings. Ordinary recipes remain softer and can legitimately produce
+identical PCM for the soft/dynamic kits when every note stays below 0.6. Both
+WAV and MIDI retain the scaled velocities. Final velocities are clamped to 1;
+stronger hits can increase peak level, so keep headroom or lower outputGainDb.

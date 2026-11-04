@@ -8,9 +8,9 @@ function random(seed,index,salt){let x=Math.imul((seed^index^salt)>>>0,0x45d9f3b
 function scalePitches(root,mode){const notes=[];for(let n=24;n<=108;n++)if(MODES[mode].includes(((n-root)%12+12)%12))notes.push(n);return notes;}
 function diatonic(notes,pitch,steps,lo=60,hi=88){const i=notes.indexOf(pitch);if(i<0)throw new Error('Source note outside selected scale');let p=notes[clamp(i+steps,0,notes.length-1)];while(p<lo)p+=12;while(p>hi)p-=12;return p;}
 export function validateExpression(input={}){
-  if(!plain(input)||Object.keys(input).some(k=>!['score','phrasing','phraseBars','dynamics','humanize','articulation'].includes(k)))throw new TypeError('Unknown expressive score option');
-  const o={score:{},phrasing:'dialogue',phraseBars:4,dynamics:.7,humanize:.2,articulation:.65,...input};
-  if(!plain(o.score)||!PHRASINGS.includes(o.phrasing)||![2,4,8].includes(o.phraseBars)||!unit(o.dynamics)||!unit(o.humanize)||!unit(o.articulation))throw new RangeError('Invalid expressive score options');
+  if(!plain(input)||Object.keys(input).some(k=>!['score','phrasing','phraseBars','dynamics','humanize','articulation','drumVelocityScale'].includes(k)))throw new TypeError('Unknown expressive score option');
+  const o={score:{},phrasing:'dialogue',phraseBars:4,dynamics:.7,humanize:.2,articulation:.65,drumVelocityScale:1,...input};
+  if(!plain(o.score)||!PHRASINGS.includes(o.phrasing)||![2,4,8].includes(o.phraseBars)||!unit(o.dynamics)||!unit(o.humanize)||!unit(o.articulation)||!Number.isFinite(o.drumVelocityScale)||o.drumVelocityScale<.25||o.drumVelocityScale>2)throw new RangeError('Invalid expressive score options');
   return o;
 }
 export function composeExpressivePlan(input={}){
@@ -26,6 +26,7 @@ export function composeExpressivePlan(input={}){
     const arch=.75+.25*Math.sin(Math.PI*phrasePosition),accent=Math.abs(beat-Math.round(beat))<.01?1:.86;
     velocity*=1-x.dynamics+x.dynamics*arch*accent;
     velocity*=1+(r-.5)*.10*x.humanize;
+    if(layer>=5)velocity*=x.drumVelocityScale;
     if(e.bar!==lastBar && beat>.05 && (layer===1||layer===2||layer===7))beat=clamp(beat+(r-.5)*.05*x.humanize,.01,bpb-.03);
     const frame=at(e.bar,beat),duration=Math.max(1,Math.min(base.activeFrames-frame,Math.round(gate*fpb)));
     source.push({...e,frame,beat,pitch,sourceInstrument:layer,duration,gateBeats:Math.min(gate,o.bars*bpb-e.bar*bpb-beat),velocity:clamp(velocity,0,1),pan:layer===2?.28:e.pan,role,expression:x.phrasing});
@@ -83,6 +84,6 @@ export function composeExpressivePlan(input={}){
   if(source.length>4096)throw new RangeError('Expressive score exceeds 4096 events');
   const instruments=['sine-pad','marimba','marimba','sine-texture','sine-bass','kick','snare','closed-hat','toms','short-clash'];
   const events=source.map(e=>({frame:e.frame,instrument:instruments[e.sourceInstrument],pitch:e.pitch,duration:e.duration,velocity:e.velocity,pan:e.pan}));
-  const expression=Object.freeze({phrasing:x.phrasing,phraseBars:x.phraseBars,dynamics:x.dynamics,humanize:x.humanize,articulation:x.articulation});
+  const expression=Object.freeze({phrasing:x.phrasing,phraseBars:x.phraseBars,dynamics:x.dynamics,humanize:x.humanize,articulation:x.articulation,drumVelocityScale:x.drumVelocityScale});
   return {...base,schema:'sou1.expressive-score.v1',expression,sourceEvents:source,events,audit:source.map((e,i)=>({sourceIndex:i,baseSourceIndex:e.sourceIndex,eventIndex:i,instrument:events[i].instrument,disposition:'render'})),stats:{...base.stats,baseSourceEventCount:base.sourceEvents.length,sourceEventCount:source.length,routedEvents:source.length},limitations:[...base.limitations,'Expression is an independent arrangement step: note identities, gates, dynamics and inter-part replies can change.','Humanization is seeded and bounded, not a recording of human performance.']};
 }

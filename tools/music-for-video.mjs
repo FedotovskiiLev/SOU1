@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {renderCue,validateOptions,saveCue,PROFILES} from './render-cue.mjs';
 import {renderScoreCue,validateRenderScoreOptions,DRUM_KITS} from './render-score-cue.mjs';
-import {FSA_KITS,drumManifestPath} from './instruments/drum-kits.mjs';
+import {PREPARED_DRUM_KITS,drumManifestPath} from './instruments/drum-kits.mjs';
 import {SCORE_PROFILES} from './instruments/event-score.mjs';
 import {readJson} from './bounded-json.mjs';
 export {readJson};
@@ -23,7 +23,7 @@ export function normalizeRecipe(recipe){
 export async function rendererFingerprint(engine,options={}){
   if(!ENGINES.includes(engine))throw new TypeError('Unknown engine');
   const kit=engine==='cc0'?validateRenderScoreOptions(options).drumKit:null;
-  const extra=FSA_KITS.includes(kit)?[drumManifestPath(kit)]:[];
+  const extra=PREPARED_DRUM_KITS.includes(kit)?[drumManifestPath(kit)]:[];
   const result={};for(const file of [...COMMON,...(engine==='cc0'?CC0:[]),...extra])result[file]=digest(await readFile(new URL('../'+file,import.meta.url)));
   return result;
 }

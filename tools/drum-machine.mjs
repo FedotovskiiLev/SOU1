@@ -5,7 +5,7 @@ import {resolve,dirname} from 'node:path';
 import {mkdir,readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {loadBank} from './instruments/load-bank.mjs';
-import {FSA_KITS,FSA_FULL_KITS,drumManifestPath,drumManifestUrl} from './instruments/drum-kits.mjs';
+import {PREPARED_DRUM_KITS,FULL_DRUM_KITS,GUIGUI_KITS,drumKitCapabilities,drumManifestPath,drumManifestUrl} from './instruments/drum-kits.mjs';
 import {InstrumentRack} from './instruments/rack.mjs';
 import {loadOriginalScore,SCORE_SOURCE_COMMIT} from './instruments/event-score.mjs';
 import {readJson} from './bounded-json.mjs';
@@ -14,15 +14,16 @@ import {wavHeader,saveCue} from './render-cue.mjs';
 export function validateDrumOptions(input={}){
   const allowed=['kit','fills','source','pattern','bars','bpm','sampleRate','extended','outputGainDb'];
   if(!input||typeof input!=='object'||Array.isArray(input)||Object.keys(input).some(k=>!allowed.includes(k)))throw new TypeError('Drum options object');
-  const o={kit:'fsa-electronic',fills:false,source:'fsa',pattern:'broken-beat',bars:8,bpm:112,sampleRate:48000,extended:true,outputGainDb:0,...input};
-  if(!FSA_KITS.includes(o.kit)||typeof o.fills!=='boolean'||!['fsa','procedural'].includes(o.source)||!['four-on-floor','broken-beat'].includes(o.pattern)||!Number.isInteger(o.bars)||o.bars<1||o.bars>32||!Number.isInteger(o.bpm)||o.bpm<60||o.bpm>180||![44100,48000].includes(o.sampleRate)||typeof o.extended!=='boolean'||!Number.isFinite(o.outputGainDb)||o.outputGainDb< -60||o.outputGainDb>18)throw new RangeError('Invalid drum options');
+  const o={kit:'fsa-electronic',fills:false,source:GUIGUI_KITS.includes(input.kit)?'samples':'fsa',pattern:'broken-beat',bars:8,bpm:112,sampleRate:48000,extended:true,outputGainDb:0,...input};
+  if(!PREPARED_DRUM_KITS.includes(o.kit)||typeof o.fills!=='boolean'||!['fsa','samples','procedural'].includes(o.source)||!['four-on-floor','broken-beat'].includes(o.pattern)||!Number.isInteger(o.bars)||o.bars<1||o.bars>32||!Number.isInteger(o.bpm)||o.bpm<60||o.bpm>180||![44100,48000].includes(o.sampleRate)||typeof o.extended!=='boolean'||!Number.isFinite(o.outputGainDb)||o.outputGainDb< -60||o.outputGainDb>18)throw new RangeError('Invalid drum options');
   if(o.source==='procedural'&&o.extended)throw new Error('Procedural comparison has no clap/open hat: set extended:false');
-  if(o.fills&&(!FSA_FULL_KITS.includes(o.kit)||o.source!=='fsa'))throw new Error('Fills require a full prepared kit');
+  if(o.fills&&(!FULL_DRUM_KITS.includes(o.kit)||o.source==='procedural'))throw new Error('Fills require a full prepared kit');
   if(o.source==='procedural'&&o.kit!=='fsa-electronic')throw new Error('Kit selection applies only to prepared samples');
+  if(o.source==='fsa'&&GUIGUI_KITS.includes(o.kit))throw new Error('Guigui is acoustic: use source:samples, not fsa');
   return o;
 }
 export function composeDrumPattern(input={}){
-  const o=validateDrumOptions(input),events=[];
+  const o=validateDrumOptions(input),events=[],capabilities=drumKitCapabilities(o.kit);
   const activeFrames=Math.round(o.bars*4*60/o.bpm*o.sampleRate),frames=activeFrames+2*o.sampleRate;
   const add=(bar,step,instrument,velocity,pan=.5)=>events.push({frame:Math.round((bar*16+step)*60/o.bpm/4*o.sampleRate),instrument,pitch:{kick:36,snare:38,'closed-hat':42,'open-hat':46,clap:39,'tom-high':49,'tom-mid':47,'tom-low':45}[instrument]??60,duration:Math.round(.22*o.sampleRate),velocity,pan});
   for(let bar=0;bar<o.bars;bar++){
@@ -33,11 +34,11 @@ export function composeDrumPattern(input={}){
       const open=o.extended&&s===14&&bar%2===1;
       add(bar,s,open?'open-hat':'closed-hat',open?.32:(s%4===0?.30:.20),.58);
     }
-    if(o.extended&&bar>=Math.floor(o.bars/2))add(bar,12,'clap',.30,.45);
+    if(o.extended&&capabilities.clap&&bar>=Math.floor(o.bars/2))add(bar,12,'clap',.30,.45);
     if(o.fills){
       if(bar%4===3)for(const [step,id,pan] of [[13,'tom-high',.35],[14,'tom-mid',.5],[15,'tom-low',.65]])add(bar,step,id,.48,pan);
       // sdbkit has no cymbal. Never substitute an unnamed sample inside this kit demo.
-      if(bar%4===0&&o.kit!=='fsa-sdbkit')add(bar,0,o.kit==='fsa-x0xproc2'?'cymbal':'crash',.36,.6);
+      if(bar%4===0&&capabilities.cymbal)add(bar,0,capabilities.cymbal,.36,.6);
     }
   }
   // Stable order: kick, snare, hats, clap. There is never a simultaneous open/closed hat.
@@ -48,7 +49,7 @@ export async function renderDrumPattern(input={},blockSize=256){
   if(!Number.isInteger(blockSize)||blockSize<1||blockSize>2048)throw new RangeError('blockSize 1..2048');
   const plan=composeDrumPattern(input),o=plan.options;
   let backend,bank,atEvent=0;
-  if(o.source==='fsa'){
+  if(o.source!=='procedural'){
     bank=await loadBank(fileURLToPath(drumManifestUrl(o.kit)));
     backend=new InstrumentRack(o.sampleRate,bank.instruments,{polyphony:48});backend.schedule(plan.events);
   }else{
@@ -74,10 +75,10 @@ export async function renderDrumPattern(input={},blockSize=256){
       peak=Math.max(peak,Math.abs(x));sum+=x*x;wav.writeIntLE(Math.round(x*8388607),44+(at+i)*6+3*ch,3);
     }at+=n;
   }
-  const stats=o.source==='fsa'?{...backend.stats,activeVoices:backend.voices.length}:{accepted:backend.noteOnCount,dropped:backend.droppedNotes,unmapped:0};
+  const stats=o.source!=='procedural'?{...backend.stats,activeVoices:backend.voices.length}:{accepted:backend.noteOnCount,dropped:backend.droppedNotes,unmapped:0};
   if(stats.dropped||stats.unmapped||stats.accepted!==plan.events.length)throw new Error('Incomplete drum event rendering');
-  const rendererFiles={};for(const path of ['tools/drum-machine.mjs','tools/render-cue.mjs','tools/bounded-json.mjs','tools/instruments/event-score.mjs','tools/instruments/event-score-core.mjs','tools/instruments/rack.mjs',...(o.source==='fsa'?['tools/instruments/load-bank.mjs','tools/instruments/wav.mjs','tools/instruments/drum-kits.mjs',drumManifestPath(o.kit)]:['docs/audio-engine.js','docs/environment-audio.js'])])rendererFiles[path]=createHash('sha256').update(await readFile(new URL('../'+path,import.meta.url))).digest('hex');
-  const report={schema:'sou1.drum-machine.v1',...o,rendererFiles,proceduralSourceCommit:o.source==='procedural'?SCORE_SOURCE_COMMIT:null,proceduralSeed:o.source==='procedural'?20261104:null,frames:plan.frames,activeFrames:plan.activeFrames,bankId:bank?.manifest.id??null,bankSourceCommit:bank?.manifest.sourceCommit??null,events:plan.events,rack:stats,peakDbfs:peak?20*Math.log10(peak):null,rmsDbfs:sum?10*Math.log10(sum/(plan.frames*2)):null,sha256:createHash('sha256').update(wav).digest('hex'),clippedSamples:0,nonfiniteSamples:0,limitations:['Offline fixed-pattern sequencer, not EventScore and not a shipped app feature.','FSA uses prepared authored electronic one-shots, not recordings of a certified hardware 808/909. One sample per articulation, no velocity layers or round robins.','Procedural comparison uses original SOU1 oscillator voices/master, identical common-note events and a disabled startup fade. It has no clap/open-hat equivalent.','Hat choke is symmetric and stable-order dependent; patterns never schedule zero-velocity or simultaneous open/closed events. Full polyphony would be rejected, not silently stolen.','Includes a two-second transport tail. No automatic loudness matching or subjective quality approval.']};
+  const rendererFiles={};for(const path of ['tools/drum-machine.mjs','tools/render-cue.mjs','tools/bounded-json.mjs','tools/instruments/event-score.mjs','tools/instruments/event-score-core.mjs','tools/instruments/rack.mjs',...(o.source!=='procedural'?['tools/instruments/load-bank.mjs','tools/instruments/wav.mjs','tools/instruments/drum-kits.mjs',drumManifestPath(o.kit)]:['docs/audio-engine.js','docs/environment-audio.js'])])rendererFiles[path]=createHash('sha256').update(await readFile(new URL('../'+path,import.meta.url))).digest('hex');
+  const report={schema:'sou1.drum-machine.v1',...o,rendererFiles,proceduralSourceCommit:o.source==='procedural'?SCORE_SOURCE_COMMIT:null,proceduralSeed:o.source==='procedural'?20261104:null,frames:plan.frames,activeFrames:plan.activeFrames,bankId:bank?.manifest.id??null,bankSourceCommit:bank?.manifest.sourceCommit??null,events:plan.events,rack:stats,peakDbfs:peak?20*Math.log10(peak):null,rmsDbfs:sum?10*Math.log10(sum/(plan.frames*2)):null,sha256:createHash('sha256').update(wav).digest('hex'),clippedSamples:0,nonfiniteSamples:0,limitations:['Offline fixed-pattern sequencer, not EventScore and not a shipped app feature.',GUIGUI_KITS.includes(o.kit)?'Guigui is an authored acoustic kit. No clap: extended mode adds only open hat. Dynamic mode switches seven soft/hard pairs at velocity 0.6; soft mode does not. No round robin. Five source hard hits touch digital rails; no repair or pristine-recording claim.':'FSA uses prepared authored electronic one-shots, not recordings of a certified hardware 808/909. One sample per articulation, no velocity layers or round robins.','Procedural comparison uses original SOU1 oscillator voices/master, identical common-note events and a disabled startup fade. It has no clap/open-hat equivalent.','Hat choke is symmetric and stable-order dependent; patterns never schedule zero-velocity or simultaneous open/closed events. Full polyphony would be rejected, not silently stolen.','Includes a two-second transport tail. No automatic loudness matching or subjective quality approval.']};
   return {wav,report,events:plan.events};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){

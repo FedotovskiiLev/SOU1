@@ -131,3 +131,5 @@ node --test tests/video-music.test.mjs
 ```
 
 See [five complete CC0 drum kits and aligned stem rendering](FULL_DRUM_KITS.md) for the full 58-sound catalog.
+
+See [the separate Guigui acoustic CC0 soft/dynamic presets](ACOUSTIC_DRUMS.md) for a recorded acoustic alternative and its source-quality caveats.

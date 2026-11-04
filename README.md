@@ -88,3 +88,5 @@ score exports as type-1 MIDI with its real tempo, meter and section markers.
 See [composition and MIDI guide](tools/VARIETY_COMPOSITION.md). This updates
 local offline tools only: the live PWA/Android composer and installed version
 are unchanged. Surge XT hosting and REAPER verification are separate work.
+
+See [the separate Guigui acoustic CC0 soft/dynamic presets](tools/ACOUSTIC_DRUMS.md) for a recorded acoustic alternative and its source-quality caveats.
