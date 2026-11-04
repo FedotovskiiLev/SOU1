@@ -1,0 +1,733 @@
+{
+  "checkedAtUtc": "2026-11-04T08:35:00Z",
+  "baseCommit": "2d7c45deb7b9ab3c2a23619cfed97e64bb4a6041",
+  "scope": "Opt-in finite offline composition module and renderer, no changes to legacy EventScore, live UI, Android, instrument bank or old recipe API.",
+  "tests": {
+    "command": "node --test --test-reporter=tap tests/*.test.mjs",
+    "total": 154,
+    "pass": 154,
+    "fail": 0,
+    "skipped": 0,
+    "newCompositionTests": 22
+  },
+  "independentAudit": {
+    "symbolicPlans": 3600,
+    "matrix": "100 seeds x 6 strategies x 6 modes; edge roots and density/variation endpoints",
+    "checks": [
+      "Determinism",
+      "Scale membership",
+      "Event time and gate bounds",
+      "Both melodic/percussion mute-isolation directions",
+      "Raw onset/role/harmony/form differences with fixed 96 BPM and major mode",
+      "Six full 16-bar renders with density/variation=1, drums=true, root=71, harmonic-minor: zero lost/unmapped voices and silent endpoints",
+      "Full canon replay at block sizes 511/113",
+      "Fresh-process CLI replay at 44.1kHz and fractional BPM; altered seed rejects before output"
+    ],
+    "minorFinding": "Delayed imitation section metadata referred to its origin rather than destination bar. Corrected and covered by a new regression test.",
+    "additionalOwnFix": "Two-bar drift pad gates now stop before a changed harmony, including the final tonic. Covered at 3/8/15/16/17 bars.",
+    "qualification": "Independent full sweep/render audit preceded these final metadata/gate changes; final full repository tests include the fixes."
+  },
+  "githubCi": "Not yet run/confirmed for this new commit; local tests are not a CI pass.",
+  "demoSetup": "Same seed 7311, C tonic, quarter-note BPM 96, sample rate 48k, 16 bars, output gain +4dB; common VCSL marimba/percussion and sine pad/bass. Mode and arrangement follow each style.",
+  "demos": [
+    {
+      "style": "drift",
+      "options": {
+        "style": "drift",
+        "seed": 7311,
+        "bars": 16,
+        "bpm": 96,
+        "root": 60,
+        "sampleRate": 48000,
+        "outputGainDb": 4
+      },
+      "duration": 42,
+      "sha256": "468502939c5329295565a566229a8023075a15ddbe444f98eab2c4a6eacf5fe8",
+      "peakDbfs": -11.348748425743281,
+      "rmsDbfs": -21.374539302654654,
+      "events": 81,
+      "leadNotes": 29,
+      "meter": [
+        4,
+        4
+      ]
+    },
+    {
+      "style": "waltz",
+      "options": {
+        "style": "waltz",
+        "seed": 7311,
+        "bars": 16,
+        "bpm": 96,
+        "root": 60,
+        "sampleRate": 48000,
+        "outputGainDb": 4
+      },
+      "duration": 32,
+      "sha256": "a1b495b2018f42f41af3bbeae32f9fb6ae27af23dde393f190e9dd5a655aefc2",
+      "peakDbfs": -13.294666752724913,
+      "rmsDbfs": -26.17664885641446,
+      "events": 239,
+      "leadNotes": 47,
+      "meter": [
+        3,
+        4
+      ]
+    },
+    {
+      "style": "broken",
+      "options": {
+        "style": "broken",
+        "seed": 7311,
+        "bars": 16,
+        "bpm": 96,
+        "root": 60,
+        "sampleRate": 48000,
+        "outputGainDb": 4
+      },
+      "duration": 42,
+      "sha256": "919efa6f50cf45cea589eed994c870d6a1c34223ca52ac168ae1d1c8f7b16500",
+      "peakDbfs": -13.89495488951537,
+      "rmsDbfs": -26.29395386051021,
+      "events": 385,
+      "leadNotes": 57,
+      "meter": [
+        4,
+        4
+      ]
+    },
+    {
+      "style": "motor",
+      "options": {
+        "style": "motor",
+        "seed": 7311,
+        "bars": 16,
+        "bpm": 96,
+        "root": 60,
+        "sampleRate": 48000,
+        "outputGainDb": 4
+      },
+      "duration": 37,
+      "sha256": "c5423f2c024e55ebfc45fcdce7e2b81d9644caf778c85bffaee3714e2de21abe",
+      "peakDbfs": -13.364213060627755,
+      "rmsDbfs": -25.101775060639273,
+      "events": 348,
+      "leadNotes": 76,
+      "meter": [
+        7,
+        8
+      ]
+    },
+    {
+      "style": "song",
+      "options": {
+        "style": "song",
+        "seed": 7311,
+        "bars": 16,
+        "bpm": 96,
+        "root": 60,
+        "sampleRate": 48000,
+        "outputGainDb": 4
+      },
+      "duration": 42,
+      "sha256": "4da25c51cf27187e087d22132c1d6c6b833bfd02e234bdf40a873d45f926dd4b",
+      "peakDbfs": -13.763187108509385,
+      "rmsDbfs": -24.9121922636963,
+      "events": 256,
+      "leadNotes": 44,
+      "meter": [
+        4,
+        4
+      ]
+    },
+    {
+      "style": "canon",
+      "options": {
+        "style": "canon",
+        "seed": 7311,
+        "bars": 16,
+        "bpm": 96,
+        "root": 60,
+        "sampleRate": 48000,
+        "outputGainDb": 4
+      },
+      "duration": 32,
+      "sha256": "4cfdefa53d62038fa8232dd510a8adf31709393328faddbde50661f7db7e44d7",
+      "peakDbfs": -15.448402476489619,
+      "rmsDbfs": -24.83209446727377,
+      "events": 190,
+      "leadNotes": 58,
+      "meter": [
+        6,
+        8
+      ]
+    }
+  ],
+  "fixedControls": {
+    "bpm": 96,
+    "root": 60,
+    "mode": "major",
+    "drums": false,
+    "seed": [
+      0,
+      7311,
+      4294967295
+    ],
+    "comparisons": 45,
+    "minIntervalTrigramDistance": 0.9146341463414634,
+    "minRhythmTrigramDistance": 0.4
+  },
+  "matrix": [
+    {
+      "seed": 0,
+      "a": "drift",
+      "b": "waltz",
+      "intervalTrigramDistance": 0.9850746268656716,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 18,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "drift",
+      "b": "broken",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 23,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "drift",
+      "b": "motor",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 46,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "drift",
+      "b": "song",
+      "intervalTrigramDistance": 0.9682539682539683,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 17,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "drift",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9875,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 32,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "waltz",
+      "b": "broken",
+      "intervalTrigramDistance": 0.9146341463414634,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 5,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "waltz",
+      "b": "motor",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.6666666666666667,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 28,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "waltz",
+      "b": "song",
+      "intervalTrigramDistance": 0.9615384615384616,
+      "rhythmTrigramDistance": 0.9069767441860466,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 1,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "waltz",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9789473684210527,
+      "rhythmTrigramDistance": 0.5714285714285714,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 14,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "broken",
+      "b": "motor",
+      "intervalTrigramDistance": 0.9826086956521739,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 23,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "broken",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 6,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "broken",
+      "b": "canon",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 9,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "motor",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.9166666666666666,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 29,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "motor",
+      "b": "canon",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.4,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 14,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 0,
+      "a": "song",
+      "b": "canon",
+      "intervalTrigramDistance": 0.989247311827957,
+      "rhythmTrigramDistance": 0.8857142857142857,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 15,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "drift",
+      "b": "waltz",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 18,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "drift",
+      "b": "broken",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 28,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "drift",
+      "b": "motor",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 47,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "drift",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.9782608695652174,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 15,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "drift",
+      "b": "canon",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 29,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "waltz",
+      "b": "broken",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 10,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "waltz",
+      "b": "motor",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.5555555555555556,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 29,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "waltz",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.8958333333333334,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 3,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "waltz",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9893617021276596,
+      "rhythmTrigramDistance": 0.625,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 11,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "broken",
+      "b": "motor",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 19,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "broken",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 13,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "broken",
+      "b": "canon",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 1,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "motor",
+      "b": "song",
+      "intervalTrigramDistance": 0.97,
+      "rhythmTrigramDistance": 0.8717948717948718,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 32,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "motor",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9911504424778761,
+      "rhythmTrigramDistance": 0.40909090909090906,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 18,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 7311,
+      "a": "song",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9775280898876404,
+      "rhythmTrigramDistance": 0.9111111111111111,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 14,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "drift",
+      "b": "waltz",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 17,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "drift",
+      "b": "broken",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 26,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "drift",
+      "b": "motor",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 44,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "drift",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 11,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "drift",
+      "b": "canon",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 21,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "waltz",
+      "b": "broken",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 9,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "waltz",
+      "b": "motor",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.6538461538461539,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 27,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "waltz",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.875,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 6,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "waltz",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9772727272727273,
+      "rhythmTrigramDistance": 0.65625,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 4,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "broken",
+      "b": "motor",
+      "intervalTrigramDistance": 0.9655172413793104,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 18,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "broken",
+      "b": "song",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 1,
+      "sameMeter": true,
+      "sameChordDegrees": false,
+      "noteCountDifference": 15,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "broken",
+      "b": "canon",
+      "intervalTrigramDistance": 1,
+      "rhythmTrigramDistance": 0.9807692307692307,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 5,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "motor",
+      "b": "song",
+      "intervalTrigramDistance": 0.9809523809523809,
+      "rhythmTrigramDistance": 0.8863636363636364,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 33,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "motor",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9911504424778761,
+      "rhythmTrigramDistance": 0.5925925925925926,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 23,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    },
+    {
+      "seed": 4294967295,
+      "a": "song",
+      "b": "canon",
+      "intervalTrigramDistance": 0.9642857142857143,
+      "rhythmTrigramDistance": 0.9038461538461539,
+      "sameMeter": false,
+      "sameChordDegrees": false,
+      "noteCountDifference": 10,
+      "note": "Distances range 0 (same observed patterns) to 1 (disjoint observed patterns); they do not establish listening quality."
+    }
+  ],
+  "limitations": [
+    "Symbolic separation is not listening approval.",
+    "No live PWA/Android/REAPER integration.",
+    "Full WAV output and MP3 showcase are locally rendered, not GitHub CI."
+  ],
+  "showcase": {
+    "filename": "SOU1-six-composition-directions.mp3",
+    "sha256": "3ab58206228f63a7d2932a929f33ce46a077a75f55601ee666b9aac2ae8021c8",
+    "durationSeconds": 89,
+    "processing": "First 14s of each full composition; 0.4s excerpt-end fade and 1s gaps. Each full cue gets a fixed gain targeting -23dBFS RMS with a -1dBFS peak ceiling. This is not perceptual loudness normalization. MP3 192kbps 48k stereo.",
+    "segments": [
+      {
+        "style": "drift",
+        "startSeconds": 0,
+        "excerptSeconds": 14,
+        "staticGainDb": -1.6254606973453463,
+        "fullMp3": "SOU1-drift-full.mp3"
+      },
+      {
+        "style": "waltz",
+        "startSeconds": 15,
+        "excerptSeconds": 14,
+        "staticGainDb": 3.1766488564144595,
+        "fullMp3": "SOU1-waltz-full.mp3"
+      },
+      {
+        "style": "broken",
+        "startSeconds": 30,
+        "excerptSeconds": 14,
+        "staticGainDb": 3.2939538605102108,
+        "fullMp3": "SOU1-broken-full.mp3"
+      },
+      {
+        "style": "motor",
+        "startSeconds": 45,
+        "excerptSeconds": 14,
+        "staticGainDb": 2.101775060639273,
+        "fullMp3": "SOU1-motor-full.mp3"
+      },
+      {
+        "style": "song",
+        "startSeconds": 60,
+        "excerptSeconds": 14,
+        "staticGainDb": 1.9121922636963014,
+        "fullMp3": "SOU1-song-full.mp3"
+      },
+      {
+        "style": "canon",
+        "startSeconds": 75,
+        "excerptSeconds": 14,
+        "staticGainDb": 1.8320944672737696,
+        "fullMp3": "SOU1-canon-full.mp3"
+      }
+    ],
+    "fullDecode": "All seven MP3 files decoded without errors."
+  }
+}
