@@ -1,0 +1,206 @@
+{
+  "schema": "sou1.audio-integration-check.v1",
+  "checkedAt": "2026-11-04T09:20:00Z",
+  "parentCommits": {
+    "composition": "188c5d6ea6f0f0a77c717ff831f8480ff364848c",
+    "fsaDrumKits": "4f003687ae87780caea5d189786ececbf418dfd2"
+  },
+  "scope": "Offline Node composition, expressive MIDI and sample-bank renderer integration. No live browser/Android DSP changes.",
+  "sourceCombination": {
+    "commonBase": "2d7c45deb7b9ab3c2a23619cfed97e64bb4a6041",
+    "newCompositionFiles": 22,
+    "sharedPathConflicts": 0,
+    "description": "FSA snapshot plus all 22 composition files, followed by explicit renderer/CLI kit-selection integration."
+  },
+  "verification": {
+    "baselineMergedSuite": {
+      "tests": 197,
+      "passed": 197,
+      "failed": 0,
+      "skipped": 0
+    },
+    "finalSuite": {
+      "command": "node --test --test-reporter=tap tests/*.test.mjs",
+      "tests": 206,
+      "passed": 206,
+      "failed": 0,
+      "skipped": 0,
+      "durationMs": 51823.493583
+    },
+    "integrationTests": 9,
+    "renderMatrix": {
+      "styles": 6,
+      "phrasingStrategies": 5,
+      "fullFsaKits": 5,
+      "combinations": 150,
+      "barsPerCase": 2,
+      "bpm": 180,
+      "sampleRate": 48000,
+      "dropped": 0,
+      "unmapped": 0,
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0
+    },
+    "legacyDefaultPcm": "Six short VCSL compositions byte-identical to the pre-integration renderer.",
+    "midi": "One expressive render recipe exports identical MIDI bytes for VCSL and all five full FSA kits. Kit is explicitly metadata only; samples are not embedded or loaded into a DAW.",
+    "replay": "Selected kit and all contributing bank fingerprints preserved; fixed fixture is byte-identical across render block sizes and fresh-process replay.",
+    "missingInstruments": "Missing selected-kit cymbal is explicitly attributed to VCSL, not misreported as FSA.",
+    "independentReview": "Six targeted integration regressions and separate fsa-electronic provenance render passed. The full 150-case matrix was not duplicated by the reviewer."
+  },
+  "fullLengthRenders": [
+    {
+      "options": {
+        "seed": 97011,
+        "sampleRate": 48000,
+        "bars": 16,
+        "bpm": 112,
+        "root": 62,
+        "mode": "dorian",
+        "density": 0.72,
+        "variation": 0.65,
+        "drums": true,
+        "melody": true,
+        "outputGainDb": 4,
+        "style": "broken"
+      },
+      "drumKit": "fsa-distkit",
+      "duration": 36.28570833333333,
+      "frames": 1741714,
+      "sha256": "e98601a08c5879025730cdc8141c8cf66a83d399a9eb5f26e1b6e270e5876cc2",
+      "peakDbfs": -6.00969261339581,
+      "rmsDbfs": -22.207180507132772,
+      "rack": {
+        "accepted": 386,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 23,
+        "activeVoices": 0
+      },
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0,
+      "instrumentBanks": {
+        "kick": "fsa-distkit-full-v1",
+        "snare": "fsa-distkit-full-v1",
+        "closed-hat": "fsa-distkit-full-v1",
+        "marimba": "vcsl-mini-v2",
+        "shaker-double": "vcsl-mini-v2",
+        "toms": "fsa-distkit-full-v1",
+        "short-clash": "fsa-distkit-full-v1",
+        "clap": "fsa-distkit-full-v1",
+        "crash": "fsa-distkit-full-v1",
+        "ride": "fsa-distkit-full-v1",
+        "open-hat": "fsa-distkit-full-v1",
+        "claves": "fsa-distkit-full-v1",
+        "cowbell": "fsa-distkit-full-v1",
+        "zap": "fsa-distkit-full-v1",
+        "tom-high": "fsa-distkit-full-v1",
+        "tom-low": "fsa-distkit-full-v1",
+        "tom-mid": "fsa-distkit-full-v1"
+      }
+    },
+    {
+      "options": {
+        "seed": 9182,
+        "sampleRate": 48000,
+        "bars": 16,
+        "bpm": 126,
+        "root": 64,
+        "mode": "phrygian",
+        "density": 0.72,
+        "variation": 0.65,
+        "drums": true,
+        "melody": true,
+        "outputGainDb": 4,
+        "style": "motor"
+      },
+      "drumKit": "fsa-x0xproc2",
+      "duration": 28.666666666666668,
+      "frames": 1376000,
+      "sha256": "6067fc584ad860d43a32406a60dc53c920e06efd4ff5c73a42666c5d0da7d11c",
+      "peakDbfs": -6.559303577302384,
+      "rmsDbfs": -18.82912684874921,
+      "rack": {
+        "accepted": 323,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 0,
+        "activeVoices": 0
+      },
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0,
+      "instrumentBanks": {
+        "kick": "fsa-x0xproc2-full-v1",
+        "snare": "fsa-x0xproc2-full-v1",
+        "closed-hat": "fsa-x0xproc2-full-v1",
+        "marimba": "vcsl-mini-v2",
+        "shaker-double": "vcsl-mini-v2",
+        "toms": "fsa-x0xproc2-full-v1",
+        "short-clash": "fsa-x0xproc2-full-v1",
+        "clap": "fsa-x0xproc2-full-v1",
+        "cymbal": "fsa-x0xproc2-full-v1",
+        "open-hat": "fsa-x0xproc2-full-v1",
+        "claves": "fsa-x0xproc2-full-v1",
+        "cowbell": "fsa-x0xproc2-full-v1",
+        "maracas": "fsa-x0xproc2-full-v1",
+        "rimshot": "fsa-x0xproc2-full-v1",
+        "tom-high": "fsa-x0xproc2-full-v1",
+        "tom-low": "fsa-x0xproc2-full-v1",
+        "tom-mid": "fsa-x0xproc2-full-v1"
+      }
+    },
+    {
+      "options": {
+        "seed": 33,
+        "sampleRate": 48000,
+        "bars": 16,
+        "bpm": 118,
+        "root": 65,
+        "mode": "major",
+        "density": 0.72,
+        "variation": 0.65,
+        "drums": true,
+        "melody": true,
+        "outputGainDb": 4,
+        "style": "waltz"
+      },
+      "drumKit": "fsa-sdbkit",
+      "duration": 26.406770833333333,
+      "frames": 1267525,
+      "sha256": "2ba824209ee533a357ad075272b013c079d79cd7d6d4d328affa1fdf20682811",
+      "peakDbfs": -6.825927841755944,
+      "rmsDbfs": -22.935852060508196,
+      "rack": {
+        "accepted": 229,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 0,
+        "activeVoices": 0
+      },
+      "clippedSamples": 0,
+      "nonfiniteSamples": 0,
+      "instrumentBanks": {
+        "kick": "fsa-sdbkit-full-v1",
+        "snare": "fsa-sdbkit-full-v1",
+        "closed-hat": "fsa-sdbkit-full-v1",
+        "marimba": "vcsl-mini-v2",
+        "shaker-double": "vcsl-mini-v2",
+        "toms": "fsa-sdbkit-full-v1",
+        "short-clash": "vcsl-mini-v2",
+        "clap": "fsa-sdbkit-full-v1",
+        "open-hat": "fsa-sdbkit-full-v1",
+        "sub-a": "fsa-sdbkit-full-v1",
+        "fmperc": "fsa-sdbkit-full-v1",
+        "tom-high": "fsa-sdbkit-full-v1",
+        "tom-low": "fsa-sdbkit-full-v1",
+        "tom-mid": "fsa-sdbkit-full-v1"
+      }
+    }
+  ],
+  "limitations": [
+    "Cloud Node software tests and offline WAV renders only. No subjective listening claim.",
+    "No actual REAPER, browser/Android playback, hardware sound-device or live plugin-host integration validated.",
+    "Pitched audio in this renderer remains VCSL marimba and sine pad/bass. Surge XT and other plugin examples belong to the separate Augmented Audio host.",
+    "GitHub CI status is not established by these local checks.",
+    "No release, main merge, or acoustic menegass/Guigui kit is part of this snapshot."
+  ]
+}

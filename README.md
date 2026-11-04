@@ -75,3 +75,16 @@ repeatable common-note A/B against the original oscillator drums. See
 production PWA/Android or integrate Surge XT.
 
 See [five complete CC0 drum kits and aligned stem rendering](tools/FULL_DRUM_KITS.md) for the full 58-sound catalog.
+
+### Composition, phrasing and full MIDI scores (offline branch)
+
+The opt-in composer offers six different forms, meters and harmonic strategies,
+plus five combinable phrasing treatments: lyrical, dialogue, angular,
+ornamented and triplet. New notes, pauses, articulation, dynamic arcs and
+counterparts are generated independently of sound selection. Both the basic
+and expressive renderer can select any prepared drum kit, and the complete
+score exports as type-1 MIDI with its real tempo, meter and section markers.
+
+See [composition and MIDI guide](tools/VARIETY_COMPOSITION.md). This updates
+local offline tools only: the live PWA/Android composer and installed version
+are unchanged. Surge XT hosting and REAPER verification are separate work.
