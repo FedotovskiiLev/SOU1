@@ -62,7 +62,7 @@ assert.match(stop, /abandonAudioFocusRequest\(focus\)/);
 assert.match(stop, /stopForeground\(STOP_FOREGROUND_REMOVE\)/);
 assert.doesNotMatch(stop, /requestId =|audioError =/);
 assert.match(service, /destroyed = true;\s*if \(preparation != null\) preparation.close\(\)/);
-assert.match(service, /engine = bank == null \? new AmbientEngine\(48000, seed\) : new AmbientEngine\(48000, seed, bank\)/);
+assert.match(service, /engine = new AmbientEngine\(48000, seed, bank, "developing"\.equals\(scoreMode\)\)/);
 assert.match(coordinator, /new ArrayBlockingQueue<>\(1\)/);
 assert.match(coordinator, /private static final ThreadPoolExecutor WORKER/);
 assert.match(coordinator, /if \(closed \|\| current != this\) return/);
@@ -87,3 +87,8 @@ console.log('PASS native service bridge/source contracts; no SDK or device quali
 
 assert.match(start, /seed &= 0xffffffffL/);
 assert.match(ready, /seed &= 0xffffffffL/);
+
+assert.match(play, /current == null && !isPreparing\(\) && intent.hasExtra\(EXTRA_SCORE_MODE\)/);
+assert.match(bridge, /PlaybackService.isSupportedScoreMode/);
+assert.match(bridge, /\.put\("scoreModes", new JSONArray\(\)\.put\("original"\)\.put\("developing"\)\)/);
+assert.match(service, /if \(isSupportedScoreMode\(savedScore\)\) scoreMode = savedScore/);

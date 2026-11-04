@@ -1,4 +1,4 @@
-import {NativeDrumSession,nativeDrumCapabilities} from './native-drum-session.js';
+import {NativeDrumSession,nativeDrumCapabilities,nativeDevelopmentCapabilities} from './native-drum-session.js';
 import {loadRecordedDrums} from './drum-loader.js';
 import {encodeMidi} from './midi-export.js';
 import {createPianoRoll} from './note-history.js';
@@ -27,12 +27,14 @@ let seed=Number.isInteger(saved.seed)?saved.seed>>>0:crypto.getRandomValues(new 
 let volume=Number.isFinite(saved.volume)?clamp(saved.volume):.35;
 const drumKits=['procedural','vcsl','fsa-electronic','fsa-distkit','fsa-sdbkit','fsa-synthkit','fsa-x0xproc1','fsa-x0xproc2','guigui-soft','guigui-dynamic'];
 const nativeDrums=native&&nativeDrumCapabilities(window.AndroidBridge,drumKits);
+const nativeDevelopment=nativeDrums&&nativeDevelopmentCapabilities(window.AndroidBridge);
 const nativeSession=nativeDrums?new NativeDrumSession(window.AndroidBridge,drumKits):null;
 let nativePreparing=false;
+let scoreMode=(!native||nativeDevelopment)&&saved.scoreMode==='developing'?'developing':'original';
 let drumKit=(!native||nativeDrums)&&drumKits.includes(saved.drumKit)?saved.drumKit:'procedural',drumLoadAbort=null,audioGeneration=0,rejectPreparation=null;
 let context,node,gain,analyser,frequency,timeData,playing=false,busy=false,exportBusy=false,started=0,elapsedBefore=0,timerHandle,timerEndAt=0,installEvent,silentFallback;
 const t=key=>dictionary[language][key]??key;
-function persist(){try{localStorage.setItem('sou1-v1',JSON.stringify({language,parameters,preset,seed,volume,drumKit}))}catch{}}
+function persist(){try{localStorage.setItem('sou1-v1',JSON.stringify({language,parameters,preset,seed,volume,drumKit,scoreMode}))}catch{}}
 function translate(){document.documentElement.lang=language;for(const el of document.querySelectorAll('[data-i18n]')){const key=el.dataset.i18n;if(key==='description')el.innerHTML=t(key);else el.textContent=t(key)}$('play-label').textContent=t(playing?'stop':'begin');$('play').setAttribute('aria-label',t(playing?'stop':'begin'));$('state').textContent=t(playing?'playing':'standby');for(const item of controls){$(item.key+'-label').textContent=t(item.label);$(item.key+'-low').textContent='0';$(item.key+'-high').textContent='100'}if($('apk').href)$('apk').textContent=t('apk');}
 const controls=[{key:'intensity',label:'activity',low:'',high:''},{key:'brightness',label:'brightness',low:'',high:''},{key:'motion',label:'motion',low:'',high:''},{key:'timbre',label:'timbre',low:'',high:''}];
 for(const key of ['pad','pluck','bell','texture','pulse','warmth','strength','width','wash','rain','thunder','wind'])controls.push({key,label:key,group:['warmth','strength','width','wash'].includes(key)?'effects':['rain','thunder','wind'].includes(key)?'weather':'layers'});
@@ -45,7 +47,7 @@ function setValue(key,v){parameters[key]=clamp(v);if(key==='rain'&&parameters[ke
 for(const el of document.querySelectorAll('[data-preset]'))el.addEventListener('click',()=>{preset=el.dataset.preset;parameters={...presets[preset]};updateKnobs();sendParameters();persist();syncWeather()});
 $('volume').value=Math.round(volume*100);$('volume-value').value=Math.round(volume*100)+'%';$('volume').addEventListener('input',e=>{volume=clamp(Number(e.target.value)/100);$('volume-value').value=Math.round(volume*100)+'%';if(gain)gain.gain.setTargetAtTime(volume,context.currentTime,.05);sendParameters();persist()});
 function state(value){playing=value;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;document.body.classList.toggle('playing',value);$('play-label').textContent=t(value?'stop':'begin');$('play-icon').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',t(value?'stop':'begin'));$('play').setAttribute('aria-pressed',String(value));$('state').textContent=t(value?'playing':'standby');$('new-seed').disabled=busy||nativePreparing||exportBusy;syncPreparation();}
-function syncPreparation(){ $('play').disabled=busy||nativePreparing;$('new-seed').disabled=busy||nativePreparing||exportBusy;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;$('cancel-prepare').disabled=!(busy||nativePreparing); }
+function syncPreparation(){ $('score-mode').disabled=(native&&!nativeDevelopment)||playing||busy||nativePreparing||exportBusy;$('play').disabled=busy||nativePreparing;$('new-seed').disabled=busy||nativePreparing||exportBusy;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;$('cancel-prepare').disabled=!(busy||nativePreparing); }
 function cancelPreparation(){if(nativePreparing){try{nativeSession.cancel();}catch{applyNativeSession();return;}nativePreparing=false;state(false);$('notice').textContent=language==='ru'?'Подготовка отменена.':'Preparation cancelled.';return;}if(!busy)return;audioGeneration++;rejectPreparation?.(Object.assign(new Error('Preparation cancelled'),{name:'AbortError'}));drumLoadAbort?.abort();context?.close().catch(()=>{});}
 async function start(){
  if(busy||playing||nativePreparing)return;
@@ -55,7 +57,7 @@ async function start(){
  const cancelled=()=>generation!==audioGeneration||(!native&&context!==current);
  const check=()=>{if(cancelled())throw new DOMException('Preparation cancelled','AbortError');};
  try{
-  if(native){if(nativeSession){if(!nativeSession.start({...parameters,volume,seed,drumKit,timerMinutes:Number($('timer').value)||0}))throw Error('Native playback is still active');nativePreparing=true;syncPreparation();$('notice').textContent=language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';return;}if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error('Native playback unavailable');}
+  if(native){if(nativeSession){if(!nativeSession.start({...parameters,volume,seed,drumKit,scoreMode,timerMinutes:Number($('timer').value)||0}))throw Error('Native playback is still active');nativePreparing=true;syncPreparation();$('notice').textContent=language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';return;}if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error('Native playback unavailable');}
   else{
    if(!context)context=new AudioContext({latencyHint:'playback'});current=context;
    if(!node){
@@ -67,8 +69,9 @@ async function start(){
      drumLoadAbort=new AbortController();const bank=await wait(loadRecordedDrums(drumKit,current.sampleRate,{signal:drumLoadAbort.signal}));check();drumLoadAbort=null;
      wireBank=bank.wireBank;$('drum-source').textContent=bank.report.banks.map(b=>b.id).join(' + ');
     }
-    await wait(current.audioWorklet.addModule(recorded?'./recorded-drum-worklet.js':'./audio-worklet.js'));check();
-    scorePending=false;node=new AudioWorkletNode(current,recorded?'sou1-recorded-drums':'sou1-ambient',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{seed,...(recorded?{wireBank}:{})}});
+    const module=scoreMode==='developing'?'./developing-worklet.js':recorded?'./recorded-drum-worklet.js':'./audio-worklet.js';
+    await wait(current.audioWorklet.addModule(module));check();
+    scorePending=false;node=new AudioWorkletNode(current,scoreMode==='developing'?'sou1-developing':recorded?'sou1-recorded-drums':'sou1-ambient',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{seed,...(recorded?{wireBank}:{})}});
     gain=current.createGain();gain.gain.value=volume;analyser=current.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.8;
     frequency=new Uint8Array(analyser.frequencyBinCount);timeData=new Float32Array(analyser.fftSize);node.connect(gain).connect(analyser).connect(current.destination);
     const graphNode=node;
@@ -95,6 +98,15 @@ async function start(){
 function stop(){if(!playing)return;elapsedBefore+=(performance.now()-started);state(false);clearTimeout(timerHandle);timerEndAt=0;if(native){if(nativeSession){try{nativeSession.cancel();}catch{applyNativeSession();}}else window.AndroidBridge.stop();}else{node?.port.postMessage({type:'stop'});clearTimeout(silentFallback);const stoppingContext=context;silentFallback=setTimeout(()=>{if(context===stoppingContext&&!playing&&!busy)stoppingContext?.suspend()},3000)}}
 $('play').addEventListener('click',()=>playing?stop():start());
 $('cancel-prepare').addEventListener('click',cancelPreparation);syncPreparation();
+$('score-mode').value=scoreMode;$('score-mode-control').hidden=native&&!nativeDevelopment;
+$('score-mode').addEventListener('change',async()=>{
+ if(playing||busy||nativePreparing||exportBusy){$('score-mode').value=scoreMode;return;}
+ const selected=$('score-mode').value;if(!['original','developing'].includes(selected)){ $('score-mode').value=scoreMode;return; }
+ busy=true;syncPreparation();audioGeneration++;clearTimeout(silentFallback);const previous=context;
+ try{if(previous)await previous.close();if(context===previous)context=node=gain=analyser=null;scoreMode=selected;persist();}
+ catch(error){$('score-mode').value=scoreMode;$('notice').textContent=t('error');}
+ finally{busy=false;syncPreparation();}
+});
 $('drum-samples').value=drumKit;$('recorded-drums-controls').hidden=native&&!nativeDrums;
 $('drum-samples').addEventListener('change',async()=>{
  if(playing||busy||nativePreparing||exportBusy){$('drum-samples').value=drumKit;return;}
@@ -130,6 +142,7 @@ function applyNativeSession(restore=false){
  if(!nativeSession)return null;
  const result=restore?nativeSession.restore():nativeSession.poll();
  nativePreparing=result.phase==='preparing'||(result.stopFailed&&result.uncertainPhase==='preparing');const value=result.data;
+ if(value&&['preparing','playing'].includes(result.phase)&&['original','developing'].includes(value.scoreMode??'original')){scoreMode=value.scoreMode??'original';$('score-mode').value=scoreMode;}
  if(value&&['preparing','playing'].includes(result.phase)&&drumKits.includes(value.drumKit)){drumKit=value.drumKit;$('drum-samples').value=drumKit;$('drum-source').textContent=drumKit==='procedural'?'':drumKit;}
  if(nativePreparing){state(false);$('notice').textContent=result.stopFailed?result.error:language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';}
  else if(result.phase==='playing'){if(!playing){started=performance.now();elapsedBefore=0;state(true);$('notice').textContent=t('quiet');}}

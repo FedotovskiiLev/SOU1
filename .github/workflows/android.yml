@@ -56,6 +56,8 @@ jobs:
           sh tests/run-recorded-engine.sh
           sh tests/run-native-drum-banks.sh
           sh tests/run-native-drum-service.sh
+          sh tests/run-development-score.sh
+          sh tests/run-developing-engine.sh
       - name: Compile APK and run Android lint
         run: gradle --no-daemon :app:assembleDebug :app:lintDebug :app:assembleRelease :app:lintRelease
       - name: Verify APK signing and package

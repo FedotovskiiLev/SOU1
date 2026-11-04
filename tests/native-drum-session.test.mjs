@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {NativeDrumSession,nativeDrumCapabilities} from '../docs/native-drum-session.js';
+import {NativeDrumSession,nativeDrumCapabilities,nativeDevelopmentCapabilities} from '../docs/native-drum-session.js';
 const kits=['procedural','vcsl','guigui-dynamic'];
 function fixture(){let now=1000,status={requestId:0,drumKit:'procedural',preparing:false,playing:false};const requests=[];let stops=0;const bridge={play:s=>{requests.push(JSON.parse(s));return true;},stop:()=>stops++,status:()=>JSON.stringify(status)};const session=new NativeDrumSession(bridge,kits,{now:()=>now,timeoutMs:100});return{session,bridge,requests,get stops(){return stops;},setStatus:v=>status=v,time:v=>now=v,ready:(extra={})=>{status={requestId:session.requestId,drumKit:'guigui-dynamic',preparing:false,playing:true,...extra};}};}
 test('capabilities require explicit version and complete unique closed kit set',()=>{
@@ -37,7 +37,7 @@ test('background completion wins over UI deadline; retired identities never revi
  for(const requestId of [a,b,a,b]){h.setStatus({requestId,drumKit:'guigui-dynamic',preparing:false,playing:false});h.session.restore();h.setStatus({requestId,drumKit:'guigui-dynamic',preparing:false,playing:true});assert.equal(h.session.restore().phase,'idle');}
 });
 test('matching request cannot silently substitute a different known bank',()=>{
- const h=fixture();h.session.start({drumKit:'vcsl'});h.ready({drumKit:'procedural'});assert.equal(h.session.poll().phase,'error');assert.match(h.session.error,/bank mismatch/);assert.equal(h.stops,1);
+ const h=fixture();h.session.start({drumKit:'vcsl'});h.ready({drumKit:'procedural'});assert.equal(h.session.poll().phase,'error');assert.match(h.session.error,/selection mismatch/);assert.equal(h.stops,1);
 });
 
 test('regressive preparing snapshots cannot replace confirmed playing data',()=>{
@@ -53,4 +53,14 @@ test('timed out preparation with throwing STOP remains cancellable and observabl
  const h=fixture();h.session.start({drumKit:'vcsl'});const id=h.session.requestId;h.bridge.stop=()=>{throw Error('service unavailable')};h.time(1200);
  assert.equal(h.session.poll().phase,'error');assert.equal(h.session.stopFailed,true);assert.equal(h.session.uncertainPhase,'preparing');assert.equal(h.session.requestId,id);
  h.bridge.stop=()=>{};h.session.cancel();assert.equal(h.session.phase,'idle');assert.equal(h.session.requestId,null);
+});
+
+
+test('development selection requires explicit capability and matching native acknowledgement',()=>{
+ assert.equal(nativeDevelopmentCapabilities({audioCapabilities:()=>JSON.stringify({schema:'sou1.native-audio.v1',scoreModes:['original','developing']})}),true);
+ for(const scoreModes of [undefined,[],['original'],['original','developing','other'],['developing','developing']])assert.equal(nativeDevelopmentCapabilities({audioCapabilities:()=>JSON.stringify({schema:'sou1.native-audio.v1',scoreModes})}),false);
+ const f=fixture();assert.throws(()=>f.session.start({drumKit:'guigui-dynamic',scoreMode:'other'}));assert.equal(f.requests.length,0);
+ f.session.start({drumKit:'guigui-dynamic',scoreMode:'developing'});f.ready({scoreMode:'developing'});assert.equal(f.session.poll().phase,'playing');assert.equal(f.requests[0].scoreMode,'developing');
+ const mismatch=fixture();mismatch.session.start({drumKit:'guigui-dynamic',scoreMode:'developing'});mismatch.ready();assert.equal(mismatch.session.poll().phase,'error');assert.equal(mismatch.stops,1);assert.match(mismatch.session.error,/selection mismatch/);
+ const restored=fixture();restored.setStatus({requestId:123,drumKit:'vcsl',scoreMode:'developing',preparing:false,playing:true});assert.equal(restored.session.restore().phase,'playing');assert.equal(restored.session.expectedScoreMode,'developing');
 });

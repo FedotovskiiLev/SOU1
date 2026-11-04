@@ -317,6 +317,7 @@ public final class AmbientEngine {
     // Constructor-only bank selection. Never publish the mutable, render-owned pool.
     private final LiveDrumPool recordedDrums;
     private final EventScore score;
+    private final DevelopmentScore developmentScore;
     private final EnvironmentAudio environment;
     private final NoteHistory noteHistory = new NoteHistory();
     /** Generated score events, including notes suppressed by voice limits or mix levels. */
@@ -392,6 +393,11 @@ public final class AmbientEngine {
      * Bank selection cannot change while the engine is rendering.
      */
     public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank) {
+        this(sampleRate, seed, drumBank, false);
+    }
+
+    /** Score selection is fixed for the session; existing constructors preserve the original score. */
+    public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank, boolean developing) {
         if (sampleRate < 8000 || sampleRate > 192000)
             throw new IllegalArgumentException("sampleRate must be 8000..192000");
         this.sampleRate = sampleRate;
@@ -399,6 +405,7 @@ public final class AmbientEngine {
         if (recordedDrums != null) recordedDrums.setEnabled(parameters.drumsEnabled);
         macros = new MacroBus(sampleRate);
         score = new EventScore(sampleRate, seed);
+        developmentScore = developing ? new DevelopmentScore(sampleRate, seed) : null;
         noteHistory.clear(seed);
         environment = new EnvironmentAudio(sampleRate, seed);
         smoothing = 1.0 - StrictMath.exp(-1.0 / (sampleRate * 1.5));
@@ -424,6 +431,7 @@ public final class AmbientEngine {
     public long getNoteOffCount() { return noteOffCount; }
     public long getDroppedNotes() { return droppedNotes; }
     public EventScore getScore() { return score; }
+    public DevelopmentScore getDevelopmentScore() { return developmentScore; }
     public int getActiveVoiceCount() { int n = 0; for (Voice v : voices) if (v.active) n++; return n; }
     public int getActiveDrumVoiceCount() {
         if (recordedDrums != null) return recordedDrums.getActiveVoices();
@@ -440,6 +448,7 @@ public final class AmbientEngine {
     private void applyReseed() {
         noteHistory.clear(pendingSeed);
         score.reseed(pendingSeed);
+        if (developmentScore != null) developmentScore.reseed(pendingSeed);
         frame = 0;
         for (Voice v : voices) { if (v.active && !v.off) noteOffCount++; v.active = false; }
         for (DrumVoice v : drumVoices) { if (v.active && !v.off) noteOffCount++; v.active = false; }
@@ -458,6 +467,7 @@ public final class AmbientEngine {
         fade = 0;
         frame = 0;
         score.reset();
+        if (developmentScore != null) developmentScore.reset();
         noteHistory.clear(score.seed);
         for (Voice v : voices) v.active = false;
         for (DrumVoice v : drumVoices) v.active = false;
@@ -587,7 +597,10 @@ public final class AmbientEngine {
             if (seedGain < 1e-12 || (!playing && fade == 0)) { seedGain = 0; applyReseed(); }
         } else seedGain = Math.min(1, seedGain + 1.0 / (sampleRate * .08));
         if (!playing && fade == 0) { outputL = outputR = 0; return; }
-        if (playing) score.advanceTo(frame, target, noteSink);
+        if (developmentScore != null) {
+            if (playing) developmentScore.advanceTo(frame, target, noteSink);
+            else { developmentScore.beatNext++; developmentScore.next = Math.round(developmentScore.beatNext); }
+        } else if (playing) score.advanceTo(frame, target, noteSink);
         else { score.beatNext++; score.next = Math.round(score.beatNext); }
         final double tone = 1 - StrictMath.exp(-2 * StrictMath.PI * (900 + brightness * 4200) / sampleRate);
         double left = 0, right = 0;

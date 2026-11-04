@@ -89,3 +89,15 @@ unavailable in this workspace. APK compilation, Android lint, installation,
 actual notification/focus/background behavior and physical-device listening
 have **not** been qualified by these tests. Run the project's supported Android
 build/lint and device checks before calling this integration release-ready.
+
+## Continuous development score (candidate integration)
+
+An additional closed `scoreMode` selection (`original` or `developing`) travels
+with PLAY. The latter uses the live `DevelopmentScore`, not a rendered clip.
+The existing original constructors and default remain unchanged. Mode selection
+is accepted only for a stopped, new PLAY, preserved through foreground-service
+recreation, and acknowledged in status. Repeated PLAY and UPDATE cannot change
+an active or preparing session's score mode. The browser validates the matching
+acknowledgement, and old native bridges without explicit `scoreModes` capability
+continue using the original score. Sound controls, weather, reseed fade, timer,
+note history and retained MIDI export use their existing paths.

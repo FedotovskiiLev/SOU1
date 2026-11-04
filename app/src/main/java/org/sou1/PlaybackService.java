@@ -46,6 +46,10 @@ public final class PlaybackService extends Service {
     public static final String EXTRA_WIND = "wind";
     public static final String EXTRA_VOLUME = "volume";
     public static final String EXTRA_DRUM_KIT = "drumKit", EXTRA_REQUEST_ID = "requestId";
+    public static final String EXTRA_SCORE_MODE = "scoreMode";
+    static boolean isSupportedScoreMode(String mode) {
+        return "original".equals(mode) || "developing".equals(mode);
+    }
     public static final String EXTRA_TIMER_MINUTES = "timerMinutes";
     private static final String PROCEDURAL = "procedural";
     private static final long MAX_REQUEST_ID = 9007199254740991L;
@@ -61,6 +65,7 @@ public final class PlaybackService extends Service {
     private static long requestId;
     private static String audioError = "";
     private String drumKit = PROCEDURAL;
+    private String scoreMode = "original";
     private long preparingSeed;
     private DrumPreparation<NativeDrumBankLoader.Prepared> preparation;
     private long sessionStartedAt, sessionSeed, timerDeadline;
@@ -83,7 +88,7 @@ public final class PlaybackService extends Service {
                 .put("ambient", parameters.ambient).put("counterpoint", parameters.counterpoint)
                 .put("rhythmic", parameters.rhythmic).put("arpeggio", parameters.arpeggio)
                 .put("density", parameters.density).put("complexity", parameters.complexity).put("swing", parameters.swing)
-                .put(EXTRA_DRUM_KIT, drumKit);
+                .put(EXTRA_DRUM_KIT, drumKit).put(EXTRA_SCORE_MODE, scoreMode);
     }
     private void publishStatus() {
         try {
@@ -96,6 +101,7 @@ public final class PlaybackService extends Service {
             // Never lose request correlation or report a fabricated stopped session.
             statusJson = "{\"playing\":" + playing + ",\"preparing\":" + isPreparing()
                     + ",\"requestId\":" + requestId + ",\"drumKit\":" + org.json.JSONObject.quote(drumKit)
+                    + ",\"scoreMode\":" + org.json.JSONObject.quote(scoreMode)
                     + ",\"audioError\":" + org.json.JSONObject.quote(audioError) + "}";
         }
     }
@@ -138,6 +144,8 @@ public final class PlaybackService extends Service {
                     saved.optDouble(EXTRA_COMPLEXITY, parameters.complexity), saved.optDouble(EXTRA_SWING, parameters.swing));
             String savedKit = saved.optString(EXTRA_DRUM_KIT, PROCEDURAL);
             if (isSupportedDrumKit(savedKit)) drumKit = savedKit;
+            String savedScore = saved.optString(EXTRA_SCORE_MODE, "original");
+            if (isSupportedScoreMode(savedScore)) scoreMode = savedScore;
             double savedVolume = saved.optDouble(EXTRA_VOLUME, volume);
             if (Double.isFinite(savedVolume)) volume = Math.max(0, Math.min(1, savedVolume));
         } catch (org.json.JSONException | ClassCastException invalidPreferences) {
@@ -327,6 +335,13 @@ public final class PlaybackService extends Service {
                 }
                 drumKit = requestedKit;
             }
+            if (current == null && !isPreparing() && intent.hasExtra(EXTRA_SCORE_MODE)) {
+                String requestedMode = intent.getStringExtra(EXTRA_SCORE_MODE);
+                if (!isSupportedScoreMode(requestedMode)) {
+                    failPlayback("Unsupported score mode", null); return START_NOT_STICKY;
+                }
+                scoreMode = requestedMode;
+            }
             // requestId is published below with preparing/playing in the same command,
             // before preparation can deliver a completion on this main thread.
         }
@@ -463,7 +478,7 @@ public final class PlaybackService extends Service {
             }
         }
         Session(long seed, LiveDrumPool.Bank bank) {
-            engine = bank == null ? new AmbientEngine(48000, seed) : new AmbientEngine(48000, seed, bank);
+            engine = new AmbientEngine(48000, seed, bank, "developing".equals(scoreMode));
             scoreEngine = engine;
             engine.setParameters(parameters);
             thread = new Thread(this, "SOU1-audio");

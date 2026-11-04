@@ -93,6 +93,12 @@ public final class MainActivity extends Activity {
         if (json.has("polyphony")) intent.putExtra(PlaybackService.EXTRA_POLYPHONY,json.optInt("polyphony",16));
         if (json.has("melodyEnabled")) intent.putExtra(PlaybackService.EXTRA_MELODY_ENABLED,json.optBoolean("melodyEnabled",true));
         if (json.has("drumsEnabled")) intent.putExtra(PlaybackService.EXTRA_DRUMS_ENABLED,json.optBoolean("drumsEnabled",false));
+        if (json.has("scoreMode")) {
+            Object mode = json.get("scoreMode");
+            if (!(mode instanceof String) || !PlaybackService.isSupportedScoreMode((String) mode))
+                throw new JSONException("Unsupported score mode");
+            intent.putExtra(PlaybackService.EXTRA_SCORE_MODE, (String) mode);
+        }
         if (json.has("drumKit")) {
             Object kit = json.get("drumKit");
             if (!(kit instanceof String) || !PlaybackService.isSupportedDrumKit((String) kit))
@@ -145,7 +151,8 @@ public final class MainActivity extends Activity {
             try {
                 JSONArray kits = new JSONArray().put("procedural");
                 for (String kit : NativeDrumBankLoader.supportedKits()) kits.put(kit);
-                return new JSONObject().put("schema", "sou1.native-audio.v1").put("drumKits", kits).toString();
+                return new JSONObject().put("schema", "sou1.native-audio.v1").put("drumKits", kits)
+                        .put("scoreModes", new JSONArray().put("original").put("developing")).toString();
             } catch (JSONException impossible) { return "{}"; }
         }
         @JavascriptInterface public String midiExportStatus() { return midiStatus; }
