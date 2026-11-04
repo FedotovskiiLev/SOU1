@@ -5,13 +5,33 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {InstrumentRack,SineInstrument} from './instruments/rack.mjs';
 import {loadBank} from './instruments/load-bank.mjs';
-import {composeScorePlan} from './instruments/event-score.mjs';
+import {composeScorePlan,validateScoreOptions} from './instruments/event-score.mjs';
 import {wavHeader,saveCue} from './render-cue.mjs';
 import {readJson} from './bounded-json.mjs';
+export const DRUM_KITS=Object.freeze(['vcsl','fsa-electronic']);
+export function validateRenderScoreOptions(options={}){
+  if(!options||typeof options!=='object'||Array.isArray(options))throw new TypeError('Score options object');
+  const {drumKit='vcsl',...score}=options;
+  if(!DRUM_KITS.includes(drumKit))throw new RangeError('Unknown drumKit: vcsl or fsa-electronic');
+  return {...validateScoreOptions(score),drumKit};
+}
+export async function loadScoreBank(drumKit='vcsl'){
+  if(!DRUM_KITS.includes(drumKit))throw new RangeError('Unknown drumKit');
+  const bank=await loadBank(fileURLToPath(new URL('../assets/cc0-mini/manifest.json',import.meta.url)));
+  const banks=[{id:bank.manifest.id,sourceCommit:bank.manifest.sourceCommit}];
+  if(drumKit==='fsa-electronic'){
+    const electronic=await loadBank(fileURLToPath(new URL('../assets/fsa-electronic/manifest.json',import.meta.url)));
+    for(const [id,instrument] of electronic.instruments)bank.instruments.set(id,instrument);
+    banks.push({id:electronic.manifest.id,sourceCommit:electronic.manifest.sourceCommit});
+  }
+  const instrumentBanks=Object.fromEntries([...bank.instruments.keys()].map(id=>[id,drumKit==='fsa-electronic'&&['kick','snare','closed-hat','open-hat','clap'].includes(id)?banks[1].id:banks[0].id]));
+  return {...bank,banks,instrumentBanks};
+}
 export async function renderScoreCue(options={},blockSize=256){
   if(!Number.isInteger(blockSize)||blockSize<1||blockSize>2048)throw new RangeError('blockSize 1..2048');
-  const plan=await composeScorePlan(options),o=plan.options;
-  const bank=await loadBank(fileURLToPath(new URL('../assets/cc0-mini/manifest.json',import.meta.url)));
+  const {drumKit,...score}=validateRenderScoreOptions(options);
+  const plan=await composeScorePlan(score),o={...plan.options,drumKit};
+  const bank=await loadScoreBank(drumKit);
   for(const [id,gain] of [['sine-pad',.14],['sine-texture',.05],['sine-bass',.20],['sine-fallback',.14]])bank.instruments.set(id,new SineInstrument({gain}));
   const rack=new InstrumentRack(o.sampleRate,bank.instruments,{polyphony:48});rack.schedule(plan.events);
   const wav=Buffer.alloc(44+plan.frames*6);wavHeader(plan.frames,o.sampleRate).copy(wav);
@@ -27,7 +47,7 @@ export async function renderScoreCue(options={},blockSize=256){
     }at+=n;
   }
   if(rack.stats.unmapped||rack.stats.dropped)throw new Error('Rack cannot preserve all routed notes (unmapped or polyphony drop)');
-  const report={schema:'sou1.event-score-cue.v1',...o,frames:plan.frames,activeFrames:plan.activeFrames,sourceCommit:plan.sourceCommit,sourceHashes:plan.sourceHashes,bankId:bank.manifest.id,bankSourceCommit:bank.manifest.sourceCommit,...plan.stats,rack:{...rack.stats,activeVoices:rack.voices.length},peakDbfs:peak?20*Math.log10(peak):null,rmsDbfs:sum?10*Math.log10(sum/(2*plan.frames)):null,clippedSamples:0,nonfiniteSamples:0,sha256:createHash('sha256').update(wav).digest('hex'),sourceEvents:plan.sourceEvents,routingAudit:plan.audit,limitations:['Original EventScore timing/pitch/gates/pan are preserved for routed notes; only velocity is scaled by the layer gain.','Sound is a new arrangement: marimba replaces pluck/bell, sine substitutes pad/texture/bass. Original live DSP effects/weather are not reproduced.','Out-of-range marimba pitches use explicitly counted sine fallback without octave folding.','Tom keys 49/47/45 select high/down-two-semitones-high/low stick toms; these are articulation keys, not a claim of concert-pitch tuning. Cymbal uses a recorded short clash, not a full free-decay crash or ride.','Percussion one-shots retain natural sample tails; stopping at duration minus 2 seconds explicitly releases all voices.','Offline Node qualification only; no PWA, Android, VST integration, listening approval or release claim.']};
+  const report={schema:'sou1.event-score-cue.v1',...o,frames:plan.frames,activeFrames:plan.activeFrames,sourceCommit:plan.sourceCommit,sourceHashes:plan.sourceHashes,bankId:bank.banks.map(b=>b.id).join('+'),banks:bank.banks,instrumentBanks:bank.instrumentBanks,bankSourceCommit:bank.manifest.sourceCommit,...plan.stats,rack:{...rack.stats,activeVoices:rack.voices.length},peakDbfs:peak?20*Math.log10(peak):null,rmsDbfs:sum?10*Math.log10(sum/(2*plan.frames)):null,clippedSamples:0,nonfiniteSamples:0,sha256:createHash('sha256').update(wav).digest('hex'),sourceEvents:plan.sourceEvents,routingAudit:plan.audit,limitations:[...(drumKit==='fsa-electronic'?['FSA prepared electronic one-shots replace kick/snare/closed hat. Toms, short clash and marimba remain VCSL. Open hat and clap are available in the rack/demo but are not generated by the original EventScore.']:[]),'Original EventScore timing/pitch/gates/pan are preserved for routed notes; only velocity is scaled by the layer gain.','Sound is a new arrangement: marimba replaces pluck/bell, sine substitutes pad/texture/bass. Original live DSP effects/weather are not reproduced.','Out-of-range marimba pitches use explicitly counted sine fallback without octave folding.','Tom keys 49/47/45 select high/down-two-semitones-high/low stick toms; these are articulation keys, not a claim of concert-pitch tuning. Cymbal uses a recorded short clash, not a full free-decay crash or ride.','Percussion one-shots retain natural sample tails; stopping at duration minus 2 seconds explicitly releases all voices.','Offline Node qualification only; no PWA, Android, VST integration, listening approval or release claim.']};
   return {wav,report,events:plan.events};
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){

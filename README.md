@@ -66,3 +66,10 @@ Browsers download the file locally. Android uses the system Create Document pick
 
 Version0.2.0 uses versionCode2. CI produces an **unsigned release APK** for owner-controlled release signing; this artifact is not install-ready. The persistent release key and password must stay outside this repository. The old debug-signed preview cannot be upgraded in place with a new release certificate. The public download manifest now points to the signed 0.2.0 APK. The owner confirmed a successful phone check on 2026-10-17; this does not claim broader device or background-playback qualification. Download the APK from the PWA or [GitHub Releases](https://github.com/FedotovskiiLev/SOU1/releases/tag/v0.2.0).
 
+
+### Prepared electronic drums (offline branch)
+
+The local rack can select the CC0 Fugue State Audio x0xproc1 kit and render a
+repeatable common-note A/B against the original oscillator drums. See
+[the electronic-drums guide](tools/ELECTRONIC_DRUMS.md). This does not alter the
+production PWA/Android or integrate Surge XT.

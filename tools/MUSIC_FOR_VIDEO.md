@@ -57,6 +57,10 @@ Node API, not a browser package or a promise of real-time performance.
   rates: 8000, 16000, 22050, 24000, 44100, 48000 and 96000 Hz. Prefer 48000 for
   video work. Its profiles are different from same-named CC0 arrangements.
 
+For prepared electronic kick/snare/hats, select `--drum-kit fsa-electronic`
+with `cc0`. The default `vcsl` bank remains available. Open-hat/clap and
+a common-note A/B are described in [ELECTRONIC_DRUMS.md](ELECTRONIC_DRUMS.md).
+
 The CLI defaults to `cc0`; `help` and `profiles` show choices. The backend
 validators supply the remaining defaults, which are written explicitly into
 the receipt. Seeds are unsigned 32-bit integers. Gain is explicit, -60..24 dB.

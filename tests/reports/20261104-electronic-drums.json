@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-04",
+  "scope": "Offline prepared CC0 electronic drums; no PWA/Android/Surge XT integration or release",
+  "baseCommit": "2d7c45deb7b9ab3c2a23619cfed97e64bb4a6041",
+  "tests": {
+    "command": "node --test tests/*.test.mjs",
+    "passed": 146,
+    "failed": 0,
+    "skipped": 0,
+    "independentReview": "Converter byte rebuild, fractional durations, seed zero, two rates, varied blocks, bad selectors/flags, 24 pattern combinations, 130-second max pattern, true CLI replay; A/B stereo issue fixed and rechecked."
+  },
+  "bank": {
+    "id": "fsa-x0xproc1-v1",
+    "sourceCommit": "dbfd6ec52d4ed53b60bdbea5fc6adf295127c027",
+    "license": "CC0-1.0",
+    "author": "Kevin B. / Fugue State Audio",
+    "samples": 5,
+    "encodedBytes": 307062,
+    "decodedPcmBytes": 409120,
+    "conversionRebuiltByteIdentically": true
+  },
+  "dense120s": {
+    "sampleRate": 48000,
+    "duration": 120,
+    "frames": 5760000,
+    "rack": {
+      "accepted": 3476,
+      "dropped": 0,
+      "unmapped": 0,
+      "choked": 707,
+      "activeVoices": 0
+    },
+    "peakDbfs": -12.003416213919555,
+    "clippedSamples": 0,
+    "nonfiniteSamples": 0,
+    "sha256": "8bdbe1f016c8713cc849d1ec3e25bcdafb6846a670218a91099e093947b1808d"
+  },
+  "abPreview": {
+    "filename": "SOU1-drums-AB-level-matched.mp3",
+    "durationSeconds": 39.12,
+    "a": "Original SOU1 procedural voices/master, common events; no startup fade",
+    "b": "FSA prepared samples, same common events",
+    "bStartsAtSeconds": 19.942857,
+    "constantGainDb": {
+      "a": 4.08,
+      "b": -4.08
+    },
+    "measuredPreviewLufs": {
+      "a": -23.04,
+      "b": -23.0
+    },
+    "dynamicCompression": false,
+    "samePanParameters": true,
+    "sha256": "1e3344fe9f98efd035a2708dd6d1adfcdae78031d996ceec46041542e0b2efcf"
+  },
+  "kitDemo": {
+    "filename": "SOU1-electronic-kit-demo.mp3",
+    "durationSeconds": 36.312,
+    "articulations": [
+      "kick",
+      "snare",
+      "closed hat",
+      "open hat",
+      "clap"
+    ],
+    "sha256": "07ded66d86958d207a8b9d769654b680296ec9e7010076e6394ca4948976b0cb"
+  },
+  "limitations": [
+    "No listening approval or claim that numeric checks establish perceived musical quality.",
+    "Single sample per articulation, no velocity layers/round robins; not certified hardware recordings.",
+    "Existing EventScore generates only kick/snare/closed hat from new bank. Toms/cymbal/marimba remain VCSL.",
+    "Symmetric hat choke with same-frame order dependence. Full voice pool fails rather than silently stealing.",
+    "No full Virtuosity library, native instrument host, app deployment or browser device verification in this change.",
+    "GitHub CI status must be checked separately on saved commit."
+  ]
+}
