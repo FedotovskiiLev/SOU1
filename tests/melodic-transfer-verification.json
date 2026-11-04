@@ -1,0 +1,7 @@
+{
+  "scope": "Actual Node Worker transfer, not browser/AudioWorklet",
+  "preset": "piano-room",
+  "decodedBytes": 32297680,
+  "producerPcmBytesAfterTransfer": 0,
+  "consumerAdoptionMilliseconds": 1.1800399999999627
+}

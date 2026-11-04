@@ -1,0 +1,840 @@
+{
+  "schema": "sou1.melodic-source-lock.v1",
+  "license": "CC0-1.0",
+  "source_commits": {
+    "sgossner/VSCO-2-CE": "6dd651d55dde97fd4028699be9d4481f26917891",
+    "sgossner/VCSL": "dfcf4a4918771eee884b96ad4493de82ef84daf6"
+  },
+  "downloads": [
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_A3_v1.wav",
+      "size": 1890316,
+      "git_blob_sha": "ec84b89a4b93ecdc7e23d0c023b897b6f151bca7",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_A3_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "72817a53dfd2eb61eca94658c14e1cab6017629ca2f27bab8e394c6675bfaad7"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_B2_v1.wav",
+      "size": 2314360,
+      "git_blob_sha": "c2bdf89eed02c0e7fbb11b52799ac62276787ff8",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_B2_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "1a873970a86da78ed8c9aa068303958496c34eee6fa94fcab39d499dbdfb7826"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_B4_v1.wav",
+      "size": 2056964,
+      "git_blob_sha": "8e22cb66ba5bccb4df68decf98139b3008733e8a",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_B4_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "ec4cea41ac77f251bf5f4158fe9cbeeae13755e3785106e505808de18fdddc0d"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_C4_v1.wav",
+      "size": 2063320,
+      "git_blob_sha": "6d81fcafba04ca992a8b85665a56e60337929ce0",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_C4_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "c07edd5b2119fa1da2207aba996961b50dd616f69bbcf2300ab271bc6c16239f"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_D3_v1.wav",
+      "size": 2061808,
+      "git_blob_sha": "e47f9a53d487475fb049039ca7846e11c1ff830a",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_D3_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "583e660bc5daa4e094aef5fc014fbb92751040be8741ed7a16847306a1fe0a99"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_D5_v1.wav",
+      "size": 2116352,
+      "git_blob_sha": "fa455a7f8fe8c5c00b36c8e131bbc340204ae1c8",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_D5_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "f8d870457826c94270b9c3ead8e8ec02cb7e6c4a3481cded055641b7fab7df62"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_E4_v1.wav",
+      "size": 2315540,
+      "git_blob_sha": "838b43d3c9e763898817869d411ab26463b7464f",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_E4_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "787fb4bcfb47d5c88ee1573c8db15f32d345386301be4a8eea6a825847413ae2"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_F#3_v1.wav",
+      "size": 1585612,
+      "git_blob_sha": "996ca7e6b1d9541d2f2fd7f53ba88294693893e7",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_F%233_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "8dc13d197373f0d1fe1b0744de57796800bde372906d3667398c55d473a383ea"
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_G4_v1.wav",
+      "size": 2330236,
+      "git_blob_sha": "81d3994ebbf467cbbc88bb2d2ad0dd94d96e7e04",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Violin%20Section/susVib/VlnEns_susVib_G4_v1.wav",
+      "root": "vsco2-ce",
+      "sha256": "ed2a89cf254432d2af073699fa43ebfa16cfbc5552c7fc964a184fc434eaaa39"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_A2_v1_1.wav",
+      "size": 2336738,
+      "git_blob_sha": "76df6b474aff133b2ac9d96bf2466cb6fd865c72",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_A2_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "c97a003184fdcb153d6b6c0bae8d82a90592a1b04b06bd7caaeda8b9776d5284"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_B1_v1_1.wav",
+      "size": 2372492,
+      "git_blob_sha": "d6a4a2d1a688c6ccb4e1e1a56b878c9c93df468b",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_B1_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "4f95c087c4b8d87ee591e9d39c3c9caf085c6f1b9125eac3ca9e4e637da628ee"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_B3_v1_1.wav",
+      "size": 1690082,
+      "git_blob_sha": "16d846690d7c4d385f3cfc8f1fe25873d6bd5b01",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_B3_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "bd25d66c1c4e73f5827bf3b931244e51ec8388594d8004529a762be81258097f"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_C3_v1_1.wav",
+      "size": 2444174,
+      "git_blob_sha": "73ccb5dc2cc2a07926a1c41aa3c5621b19f420bf",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_C3_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "a614ee7ca821b44660236e47b89620cf914ec6ad27a99bc0d9764f47dbe512e1"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_D2_v1_1.wav",
+      "size": 2550956,
+      "git_blob_sha": "8076f809d4f6a8057f3835e12d22751a25e39252",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_D2_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "e8640dec9febc6e39fcf06b19d2c95a85d5ff8c38f13c9879e69f551eaf38ab8"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_D4_v1_1.wav",
+      "size": 2153228,
+      "git_blob_sha": "e1125afc13def9b43e4612cdcebd11b99fce20cc",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_D4_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "b4aa3a7fec1f0e783fa560f493868c17045feb271738e3d6834d1b00594b1c38"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_E3_v1_1.wav",
+      "size": 2456672,
+      "git_blob_sha": "63f4d6df3a25fb95f417b5d45b5f8bf6a11107bf",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_E3_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "d2f961e30bf64021cf4acbd88e0e7a1fd1840943ae78c62a711bcce3d109216e"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_F2_v1_1.wav",
+      "size": 2186012,
+      "git_blob_sha": "78f52c49ddc8a357657d92b05cd89f15beb6c717",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_F2_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "162054eab4ba118924f8f8986cf1b17ccfd65211d1945743ffbae30b4953f901"
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_G3_v1_1.wav",
+      "size": 2431598,
+      "git_blob_sha": "7880157fbb8e57fb0b7a694b8569701bc0d942ea",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/susvib/susvib_G3_v1_1.wav",
+      "root": "vsco2-ce",
+      "sha256": "8d658346b8d2054fd534b3222b5d7a23196d22a83a68c3a04ffb76b21853a3db"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_B1_v1_RR1.wav",
+      "size": 890366,
+      "git_blob_sha": "a77d940699042d211e6e329d2331d95ca76842c8",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_B1_v1_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "33bbfc9664e8536e8931fba5c53ab4e06abeb6f75fc3b6186bcdb159d6000604"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_C1_v1_RR1.wav",
+      "size": 829634,
+      "git_blob_sha": "c075a85b166054bbb9d1f900393a76f05f10a8b1",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_C1_v1_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "9032689650e38cb7a967616d15f3434bd52865637200e785bf89c3a1a88b29ce"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_D2_v1_RR1.wav",
+      "size": 723014,
+      "git_blob_sha": "602ef076ef3e60774a7a9d99450fbceaa7f4d24b",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_D2_v1_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "434925e6b7d154cfa7c17e89ccc8e4a126e01a970cabee22fe09a9fb0e462bb6"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_E1_v1_RR1.wav",
+      "size": 842720,
+      "git_blob_sha": "9678586affff8ef2973ef9da03259ba0132d1b67",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_E1_v1_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "9fed783345f57619ccc7ac1eff282c4e5ec6ff30b7b935ee96da204efb6b6c59"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_F2_v1_RR1.wav",
+      "size": 662600,
+      "git_blob_sha": "65b06f53a4d2c449f38b30a22aeea6bf1ce814af",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_F2_v1_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "ff44e135372083b7c7989fc741c2ebc97bf91f11c5ba7d3c99bcf2c967f6c4e8"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_G1_v1_RR1.wav",
+      "size": 852008,
+      "git_blob_sha": "7a2e62d4053cf9d0260ededbe1b97b1963cdd1e0",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_G1_v1_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "4bfeddd80e7dd07d71f627d16b7458231c6b14118b8b8b3fe039ba8b73d88236"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_B1_v2_RR1.wav",
+      "size": 1058144,
+      "git_blob_sha": "4a241c20bb2cb76be13837019363537e85851f40",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_B1_v2_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "d5898f41739b4929530aa7d4a3f1660ee2bb6096b375c1f034eb6d26cbb10623"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_C1_v2_RR1.wav",
+      "size": 981176,
+      "git_blob_sha": "e863415fcc1daf43bb56c7ad2990774f66c1cb98",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_C1_v2_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "eb757d0688c447d609e9583c3943b9b51f5dee3c8b309ef6e03cac0c36910f15"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_D2_v2_RR1.wav",
+      "size": 770222,
+      "git_blob_sha": "55891f1ec98c1742b27e0b7565c0ef2f027e9bbc",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_D2_v2_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "5f80f5fd2f8f3f2cc33b8e7cdba1c5984b5a8158d6d34cd03fe48ae46b335461"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_E1_v2_RR1.wav",
+      "size": 826130,
+      "git_blob_sha": "7e8f2ebee318b74e00763e877c7da474511e3341",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_E1_v2_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "e5dc2a92063c0d2262336239a227e686c4977b6f8aaf65a2dda13c71ffe982df"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_F2_v2_RR1.wav",
+      "size": 479312,
+      "git_blob_sha": "20c6e50e4f6e6d4e677a66989de22ebe44af9707",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_F2_v2_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "eb5b95b1f7b22370ad00713db544f2eb3cae6b70a29fcaf673c54d485e73c8a3"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_G1_v2_RR1.wav",
+      "size": 884180,
+      "git_blob_sha": "9e6b7510899020e0deffdf7cd84ebc207057ec27",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_G1_v2_RR1.wav",
+      "root": "vsco2-ce",
+      "sha256": "a12366cff3dd68c4a1622bd504161caa9ed18d23f9d03ed413936a0829188cf1"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_B1_v1_RR2.wav",
+      "size": 1005728,
+      "git_blob_sha": "2ac3786f8de7fa92086cf2620d4acf0be60c0ae9",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_B1_v1_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "197600ab555da6f29b368b898a089f7b8d79f9a6b7388ff3fe86560ad9ca6186"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_C1_v1_RR2.wav",
+      "size": 858296,
+      "git_blob_sha": "ab41bf7563e84434f5babc50dda270e92fdb89d2",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_C1_v1_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "894bd93d7dded6eb60788b8ebf2fc45e9b542c579995d00b518d67727c2d82e5"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_D2_v1_RR2.wav",
+      "size": 769676,
+      "git_blob_sha": "896b65e4cff10b895f49ecf50d3eb12bde14f341",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_D2_v1_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "f23062710e77ca46c33fe453874f8730e80b1f7f7a769bcafdf7bcd0b6254460"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_E1_v1_RR2.wav",
+      "size": 688292,
+      "git_blob_sha": "9a4a5b9bd741c22fbd2646eed0bf48f839c8445d",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_E1_v1_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "49103857fc6279932a03af6b09a2432be3b7f120de7a66307ad1cbd3266fa72d"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_F2_v1_RR2.wav",
+      "size": 446198,
+      "git_blob_sha": "69b5bd25c32e439c69df8ce0623d767bcc98fd08",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_F2_v1_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "f8a1804d48d1b0dfc48ec63e8f8de07834ed1efc83fa9a25584bc295235cc196"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_G1_v1_RR2.wav",
+      "size": 718130,
+      "git_blob_sha": "1f424612f211f3360db750f4f1cbd5c7c25b6812",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_G1_v1_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "5adede63f128d450b1f63a5cc306a5fc8405b6cedee0de90b589df8a9830dfc6"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_B1_v2_RR2.wav",
+      "size": 851390,
+      "git_blob_sha": "7792131afbc5bdc2e2e85ca070954a72239ef523",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_B1_v2_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "675a55fce6f23a97281704024ed01e69cc8699fd3458fe76f22ba19b91c20348"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_C1_v2_RR2.wav",
+      "size": 886544,
+      "git_blob_sha": "a6030389c8d46bdbfdcb9954de2db56972743873",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_C1_v2_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "c2485a37f8e62af3ef7b530a6e6e9892a5887b36c675072a3b201db39793da73"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_D2_v2_RR2.wav",
+      "size": 686930,
+      "git_blob_sha": "15d9901c6962456d98fa7e435e485df07bd39e3e",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_D2_v2_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "2b25fcdf1958fabbd54f1f64b620df12af5436d074da6b5030c5f0b2dad4a250"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_E1_v2_RR2.wav",
+      "size": 1005260,
+      "git_blob_sha": "0031262b33fb7a612eab5f7e42b7737600275eca",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_E1_v2_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "8ae271ce5c337de9996193e66de415dc8ae322eb86bcafdcc78bbe4ec4acf4db"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_F2_v2_RR2.wav",
+      "size": 537716,
+      "git_blob_sha": "d172b1efd4ed288c0be128c1360583756a5d04bd",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_F2_v2_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "2114b5d349fad4c99ae5cc12080dc0fb838490fb9f79b707446d9a5e59826859"
+    },
+    {
+      "path": "Strings/Cello Section/pizzT/pizzT_G1_v2_RR2.wav",
+      "size": 977798,
+      "git_blob_sha": "dc1935483eda7148f8db4cc3b62d0f6dce23a4d6",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Cello%20Section/pizzT/pizzT_G1_v2_RR2.wav",
+      "root": "vsco2-ce",
+      "sha256": "0d56d33e6665fd25f7d2aa7e97cc918fe26ab81a956cfefcadd6e17a4f116193"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_A4_mf.wav",
+      "size": 2143618,
+      "git_blob_sha": "acbece38a84e886cb5516e0f29d6ff5d38900fe1",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_A4_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "3665f3975cad4a33f46784aa4f896f4b4319ba2b7831e892d975bc38c9f09f23"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_A6_mf.wav",
+      "size": 636870,
+      "git_blob_sha": "9fc9959804954e24e6837c426d702031fd2a3b7f",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_A6_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "4605355d22fae6f58190bf0d033d2ebdd745d63e2e43204d6f41ad27e4f09af0"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_B3_mf.wav",
+      "size": 1981130,
+      "git_blob_sha": "8d06cd55bc871d19f25a2bb1b56c7a567aabbc6b",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_B3_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "f6f71be8c640822ef48a448b245585659acdfcc7ed5774e10f37be2fc02fcab4"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_B5_mf.wav",
+      "size": 779058,
+      "git_blob_sha": "2d2689e8ca023cd685ed5a29161f3d641f109da9",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_B5_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "f2757b674c6b7301bed52e17a1ae3e3d34d628b3f7edc5773ebb25798d2541f7"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_B6_mf.wav",
+      "size": 483966,
+      "git_blob_sha": "d350ad472b663c9c239802f10228cd0073cf698d",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_B6_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "720e56b99f84d4ef1b9bc8cd3c217170320f523edb68488af3da76d2217e16f7"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_C3_mf.wav",
+      "size": 1586172,
+      "git_blob_sha": "20e91e167e86132bb16601f682c90444779d8a23",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_C3_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "e5d232771704e140959819de8cf2a3e0ba49d021ca77354c42664ce4fce6d9f3"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_C5_mf.wav",
+      "size": 1237142,
+      "git_blob_sha": "748b4b1366616972c2a22e81fc48a86178801c45",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_C5_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "7c8b862f6fd3f1442ed87537af976d84bda8c05a5b4900e8907d570b5202a517"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_D4_mf.wav",
+      "size": 1921690,
+      "git_blob_sha": "342eec5072e2c0a7fb7cb03b6f5b46d84ed6ac69",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_D4_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "ebfde8aab4411019e37e3426f4dd88d6a52a38c2d0261d7f10ec63d8ff584dc7"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_D6_mf.wav",
+      "size": 687750,
+      "git_blob_sha": "f66e88f651740695e4971c3197e6a1d61d6380c1",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_D6_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "b040b61fb279efa1a9b9c60dcbd8626a37f57ffb30f3b50747a2123ee4db5bd2"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_E3_mf.wav",
+      "size": 2461138,
+      "git_blob_sha": "5c6c7410ae0ff7800214931f9db9a7f52db5987e",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_E3_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "aafa9d41ec0f77da8f2891055af8b3f9557e0ba1f1df93d53ae6e1fda07afae5"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_E5_mf.wav",
+      "size": 1171586,
+      "git_blob_sha": "20675907d698db011d0c8bc72cf9af4e7a1ac971",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_E5_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "95dd9ddb0bd15bee7687906e00f25aafcaa43020cc9501f0e8b6cabf0e9a53ec"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_F4_mf.wav",
+      "size": 1913498,
+      "git_blob_sha": "a1966639b165b623ac533270d616814cbc5389ef",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_F4_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "db27ebbb37334c10e06f2ae63f4d9ff555e4d11704fcc6f0bcf503863867e577"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_F6_mf.wav",
+      "size": 413126,
+      "git_blob_sha": "5d80932f790a28c088fab5dc2727c01ef2a130fc",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_F6_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "7cf4c012542df737be39900af262fdd980681956e734f43af106718184f34213"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_G3_mf.wav",
+      "size": 1806874,
+      "git_blob_sha": "a2f7fcc2bce81d039d9c0c529a94159f589f36e1",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_G3_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "62600eb1b37bc2829ca65351f7ca7e506c9ae472abd5bea0765a8b8fa7df2772"
+    },
+    {
+      "path": "Strings/Harp/KSHarp_G5_mf.wav",
+      "size": 1049778,
+      "git_blob_sha": "8e3593345c95368ae9d74591c1046d21de6a8e60",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Strings/Harp/KSHarp_G5_mf.wav",
+      "root": "vsco2-ce",
+      "sha256": "f2004dfc617997fbabc6f849add2af06f4f859361c44a8fca0f993dc7f999540"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C3_vl2_rr1.wav",
+      "size": 5150932,
+      "git_blob_sha": "8ef76a88e25aebe3d1f3dc26099289900b3650d8",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C3_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "53c2cf94051119d240c8ccd4b9a91f07aa07333d845515c1ea1276daa775549e"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C3_vl3_rr1.wav",
+      "size": 6240562,
+      "git_blob_sha": "07e5ead535a3a348d33e4100228e0109033eff20",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C3_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "3b7a3780b620c8a698b41e52dd1b444ee8f648949663a26bd448fcbe8068e39e"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C3_vl4_rr1.wav",
+      "size": 5856190,
+      "git_blob_sha": "ffdb3ee7cfc8fd9245ce2119b1f88c9b417b817a",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C3_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "96d3944a64f1c1277a621b657d3c1e6d15930ffe83491459a2a37d409217151b"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C4_vl2_rr1.wav",
+      "size": 2260822,
+      "git_blob_sha": "5f80e0d82e670ab294d58ac9373b4156f2b6d611",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C4_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "9c2020587943a86dec7a8b7178cdac1c254c4f3dfc016bb27acdef1af292827f"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C4_vl3_rr1.wav",
+      "size": 4808380,
+      "git_blob_sha": "6042681e62e98fe2c0af4a491151d05ddf584669",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C4_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "238d6f0ed77d5696997e8be45e8d157389868cbd7396a59ad272c315fc464e5b"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C4_vl4_rr1.wav",
+      "size": 5748748,
+      "git_blob_sha": "c6331cee9fb168265b6817414030e8088383ddf1",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C4_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "04e84b9132bd44c4b4ec36536ed67211d5be138e9280e54123c32381650ebc3f"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C5_vl2_rr1.wav",
+      "size": 3389992,
+      "git_blob_sha": "d4e3e6c40762d902e249fe93aa4bd492962fb40c",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C5_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "167d625aeb78f0d64491d6cb8b0436302f63bd0dd4c2e21180460ef568e4faea"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C5_vl3_rr1.wav",
+      "size": 3562684,
+      "git_blob_sha": "5ad9b67ecb4890f19ccc5dc8a9f688fd27d36087",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C5_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "6635c5cfc5fcb95d476e7a6556d3e346b3ed32a85c814e953045e957c7d1217a"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C5_vl4_rr1.wav",
+      "size": 4222816,
+      "git_blob_sha": "02be0749f71412fa093fa0ebbeccd91a21ec2f29",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C5_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "885e5a31eaca370dd6f94613da0ebc10a0bce761ba1f09a49e0662493cc09b56"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C6_vl2_rr1.wav",
+      "size": 2162200,
+      "git_blob_sha": "f26dc99b20c0baf1620a748c68ea00909e8cef3f",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C6_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "9feff6271739e80f80b1fdaa450fee2d9c76ccf0c5bbeb89bb73f78fcd8d309f"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C6_vl3_rr1.wav",
+      "size": 2307556,
+      "git_blob_sha": "f0e2c1298e9c52bbb965f57ad46347e7ca8bc947",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C6_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "6316e80fc8acb3b4f0b844da60d1ed07989e764b5ff3d30b073be0759abd5aa1"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C6_vl4_rr1.wav",
+      "size": 2143660,
+      "git_blob_sha": "ad7727b7aae9ea051523424fdd9c359f7f597151",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C6_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "3b9395697389d10b9b2fc9d3ea569d691a99d2e9aaef9c797afa0e30259f37b7"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C7_vl2_rr1.wav",
+      "size": 949450,
+      "git_blob_sha": "5a29bd68c1d245478f05fbcb4c18626cc672c4fe",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C7_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "23d50d834b7e6780899d5e2a62c4c2ba425ac129ef80a3b3bc066038ba2ee755"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C7_vl3_rr1.wav",
+      "size": 745348,
+      "git_blob_sha": "3affb85d3d22007132a67d891e3ec919253e1ff4",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C7_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "3a46d7d880983af2b950cac6ec87586bce95c94588d48b584669a69571eb4e6f"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_C7_vl4_rr1.wav",
+      "size": 844750,
+      "git_blob_sha": "8032e1fe009ec66f944cd026d257a06aaa4b4735",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_C7_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "f84410b5f35ce44b7cff63bb6c5ecd6c13c015fa994002af780c7ba1062cc669"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#3_vl2_rr1.wav",
+      "size": 3541834,
+      "git_blob_sha": "53134a84b09d23c541862b975a7f34758810e3b5",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%233_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "4a2b66d066aba3a0688421cdf3d168fa13fe91c62a42d7159f8084c8f1c99fd1"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#3_vl3_rr1.wav",
+      "size": 4791514,
+      "git_blob_sha": "496426f59187e5059794d3f394d1dad8547f7c96",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%233_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "d3ef8589520d933c6a0214456cd3d0b15f1520cfc6656a86d5a0254fa737ba5e"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#3_vl4_rr1.wav",
+      "size": 6990022,
+      "git_blob_sha": "c51d55bafa951e39f482e9a888a76afe96074cdc",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%233_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "c594ea09b9e4f4b1df38236d7e6cbee133982c90c91ed2445587ca7fd6697af1"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#4_vl2_rr1.wav",
+      "size": 2991538,
+      "git_blob_sha": "aacdd412d3ae2af135234ee84ac65dc8e2d90cb6",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%234_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "c296451071e80e936f4b582cd5e1133fe617f7f9a5ca396ad0144d72a3f6f2f5"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#4_vl3_rr1.wav",
+      "size": 3892342,
+      "git_blob_sha": "9647a4f2763077f6d231cde92b54e7c263262d17",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%234_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "bd6cc480542e394575d34f7fcbbe359ab9b1f02427df77201f6f4759cdcbf569"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#4_vl4_rr1.wav",
+      "size": 4245736,
+      "git_blob_sha": "d0345a3042459f6c161f58f5ccc1a8fb05a26884",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%234_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "9093aebd8603864604627d0869a661754b952a27f1db5d57bcbd7da63839ba90"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#5_vl2_rr1.wav",
+      "size": 3119662,
+      "git_blob_sha": "ad21826f6d55fedc52b406bad4137d93f9c32e41",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%235_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "2f0eaf6a898a33576c3697bd52c6590be1715675a177556ed8d9ca6f2142e970"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#5_vl3_rr1.wav",
+      "size": 3479764,
+      "git_blob_sha": "e854e4ef04cfa763d5fafcd7b91ce042fa9ad413",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%235_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "284811ea2aeea0099ccf0af601d487e1b1a51de8545bf9388594c0579918d676"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#5_vl4_rr1.wav",
+      "size": 3703054,
+      "git_blob_sha": "7d51ee807d8b3837c8bb1869f5f096da87cef2b9",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%235_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "5ebd6165434013d6098c65b6a60a329a214e35c24803b347334b7d6077fabfb5"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#6_vl2_rr1.wav",
+      "size": 1223434,
+      "git_blob_sha": "40e79ff4f93e378cd08d316717aec31d272d134a",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%236_vl2_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "20d98852932c8a22cea9bee1b4892f7bc92e2c6085e9db5ab4efaf2a6a6e7e9e"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#6_vl3_rr1.wav",
+      "size": 1063384,
+      "git_blob_sha": "36b0ccf5a759be447a70fb7f6ec7e940fe01e746",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%236_vl3_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "6fadd3877797644b3931af5360d445f8a09f25a9900d5687cebc0c85549ec909"
+    },
+    {
+      "path": "Chordophones/Zithers/Grand Piano, Steinway B/NoSus/JHPiano_NoSus_Close_F#6_vl4_rr1.wav",
+      "size": 1992970,
+      "git_blob_sha": "e047b80a7bb3461cf7ce0a5d6fdf7113b024aebb",
+      "url": "https://raw.githubusercontent.com/sgossner/VCSL/dfcf4a4918771eee884b96ad4493de82ef84daf6/Chordophones/Zithers/Grand%20Piano%2C%20Steinway%20B/NoSus/JHPiano_NoSus_Close_F%236_vl4_rr1.wav",
+      "root": "vcsl-smodelb",
+      "sha256": "ca006c8685947fee99e7217bb040b6f6bb42ab45f7bbc517f59b106c771c4cb0"
+    },
+    {
+      "path": "Woodwinds/Flute/susNV/LDFlute_susNV_A3_v1_1.wav",
+      "size": 2706216,
+      "git_blob_sha": "b690a4d0006b73699176dd2fab82a9249966e33b",
+      "sha256": "6fc8d707afddfaaf3003551b95a83b52f514adbe488bfea1c8c5250080a07278",
+      "source_url": "https://github.com/sgossner/VSCO-2-CE/blob/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_A3_v1_1.wav",
+      "root": "vsco2-ce",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_A3_v1_1.wav"
+    },
+    {
+      "path": "Woodwinds/Flute/susNV/LDFlute_susNV_C3_v1_1.wav",
+      "size": 2642490,
+      "git_blob_sha": "ac3b6e4b90480a5a64798c2c399f16ea95754015",
+      "sha256": "4f221909317e257e4d0bc49f10479643c80cb213a0486455c1bdc1d6ed13a450",
+      "source_url": "https://github.com/sgossner/VSCO-2-CE/blob/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_C3_v1_1.wav",
+      "root": "vsco2-ce",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_C3_v1_1.wav"
+    },
+    {
+      "path": "Woodwinds/Flute/susNV/LDFlute_susNV_C4_v1_1.wav",
+      "size": 2722056,
+      "git_blob_sha": "ea9cc7ff40975e8d3917c6e8fa13f67167e142f2",
+      "sha256": "105a6dbced98de7ae04a317bdd3ba1a5c6b90dc94034439b68cce6635e2781df",
+      "source_url": "https://github.com/sgossner/VSCO-2-CE/blob/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_C4_v1_1.wav",
+      "root": "vsco2-ce",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_C4_v1_1.wav"
+    },
+    {
+      "path": "Woodwinds/Flute/susNV/LDFlute_susNV_E3_v1_1.wav",
+      "size": 2874126,
+      "git_blob_sha": "7a921854e39f8addf99a4dc8e4b3f27e187142c2",
+      "sha256": "87c667c2af888ed86dff87f2452248de3e3d958fc93848a4426b7c16f85f09da",
+      "source_url": "https://github.com/sgossner/VSCO-2-CE/blob/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_E3_v1_1.wav",
+      "root": "vsco2-ce",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_E3_v1_1.wav"
+    },
+    {
+      "path": "Woodwinds/Flute/susNV/LDFlute_susNV_E4_v1_1.wav",
+      "size": 2591256,
+      "git_blob_sha": "3f351c4623be881464381ac8de2c3cfef99ac646",
+      "sha256": "b609d37fb577e2a0f64f20800fba4bed067151375349bf713c0d4e803f862580",
+      "source_url": "https://github.com/sgossner/VSCO-2-CE/blob/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_E4_v1_1.wav",
+      "root": "vsco2-ce",
+      "url": "https://raw.githubusercontent.com/sgossner/VSCO-2-CE/6dd651d55dde97fd4028699be9d4481f26917891/Woodwinds/Flute/susNV/LDFlute_susNV_E4_v1_1.wav"
+    }
+  ],
+  "maps": [
+    {
+      "bank": "vsco-violin-sustain",
+      "root": "vsco2-ce",
+      "path": "Augmented-ViolinEnsSusVib.sfz",
+      "bundled": "tools/melodic-source-maps/Augmented-ViolinEnsSusVib.sfz",
+      "sha256": "576274363fc33ef4106133f7b9e9f6d5ea012a1712518c5b05e16c4d88b9935c"
+    },
+    {
+      "bank": "vsco-cello-sustain",
+      "root": "vsco2-ce",
+      "path": "Augmented-CelloEnsSusVib.sfz",
+      "bundled": "tools/melodic-source-maps/Augmented-CelloEnsSusVib.sfz",
+      "sha256": "9904388efc98d0eb6783e21e908a00ec3a6ba0734ed879c573b782ab727d2bc3"
+    },
+    {
+      "bank": "vcsl-steinway-b",
+      "root": "vcsl-smodelb",
+      "path": "Chordophones/Zithers/Augmented-Steinway-B-NoPedal.sfz",
+      "bundled": "tools/melodic-source-maps/Augmented-Steinway-B-NoPedal.sfz",
+      "sha256": "7ca075944d7ee353fd28402a93f0e4a1aef0e14e91d06ec54d19982ebd1f8389"
+    },
+    {
+      "bank": "vsco-harp-damped",
+      "root": "vsco2-ce",
+      "path": "vsco-harp-damped.sfz",
+      "bundled": "tools/melodic-source-maps/vsco-harp-damped.sfz",
+      "sha256": "d0b4838ec8c7c49f1ee9bcae12b67b2deb9d8605cca305b5745be49cd19205b7",
+      "license": "CC0-1.0",
+      "provenance": {
+        "repository": "sgossner/VSCO-2-CE",
+        "commit": "6dd651d55dde97fd4028699be9d4481f26917891",
+        "source": "Harp.sfz",
+        "changes": [
+          "expand default_path",
+          "remove display-only group_label",
+          "ampeg_release=0.6"
+        ]
+      }
+    },
+    {
+      "bank": "vsco-cello-pizzicato-short",
+      "root": "vsco2-ce",
+      "path": "vsco-cello-pizzicato-short.sfz",
+      "bundled": "tools/melodic-source-maps/vsco-cello-pizzicato-short.sfz",
+      "sha256": "c25ae9b6ba5348bf6388aff8fd07b73dc61be47c4bf4429780a98eceecc4d3dc",
+      "license": "CC0-1.0",
+      "provenance": {
+        "repository": "sgossner/VSCO-2-CE",
+        "commit": "6dd651d55dde97fd4028699be9d4481f26917891",
+        "source": "CelloEnsPizz.sfz",
+        "changes": [
+          "expand default_path",
+          "remove display-only group_label",
+          "ampeg_release=0.4"
+        ]
+      }
+    },
+    {
+      "bank": "vsco-flute-chamber-soft",
+      "root": "vsco2-ce",
+      "path": "vsco-flute-chamber-soft.sfz",
+      "bundled": "tools/melodic-source-maps/vsco-flute-chamber-soft.sfz",
+      "sha256": "4ab843260d6f7b5bc6bcd7938f45ea1765c12715e42be88b7ed92a9428b0f908",
+      "license": "CC0-1.0",
+      "provenance": {
+        "repository": "sgossner/VSCO-2-CE",
+        "commit": "6dd651d55dde97fd4028699be9d4481f26917891",
+        "source": "vsco-flute-sustain.sfz",
+        "description": "Artistic gain calibration of soft velocity layer 0..62, playable range MIDI 60..78. Not whole-keyboard calibration. All other regions and source WAVs unchanged.",
+        "changes": [
+          {
+            "pitch_keycenter": 69,
+            "original_volume_db": 12.0,
+            "profile_volume_db": 10.0,
+            "offset_db": -2
+          },
+          {
+            "pitch_keycenter": 60,
+            "original_volume_db": 12.0,
+            "profile_volume_db": 18.0,
+            "offset_db": 6
+          },
+          {
+            "pitch_keycenter": 72,
+            "original_volume_db": 12.0,
+            "profile_volume_db": 5.0,
+            "offset_db": -7
+          },
+          {
+            "pitch_keycenter": 64,
+            "original_volume_db": 12.0,
+            "profile_volume_db": 16.0,
+            "offset_db": 4
+          },
+          {
+            "pitch_keycenter": 76,
+            "original_volume_db": 12.0,
+            "profile_volume_db": -1.0,
+            "offset_db": -13
+          }
+        ]
+      },
+      "calibrated_key_range": [
+        60,
+        78
+      ],
+      "calibrated_velocity_range": [
+        0,
+        62
+      ]
+    }
+  ]
+}

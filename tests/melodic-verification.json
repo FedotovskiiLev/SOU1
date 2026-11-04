@@ -1,0 +1,78 @@
+{
+  "schema": "sou1.melodic-validation.v1",
+  "scope": "Node/JVM actual recorded PCM only. NOT browser/AudioWorklet, Android, device or listening approval.",
+  "results": [
+    {
+      "preset": "chamber",
+      "rate": 44100,
+      "decodedBytes": 23127028,
+      "kernelBytes": 82560,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 2.309848559,
+      "elapsedSeconds": 3.049725065,
+      "maxAbsolutePcmDelta": 1.3877787807814457e-17,
+      "nodeRenderSeconds": 0.6845783439999995,
+      "frames": 529200
+    },
+    {
+      "preset": "chamber",
+      "rate": 48000,
+      "decodedBytes": 23127028,
+      "kernelBytes": 82560,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.931477864,
+      "elapsedSeconds": 2.583714154,
+      "maxAbsolutePcmDelta": 2.0816681711721685e-17,
+      "nodeRenderSeconds": 0.6874175479999994,
+      "frames": 576000
+    },
+    {
+      "preset": "chamber-flute",
+      "rate": 44100,
+      "decodedBytes": 26327028,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.982751272,
+      "elapsedSeconds": 2.649015488,
+      "maxAbsolutePcmDelta": 1.3877787807814457e-17,
+      "nodeRenderSeconds": 0.703324267,
+      "frames": 529200
+    },
+    {
+      "preset": "chamber-flute",
+      "rate": 48000,
+      "decodedBytes": 26327028,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.631793526,
+      "elapsedSeconds": 2.290249148,
+      "maxAbsolutePcmDelta": 1.0408340855860843e-17,
+      "nodeRenderSeconds": 0.634037736000002,
+      "frames": 576000
+    },
+    {
+      "preset": "piano-room",
+      "rate": 44100,
+      "decodedBytes": 32297680,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.65636614,
+      "elapsedSeconds": 2.189442706,
+      "maxAbsolutePcmDelta": 8.326672684688674e-17,
+      "nodeRenderSeconds": 0.46765116899999704,
+      "frames": 529200
+    },
+    {
+      "preset": "piano-room",
+      "rate": 48000,
+      "decodedBytes": 32297680,
+      "kernelBytes": 99072,
+      "hotLoopAllocatedBytes": 0,
+      "hotLoopSeconds": 1.539311649,
+      "elapsedSeconds": 2.035099188,
+      "maxAbsolutePcmDelta": 5.551115123125783e-17,
+      "nodeRenderSeconds": 0.4428017459999974,
+      "frames": 576000
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "schema": "sou1.melodic-loop-points.v1",
+  "crossfadeSeconds": 0.25,
+  "selection": "Bounded source sustain endpoints selected for similar 250ms RMS; not a listening approval. No sample normalization or PCM changes.",
+  "points": [
+    {
+      "id": "cello-57-0-1",
+      "start": 1.1,
+      "end": 4.05,
+      "deltaDb": -0.006492356112182755
+    },
+    {
+      "id": "cello-47-0-1",
+      "start": 2.3,
+      "end": 3.85,
+      "deltaDb": 0.016515095512799595
+    },
+    {
+      "id": "cello-71-0-1",
+      "start": 1.5,
+      "end": 2.95,
+      "deltaDb": 0.003376194089391553
+    },
+    {
+      "id": "cello-60-0-1",
+      "start": 1.45,
+      "end": 3.55,
+      "deltaDb": -0.01071405566239253
+    },
+    {
+      "id": "cello-50-0-1",
+      "start": 2.7,
+      "end": 4.2,
+      "deltaDb": 0.05766266364042669
+    },
+    {
+      "id": "cello-74-0-1",
+      "start": 1.6,
+      "end": 4.2,
+      "deltaDb": 0.02325963400308654
+    },
+    {
+      "id": "cello-64-0-1",
+      "start": 1.9,
+      "end": 3.6,
+      "deltaDb": -0.008987682662129615
+    },
+    {
+      "id": "cello-53-0-1",
+      "start": 1.0,
+      "end": 4.15,
+      "deltaDb": -0.000810485812458877
+    },
+    {
+      "id": "cello-67-0-1",
+      "start": 1.25,
+      "end": 3.9,
+      "deltaDb": -0.011567382304567327
+    },
+    {
+      "id": "violin-69-0-1",
+      "start": 2.3,
+      "end": 4.1,
+      "deltaDb": 0.021520716139281203
+    },
+    {
+      "id": "violin-59-0-1",
+      "start": 1.9,
+      "end": 3.3,
+      "deltaDb": -0.09231965421942441
+    },
+    {
+      "id": "violin-83-0-1",
+      "start": 2.3,
+      "end": 4.2,
+      "deltaDb": -0.11465340884775818
+    },
+    {
+      "id": "violin-72-0-1",
+      "start": 2.65,
+      "end": 4.05,
+      "deltaDb": 0.008615788983222168
+    },
+    {
+      "id": "violin-62-0-1",
+      "start": 2.0,
+      "end": 3.75,
+      "deltaDb": -0.014381744628806151
+    },
+    {
+      "id": "violin-86-0-1",
+      "start": 2.25,
+      "end": 4.1,
+      "deltaDb": 0.0031081298790480287
+    },
+    {
+      "id": "violin-76-0-1",
+      "start": 1.9,
+      "end": 4.2,
+      "deltaDb": -0.010395143945222392
+    },
+    {
+      "id": "violin-66-0-1",
+      "start": 1.4,
+      "end": 4.2,
+      "deltaDb": -0.00336518806447809
+    },
+    {
+      "id": "violin-79-0-1",
+      "start": 1.55,
+      "end": 3.0,
+      "deltaDb": 0.037068404390962754
+    }
+  ]
+}
