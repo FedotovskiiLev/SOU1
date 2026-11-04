@@ -91,3 +91,5 @@ This verifies pinned source hashes and performs no downloads. Rendering needs
 only Node and the included bank, not Python, ffmpeg, a DAW or network access.
 Actual listening approval, browser/device playback and production integration
 are still separate work.
+
+See [five complete CC0 drum kits and aligned stem rendering](FULL_DRUM_KITS.md) for the full 58-sound catalog.

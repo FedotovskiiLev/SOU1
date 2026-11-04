@@ -129,3 +129,5 @@ implied. See [`EVENT_SCORE_RACK.md`](EVENT_SCORE_RACK.md) for the detailed arran
 ```sh
 node --test tests/video-music.test.mjs
 ```
+
+See [five complete CC0 drum kits and aligned stem rendering](FULL_DRUM_KITS.md) for the full 58-sound catalog.

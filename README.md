@@ -73,3 +73,5 @@ The local rack can select the CC0 Fugue State Audio x0xproc1 kit and render a
 repeatable common-note A/B against the original oscillator drums. See
 [the electronic-drums guide](tools/ELECTRONIC_DRUMS.md). This does not alter the
 production PWA/Android or integrate Surge XT.
+
+See [five complete CC0 drum kits and aligned stem rendering](tools/FULL_DRUM_KITS.md) for the full 58-sound catalog.

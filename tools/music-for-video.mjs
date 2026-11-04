@@ -6,6 +6,7 @@ import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {renderCue,validateOptions,saveCue,PROFILES} from './render-cue.mjs';
 import {renderScoreCue,validateRenderScoreOptions,DRUM_KITS} from './render-score-cue.mjs';
+import {FSA_KITS,drumManifestPath} from './instruments/drum-kits.mjs';
 import {SCORE_PROFILES} from './instruments/event-score.mjs';
 import {readJson} from './bounded-json.mjs';
 export {readJson};
@@ -13,7 +14,7 @@ const digest=b=>createHash('sha256').update(b).digest('hex');
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 const ENGINES=['cc0','synth'];
 const COMMON=['tools/music-for-video.mjs','tools/bounded-json.mjs','tools/render-cue.mjs','tools/instruments/event-score.mjs','tools/instruments/event-score-core.mjs','docs/audio-engine.js','docs/environment-audio.js'];
-const CC0=['tools/render-score-cue.mjs','tools/instruments/rack.mjs','tools/instruments/wav.mjs','tools/instruments/load-bank.mjs','assets/cc0-mini/manifest.json'];
+const CC0=['tools/render-score-cue.mjs','tools/instruments/drum-kits.mjs','tools/instruments/rack.mjs','tools/instruments/wav.mjs','tools/instruments/load-bank.mjs','assets/cc0-mini/manifest.json'];
 export function normalizeRecipe(recipe){
   if(!plain(recipe)||Object.keys(recipe).some(k=>!['schema','engine','options'].includes(k))||recipe.schema!=='sou1.video-recipe.v1'||!ENGINES.includes(recipe.engine)||!plain(recipe.options))throw new TypeError('Expected sou1.video-recipe.v1 with engine cc0/synth and options');
   const options=recipe.engine==='cc0'?validateRenderScoreOptions(recipe.options):validateOptions(recipe.options);
@@ -21,7 +22,8 @@ export function normalizeRecipe(recipe){
 }
 export async function rendererFingerprint(engine,options={}){
   if(!ENGINES.includes(engine))throw new TypeError('Unknown engine');
-  const extra=engine==='cc0'&&validateRenderScoreOptions(options).drumKit==='fsa-electronic'?['assets/fsa-electronic/manifest.json']:[];
+  const kit=engine==='cc0'?validateRenderScoreOptions(options).drumKit:null;
+  const extra=FSA_KITS.includes(kit)?[drumManifestPath(kit)]:[];
   const result={};for(const file of [...COMMON,...(engine==='cc0'?CC0:[]),...extra])result[file]=digest(await readFile(new URL('../'+file,import.meta.url)));
   return result;
 }
@@ -56,7 +58,7 @@ export const HELP=`SOU1 offline music for video (Node, no npm packages)
   node tools/music-for-video.mjs profiles
 Output: BASE.wav (stereo PCM24) and BASE.json (recipe, hashes, events, limits).
 No overwrite, automatic normalization, video editing or MP3 export. Existing Node required.
---drum-kit vcsl (default) or fsa-electronic applies only to cc0. No VST host.
+--drum-kit applies only to cc0: ${DRUM_KITS.join(', ')}. No VST host.
 cc0: real EventScore + CC0 rack, 4..120s, 44.1/48k. synth: original oscillator DSP, 4..300s.
 Durations include a 2s transport tail; this is not an automatic musical ending.
 `;
