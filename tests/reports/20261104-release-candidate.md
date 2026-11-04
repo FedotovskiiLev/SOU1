@@ -1,0 +1,28 @@
+# SOU1 1.0 candidate verification
+
+Runtime source checkpoint:1908d60, based on upstream458ded98c224d6eab6d2342363bb0faaf16bc80a. Signed0.2 source is525667f2cdb8fca27512bffc4205aaec57f22a36;70bf9816 is the former main used by offline cue recipes. Their original DSP baseline is explicitly retained in tools/instruments/legacy for reproducible comparisons. SOU1 remains AGPL-3.0-only. Root LICENSE is included by syncWebAssets as assets/LICENSE.txt; CC0 media provenance is separate.
+
+## Implemented behavior
+
+- Fresh UI: Pad0.2+harp hybrid palette and VCSL recorded drum kit; Eno keeps drums disabled. Explicit saved palette/kit/locks survive migration/reload. Full recorded strings and original synthesis remain explicit choices.
+- Default Eno: evolution0.8, motion0.5,48BPM. Actual hybrid engine render at8kHz, seed0x4405a035,600seconds: chord changes at57,114,171,227,284,340,396,453,509,566seconds. Degrees2,3,0 repeat;8 distinct pad pitches; peak0.1567205, no dropped notes or recorded lead leakage. These are signal/event checks, not a listening judgment.
+- Named developing melodic/drum patterns hold over time; Random remains explicit. Manual drum variation still enables fills. Existing selection locks/persistence remain.
+- Recorded voice colour receives Evolution in both hybrid/full recorded palettes, with120ms depth smoothing and bounded original spectral/additive processing. Zero-depth PCM retains the frozen pre-morph digest. A34-second one-note cello A/B uses the same seed/note/velocity and fixed gain3 on both sides, with no normalization. Peak dry0.1131, morph0.0886. Human approval of the new morph is pending.
+- Pulse explicitly selects seed7311,112BPM, VCSL marimba/sine palette and original score while stopped. The first539 source events match the favorite offline recipe. Infinite live generation continues beyond the36-second excerpt.72-second8kHz render:736 sampled notes,0 dropped/fallback, peak0.0792927. Live envelopes/effects/resampling differ; offline+12dB gain is not blindly applied.
+- Weather: processed lossy-preview CC0 derivatives, rain/wind12-second cyclic buffers and16-second finite thunder. Total1,920,132bytes.180-second weather render seed7311: peak0.1473079; thunder starts11.057,56.370625,112.824875,165.982125seconds. Procedural source remains selectable and byte-compatible without a recorded bank.
+
+## Completed checks
+
+Targeted DSP/score/sampler/weather/UI tests:39 passed before the additional600-second Eno render test; that added test passed separately. Weather assets/runtime7/7, UI18/18, source contracts and UI races passed. Full Node pass across44 files initially reported414 passed and3 failed: two old source-pin paths were corrected and rechecked successfully; the remaining failure is the JVM melodic parity test without a JDK. Two other JVM-only suites were excluded locally. Final affected CLI/fingerprint checks:15/15. The earlier empty CLI stdout was sandbox EPERM; normal permitted child-process execution passed replay without changing renderer audio behavior.
+
+Real in-app browser checks on separate loopback origin8042: fresh Eno loaded Development80 and entered GENERATING, with active audio visualizer and no error/warn logs. Pulse plus all three recorded weather controls entered GENERATING; after41seconds it reported232 sampled,0 fallback,0 dropped. After Stop, reload retained settings without autoplay. With the owned HTTP8042 server stopped and a fresh HTTP probe confirmed connection refused, cached page reload and Play still entered GENERATING, without error/warn logs. Test playback was stopped and HTTP server restored. The preview was left stopped on Eno with Pad0.2+harp. Approved preview8041 was not modified. This verifies browser startup/routing/offline behavior, not physical speaker listening quality.
+
+Canonical44-byte PCM16 WAV format and locked hashes were checked for all weather/Pulse samples. SW revision6c3e365c0505eb8e includes modules, manifests, notices and all media. No network dependency is introduced during playback.
+
+## Remaining release gates
+
+The laptop has JRE17 without jdk.compiler and no installed JDK/Gradle/SDK platform toolchain. No software was installed. Native source/selection and actual JS/JVM weather parity are prepared for CI, but local native compile/parity/APK/device qualification is not claimed. CI must run all Node/JVM suites, Android compile/lint and tools/verify-release-package.py on the real APK. The1.0 artifact is explicitly unsigned until the existing owner signing process succeeds. No debug/alternate signing identity may substitute. Published download metadata must reference the actual signed artifact/source SHA after that gate; existing0.2 metadata is not relabeled as1.0.
+
+## CI follow-up at7942ba9
+
+Run41894239363 passed420/420 Node tests, native selection/preparation checks, allocation checks, and recorded weather JS/JVM parity across336,000frames with maximum PCM delta0. The existing full-recorded engine path compared4,420,800 stereo samples bit-identically. The added hybrid engine parity reached a diagnostic mismatch: JS counted budget-rejected synth-bed notes as recorded drops while Java counted sampler attempts only. Accepted notes and active-voice counts matched at every reported boundary; hybrid PCM comparison had not yet run past that assertion. The correction changes only that diagnostic classification and retains the shared voice budget/global drop counter.14 focused ambient/morph tests passed, including a regression that distinguishes synth and sampler drops. Full hybrid PCM parity and Android APK gates remain required in the next CI run.

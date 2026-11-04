@@ -70,10 +70,12 @@ are rejected to catch stale UI/native contracts and spelling mistakes.
   4 triplet, 5 sparse, 6 offbeat, 7 tom-led.
 
 A manual selector survives reseeding and does not get replaced by phrase planning.
-A selected melodic rhythm family can still receive the existing density treatment,
-pickups, displacement and phrase rests; choosing its family does not disable the
-live complexity/evolution controls. A manual arpeggio strategy retains its strategy
-while the existing controls can change its span, density and register.
+A named melodic rhythm holds its onset grid: no autonomous displacement, phrase
+rests, call/reply density switching or phrase-end pickups. In rhythmic mode the
+named family now uses its own grid rather than the former family+2 offset. A named
+arpeggio order also avoids autonomous phrase rests. Density, BPM, swing and meter
+remain deliberate live choices; changing them can change the resulting rhythm.
+Melody pitches, harmony and dynamics can continue developing inside a held rhythm.
 
 `'seed'` lets the score select that aspect from its seed. Seed-selected melodic
 rhythm and arpeggio can develop between phrases as in phase one. Seed-selected drum
@@ -119,7 +121,9 @@ phrases. The seed option preserves the original default percussion behavior, wit
 its family derived independently from manual melodic-family choices.
 
 `drumVariation: 'auto'` preserves the original fills, phrase dynamics, breathing and
-seeded phrase-family development. Numeric one is equivalent to auto. Numeric values
+seeded phrase-family development when `drumPattern` is `'seed'` (the explicit Random
+option). For a named drum pattern, Auto means held, equivalent to numeric zero.
+Numeric one explicitly enables fills and phrase dynamics for either choice. Numeric values
 between zero and one reduce phrase-energy variation and gate additional fills and
 pickups through the existing complexity control. This is a bounded generative
 amount, not a crossfade between recordings or a probability drawn on every note.

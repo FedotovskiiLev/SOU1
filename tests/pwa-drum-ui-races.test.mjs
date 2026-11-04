@@ -13,6 +13,7 @@ const source=fs.readFileSync(root+'/docs/app.js','utf8').replace(/^import .*;\n/
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return {promise,resolve,reject}}
 const tick=async()=>{for(let i=0;i<20;i++)await Promise.resolve()};
 function boot({saved={drumKit:'vcsl'},hold='load',native=false,bridge=null}={}){
+ saved={melodicPreset:'procedural',weatherMode:'procedural',...saved};
  const els=new Map(),events=new Map(),instances=[],nodes=[],loads=[],modules=[];let next=0;const timers=new Map();
  function el(id=''){return {id,value:'0',textContent:'',style:{setProperty(){}},dataset:{},classList:{toggle(){}},listeners:{},setAttribute(k,v){this[k]=v},removeAttribute(k){delete this[k]},addEventListener(k,f){this.listeners[k]=f},append(){},focus(){},setPointerCapture(){},getContext(){return{}},set innerHTML(s){for(const m of s.matchAll(/id="([^"]+)"/g))els.set(m[1],el(m[1]));}};}
  for(const m of fs.readFileSync(root+'/docs/index.html','utf8').matchAll(/id="([^"]+)"/g))els.set(m[1],el(m[1]));els.get('rain-type').value='1';

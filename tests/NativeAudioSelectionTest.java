@@ -69,9 +69,10 @@ public final class NativeAudioSelectionTest {
         check(defaults.drums == null && defaults.melodies == null && reads.get() == 0, "procedural path has no assets");
         List<String> kits = new ArrayList<>(NativeDrumBankLoader.supportedKits()); kits.add("procedural"); kits.add(recorded("chamber").drumKit);
         for (String kit : kits) for (String score : new String[]{"original", "developing"})
-            for (String palette : new String[]{"procedural", "chamber", "piano-room", "chamber-flute"}) {
+            for (String palette : new String[]{"procedural", "chamber", "piano-room", "chamber-flute", "chamber-ambient", "piano-room-ambient", "chamber-flute-ambient"}) {
                 NativeAudioSelection selection = new NativeAudioSelection(kit, score, recorded(palette).scoreConfig, palette);
                 NativeAudioSelection decoded = NativeAudioSelection.parseKey(selection.preparationKey());
+                check(decoded.usesSynthesizedBed() == palette.endsWith("-ambient"), "explicit background routing survives selection key");
                 check(decoded.drumKit.equals(kit) && decoded.scoreMode.equals(score) && decoded.melodicPreset.equals(palette)
                         && decoded.scoreConfig.equals(selection.scoreConfig), "exact frozen round trip");
             }
@@ -174,7 +175,12 @@ public final class NativeAudioSelectionTest {
         }
     }
     public static void main(String[] args) throws Exception {
-        Path assets=Path.of(args[0]); strictSelection(); successfulPairAndQueuedStop(assets);
+        Path assets=Path.of(args[0]);
+        NativeAudioSelection weather = new NativeAudioSelection("procedural", "original", DevelopmentConfig.DEFAULT, "procedural", "recorded");
+        check(weather.needsPreparation(), "weather alone requires background bank");
+        check("recorded".equals(NativeAudioSelection.parseKey(weather.preparationKey()).weatherMode), "weather canonical selection roundtrip");
+        check(NativeAudioSelection.prepare(weather.preparationKey(), 8000, p -> Files.newInputStream(assets.resolve(p)), p -> Files.newInputStream(assets.resolve(p))).weather != null, "real weather prepared offline");
+        strictSelection(); successfulPairAndQueuedStop(assets);
         melodicFailureIsAtomic(assets); cancellationDuringEitherLoad(assets,false); cancellationDuringEitherLoad(assets,true);
         System.out.println("PASS NativeAudioSelection: "+checks.get()+" assertions; closed selection/config, real sequential banks, coalescing, atomic failure and paired cancellation (JVM only)");
     }

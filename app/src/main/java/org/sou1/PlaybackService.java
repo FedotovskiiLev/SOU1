@@ -46,7 +46,7 @@ public final class PlaybackService extends Service {
     public static final String EXTRA_VOLUME = "volume";
     public static final String EXTRA_DRUM_KIT = "drumKit", EXTRA_REQUEST_ID = "requestId";
     public static final String EXTRA_SCORE_MODE = "scoreMode";
-    public static final String EXTRA_SCORE_CONFIG = "scoreConfig", EXTRA_MELODIC_PRESET = "melodicPreset";
+    public static final String EXTRA_SCORE_CONFIG = "scoreConfig", EXTRA_MELODIC_PRESET = "melodicPreset", EXTRA_WEATHER_MODE = "weatherMode";
     static boolean isSupportedScoreMode(String mode) { return NativeAudioSelection.isSupportedScoreMode(mode); }
     static boolean isSupportedMelodicPreset(String preset) { return NativeAudioSelection.isSupportedMelodicPreset(preset); }
     /** Reject coercion, arrays, null, unknown fields and invalid scalar types before dispatch. */
@@ -99,7 +99,7 @@ public final class PlaybackService extends Service {
                 .put("density", parameters.density).put("complexity", parameters.complexity).put("swing", parameters.swing)
                 .put(EXTRA_DRUM_KIT, selection.drumKit).put(EXTRA_SCORE_MODE, selection.scoreMode)
                 .put(EXTRA_SCORE_CONFIG, new org.json.JSONObject(selection.scoreConfig.toJson()))
-                .put(EXTRA_MELODIC_PRESET, selection.melodicPreset);
+                .put(EXTRA_MELODIC_PRESET, selection.melodicPreset).put(EXTRA_WEATHER_MODE, selection.weatherMode);
     }
     private void publishStatus() {
         try {
@@ -115,6 +115,7 @@ public final class PlaybackService extends Service {
                     + ",\"scoreMode\":" + org.json.JSONObject.quote(selection.scoreMode)
                     + ",\"scoreConfig\":" + selection.scoreConfig.toJson()
                     + ",\"melodicPreset\":" + org.json.JSONObject.quote(selection.melodicPreset)
+                    + ",\"weatherMode\":" + org.json.JSONObject.quote(selection.weatherMode)
                     + ",\"audioError\":" + org.json.JSONObject.quote(audioError) + "}";
         }
     }
@@ -166,7 +167,8 @@ public final class PlaybackService extends Service {
             }
             selection = new NativeAudioSelection(isSupportedDrumKit(savedKit) ? savedKit : selection.drumKit,
                     isSupportedScoreMode(savedScore) ? savedScore : selection.scoreMode, savedConfig,
-                    isSupportedMelodicPreset(savedMelody) ? savedMelody : selection.melodicPreset);
+                    isSupportedMelodicPreset(savedMelody) ? savedMelody : selection.melodicPreset,
+                    "recorded".equals(saved.optString(EXTRA_WEATHER_MODE)) ? "recorded" : "procedural");
             double savedVolume = saved.optDouble(EXTRA_VOLUME, volume);
             if (Double.isFinite(savedVolume)) volume = Math.max(0, Math.min(1, savedVolume));
         } catch (org.json.JSONException | ClassCastException invalidPreferences) {
@@ -355,7 +357,8 @@ public final class PlaybackService extends Service {
                             intent.hasExtra(EXTRA_DRUM_KIT) ? intent.getStringExtra(EXTRA_DRUM_KIT) : selection.drumKit,
                             intent.hasExtra(EXTRA_SCORE_MODE) ? intent.getStringExtra(EXTRA_SCORE_MODE) : selection.scoreMode,
                             intent.hasExtra(EXTRA_SCORE_CONFIG) ? DevelopmentConfig.parseKey(intent.getStringExtra(EXTRA_SCORE_CONFIG)) : selection.scoreConfig,
-                            intent.hasExtra(EXTRA_MELODIC_PRESET) ? intent.getStringExtra(EXTRA_MELODIC_PRESET) : selection.melodicPreset);
+                            intent.hasExtra(EXTRA_MELODIC_PRESET) ? intent.getStringExtra(EXTRA_MELODIC_PRESET) : selection.melodicPreset,
+                            intent.hasExtra(EXTRA_WEATHER_MODE) ? intent.getStringExtra(EXTRA_WEATHER_MODE) : selection.weatherMode);
                     selection = next;
                 } catch (IllegalArgumentException invalid) {
                     failPlayback("Unsupported audio selection", invalid); return START_NOT_STICKY;
@@ -499,7 +502,7 @@ public final class PlaybackService extends Service {
         }
         Session(long seed, NativeAudioSelection.Banks banks, NativeAudioSelection selected) {
             engine = new AmbientEngine(48000, seed, banks.drums, banks.melodies,
-                    "developing".equals(selected.scoreMode), selected.scoreConfig);
+                    "developing".equals(selected.scoreMode), selected.scoreConfig, selected.usesSynthesizedBed(), !NativeAudioSelection.PROCEDURAL.equals(selected.melodicPreset), banks.weather);
             scoreEngine = engine;
             engine.setParameters(parameters);
             thread = new Thread(this, "SOU1-audio");

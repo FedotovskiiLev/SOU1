@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+import java.nio.file.Files;import java.nio.file.Path;import java.io.DataOutputStream;import java.io.BufferedOutputStream;import org.sou1.audio.RecordedWeather;import org.sou1.audio.NativeWeatherBankLoader;import org.sou1.audio.EnvironmentAudio;
+public final class RecordedWeatherVectors {
+ private RecordedWeatherVectors(){}
+ public static void main(String[] args)throws Exception{Path root=Path.of(args[0]);int rate=8000;RecordedWeather e=new RecordedWeather(rate,7311,NativeWeatherBankLoader.prepare(rate,p->Files.newInputStream(root.resolve(p))));e.setParameters(new EnvironmentAudio.Parameters(3,.7,.8,.6));e.start();double peak=0;try(DataOutputStream out=new DataOutputStream(new BufferedOutputStream(Files.newOutputStream(Path.of(args[1]))))){for(int i=0;i<rate*42;i++){if(i==rate*9)e.setParameters(new EnvironmentAudio.Parameters(1,.4,.8,.3));if(i==rate*22){e.reseed(42);e.start();}if(i==rate*37)e.stop();e.next();if(!Double.isFinite(e.outputL)||!Double.isFinite(e.outputR))throw new AssertionError("Nonfinite weather");peak=Math.max(peak,Math.max(Math.abs(e.outputL),Math.abs(e.outputR)));out.writeDouble(e.outputL);out.writeDouble(e.outputR);}}if(!e.isSilent()||peak>=.3)throw new AssertionError("Weather bounds/Stop");System.out.println("PASS native weather42s, peak="+peak);}
+}

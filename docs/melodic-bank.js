@@ -4,16 +4,17 @@ import {boundedFetch,sha256} from './audio-kit/experiments/rack-browser/bank.mjs
 import {decodePcmWav} from './audio-kit/tools/instruments/wav.mjs';
 import {LiveMelodicPool} from './live-melodic-pool.js';
 import {MELODIC_ASSETS} from './melodic-catalog.js';
-export const MELODIC_PRESETS=Object.freeze(['procedural',...Object.keys(MELODIC_ASSETS)]);
+export {MELODIC_PRESETS} from './audio-selection.js';
 const hex=s=>typeof s==='string'&&/^[a-f0-9]{64}$/.test(s);
 export async function prepareMelodicBank(preset,sampleRate,{fetcher=fetch,assetBaseUrl=new URL('./melodic-assets/',import.meta.url),signal}={}){
- if(!Object.hasOwn(MELODIC_ASSETS,preset)||!Number.isInteger(sampleRate)||sampleRate<8000||sampleRate>192000)throw new RangeError('Melodic preset/rate');
+ const bankPreset=typeof preset==='string'&&preset.endsWith('-ambient')?preset.slice(0,-8):preset;
+ if(!Object.hasOwn(MELODIC_ASSETS,bankPreset)||!Number.isInteger(sampleRate)||sampleRate<8000||sampleRate>192000)throw new RangeError('Melodic preset/rate');
  const check=()=>{if(signal?.aborted)throw new DOMException('Melodic bank preparation cancelled','AbortError');};
  const assetFetch=(url,options)=>fetcher(url,{...options,signal});
- const locked=MELODIC_ASSETS[preset];check();const bytes=await boundedFetch(new URL(preset+'.json',assetBaseUrl),locked.bytes,{fetcher:assetFetch});check();
+ const locked=MELODIC_ASSETS[bankPreset];check();const bytes=await boundedFetch(new URL(bankPreset+'.json',assetBaseUrl),locked.bytes,{fetcher:assetFetch});check();
  if(bytes.length!==locked.bytes||await sha256(bytes)!==locked.sha256)throw new Error('Melodic manifest integrity mismatch');
  const m=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
- if(m.schema!=='sou1.melodic-bank.v1'||m.id!==preset||m.license!=='CC0-1.0'||!Array.isArray(m.samples)||m.samples.length<1||m.samples.length>96||!Array.isArray(m.instruments)||m.instruments.length!==5)throw new TypeError('Melodic manifest');
+ if(m.schema!=='sou1.melodic-bank.v1'||m.id!==bankPreset||m.license!=='CC0-1.0'||!Array.isArray(m.samples)||m.samples.length<1||m.samples.length>96||!Array.isArray(m.instruments)||m.instruments.length!==5)throw new TypeError('Melodic manifest');
  let encoded=0,decoded=0;
  for(const s of m.samples){if(typeof s.file!=='string'||!/^[-a-z0-9]+\.wav$/.test(s.file)||!hex(s.sha256)||!hex(s.sourceSha256)||s.license!=='CC0-1.0'||!Number.isSafeInteger(s.frames)||s.frames<2||!Number.isSafeInteger(s.bytes)||s.bytes<44||s.bytes>2*1024*1024)throw new TypeError('Melodic sample metadata');encoded+=s.bytes;decoded+=s.frames*4;}
  if(encoded>16*1024*1024||decoded>32*1024*1024||m.decodedBytes!==decoded||m.encodedBytes!==encoded)throw new RangeError('Melodic bank memory budget');

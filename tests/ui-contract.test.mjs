@@ -90,7 +90,7 @@ class FakeWorklet{
  constructor(){graphCount++;worklet=this;this.port={postMessage(){}}}
  connect(){return {connect:()=>({connect(){}})}}
 }
-const raceContext={...context,window:{addEventListener(){}},AudioContext:FakeAudioContext,AudioWorkletNode:FakeWorklet,setTimeout:f=>{callbacks.set(++nextTimer,f);return nextTimer},clearTimeout:id=>callbacks.delete(id)};
+const raceContext={...context,localStorage:{getItem:()=>JSON.stringify({drumKit:'procedural',melodicPreset:'procedural',weatherMode:'procedural'}),setItem(){}},window:{addEventListener(){}},AudioContext:FakeAudioContext,AudioWorkletNode:FakeWorklet,setTimeout:f=>{callbacks.set(++nextTimer,f);return nextTimer},clearTimeout:id=>callbacks.delete(id)};
 vm.createContext(raceContext);vm.runInContext(appSource,raceContext);
 await vm.runInContext('start()',raceContext);
 vm.runInContext('stop()',raceContext);

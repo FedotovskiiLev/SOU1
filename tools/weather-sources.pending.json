@@ -1,0 +1,91 @@
+{
+  "status": "runtime-integrated-pending-native-and-human-listening",
+  "licenseCheckDate": "2026-11-04",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "previewFormat": "lossy public MP3 previews, not original WAV; accepted as processing inputs",
+  "previewsDownloaded": true,
+  "previewsBundled": false,
+  "derivativesPrepared": true,
+  "derivativeManifest": "docs/weather-assets/manifest.json",
+  "sources": [
+    {
+      "role": "rain",
+      "author": "Snoopy20111",
+      "title": "Rain_Loop.wav",
+      "page": "https://freesound.org/people/Snoopy20111/sounds/399072/",
+      "download": "https://cdn.freesound.org/previews/399/399072_3710957-hq.mp3",
+      "sha256": "4e85962f845a2de42ac99271799d67243d95607d7374df7fac0c7d515046faa5",
+      "bytes": 7529184,
+      "licenseEvidence": "Individual sound page links Creative Commons 0.",
+      "format": "lossy public MP3 preview, not original WAV",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseVerifiedDate": "2026-11-04",
+      "derivativeFile": "rain.wav",
+      "derivativeSha256": "4fa23795870ac894e421fc4cb592daf2cd87d283507a5d077e3b2aca636cb9a7"
+    },
+    {
+      "role": "wind",
+      "author": "Nox_Sound",
+      "title": "Ambiance_Wind_Forest_Trees_Loop_01.wav",
+      "page": "https://freesound.org/people/Nox_Sound/sounds/530908/",
+      "download": "https://cdn.freesound.org/previews/530/530908_9250976-hq.mp3",
+      "sha256": "b8962b2e82563d6a864c3215147e975633af5f27205f07cd2d3639584d6e715b",
+      "bytes": 945984,
+      "licenseEvidence": "Individual sound page links Creative Commons 0.",
+      "format": "lossy public MP3 preview, not original WAV",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseVerifiedDate": "2026-11-04",
+      "derivativeFile": "wind.wav",
+      "derivativeSha256": "7a38c7ec887ed1ea2e58cd05b8add81fb18c92e2e675a315cd70bca3b20696fd"
+    },
+    {
+      "role": "thunder",
+      "author": "Joseph SARDIN & Axeline T.",
+      "title": "Thunder #4",
+      "page": "https://bigsoundbank.com/thunder-4-s3115.html",
+      "download": "https://bigsoundbank.com/UPLOAD/mp3/3115.mp3?v=d",
+      "sha256": "96d47d6d94d1e2cb8455a662e0e36af9084a5b33a100acc8e05dc3f58be64eab",
+      "bytes": 690508,
+      "licenseEvidence": "Individual sound page explicitly labels the recording CC0 (public domain).",
+      "format": "lossy public MP3 preview, not original WAV",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "licenseVerifiedDate": "2026-11-04",
+      "derivativeFile": "thunder.wav",
+      "derivativeSha256": "509cbb56e159775a894abcfa67d647d1d99c487a5bc9b575f037bc9868b6e9cc"
+    }
+  ],
+  "history": [
+    {
+      "status": "superseded",
+      "reason": "Earlier original-WAV wait replaced by permission to process public lossy previews; raw inputs remain outside packaged assets."
+    },
+    {
+      "status": "source-replaced",
+      "role": "thunder",
+      "author": "Fission9",
+      "page": "https://freesound.org/people/Fission9/sounds/581122/",
+      "preview": "https://cdn.freesound.org/previews/581/581122_9395330-hq.mp3",
+      "reason": "Mixed rain/thunder candidate replaced by individually CC0 BigSoundBank3115; old candidate not packaged."
+    }
+  ],
+  "requirements": {
+    "keepOriginalsOutsidePackagedAssets": true,
+    "trimAndCompressApprovedExcerpts": true,
+    "recordEveryTransformAndHash": true,
+    "reviewVoicesPeaksClippingAndTransitions": true,
+    "rainWind": "continuous layers from reviewed excerpts with crossfaded loop transitions",
+    "thunder": "separate rare one-shot events, not a continuous loop",
+    "offlinePlayback": true,
+    "proceduralFallbackAndExistingControls": true
+  },
+  "assetBankFinalized": false,
+  "remaining": [
+    "Runtime integration and rare thunder scheduling by parent task",
+    "Human listening review of loop repetition/background sounds",
+    "Native compilation/package/CI after full integration"
+  ]
+}

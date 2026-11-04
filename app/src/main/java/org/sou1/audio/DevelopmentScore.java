@@ -123,7 +123,7 @@ public final class DevelopmentScore {
         retrograde = complexity > .65 ? (int) ((plan >>> 5) & 1) : 0;
         transpose = complexity > .35 ? (int) ((plan >>> 6) % 5) - 2 : 0;
         rhythmFamily = config.rhythmFamily == DevelopmentConfig.SEED && complexity > .35 ? (family + (int) ((plan >>> 9) % 3)) % 8 : family;
-        double variation = config.drumVariation == DevelopmentConfig.AUTO_VARIATION ? 1 : config.drumVariation;
+        double variation = config.drumVariation == DevelopmentConfig.AUTO_VARIATION ? (config.drumPattern == DevelopmentConfig.SEED ? 1 : 0) : config.drumVariation;
         drumFamily = config.drumPattern == DevelopmentConfig.SEED
                 ? (complexity * variation > .35 ? (seedFamily + (int) ((plan >>> 9) % 3)) % 8 : seedFamily) : config.drumPattern;
         arpKind = config.arpStrategy == DevelopmentConfig.SEED && complexity > .4 ? (arpStrategy + (int) ((plan >>> 12) % 4)) % 8 : arpStrategy;
@@ -142,19 +142,20 @@ public final class DevelopmentScore {
         }
     }
     private void planBar(double complexity) {
-        int n = meterTicks, mask = MASKS[rhythmFamily], groove = MASKS[(rhythmFamily + 2) % 8];
-        boolean call = phraseBar % 4 < 2, rest = phraseBar == restBar;
-        int shift = complexity > .55 ? 3 * (int) ((plan >>> 14) % 3) : 0;
+        boolean held = config.rhythmFamily != DevelopmentConfig.SEED, heldArp = config.arpStrategy != DevelopmentConfig.SEED;
+        int n = meterTicks, mask = MASKS[rhythmFamily], groove = MASKS[held ? rhythmFamily : (rhythmFamily + 2) % 8];
+        boolean call = phraseBar % 4 < 2, rest = !held && phraseBar == restBar, arpRest = !heldArp && phraseBar == restBar;
+        int shift = !held && complexity > .55 ? 3 * (int) ((plan >>> 14) % 3) : 0;
         int arpStep = arpKind == 6 ? 4 : (complexity > .75 && arpKind == 7 ? 3 : 6);
         for (int t = 0; t < n; t++) {
             int x = mod(t - shift, 24), y = mod(n - 1 - t + 6, 24);
             int rank = t == 0 ? 100 : (t % 12 == 0 ? 88 : (t % 6 == 0 ? 72 : 58));
-            leadGrid[t] = !rest && ((mask >>> x) & 1) != 0 ? (call ? rank : Math.max(30, rank - 26)) : 0;
-            replyGrid[t] = !rest && t % 3 == 0 && ((mask >>> mod(y + 1, 24)) & 1) != 0 ? (!call ? rank : Math.max(25, rank - 35)) : 0;
+            leadGrid[t] = !rest && ((mask >>> x) & 1) != 0 ? (held || call ? rank : Math.max(30, rank - 26)) : 0;
+            replyGrid[t] = !rest && t % 3 == 0 && ((mask >>> mod(y + 1, 24)) & 1) != 0 ? (held || !call ? rank : Math.max(25, rank - 35)) : 0;
             grooveGrid[t] = !rest && ((groove >>> x) & 1) != 0 ? rank : 0;
-            arpGrid[t] = !rest && t % arpStep == 0 ? (t == 0 ? 100 : (t % (arpStep * 2) == 0 ? 86 : 64)) : 0;
-            if (!rest && complexity > .65 && phraseBar % 3 == 2 && t == n - 3) replyGrid[t] = 68;
-            if (!rest && complexity > .8 && phraseBar % 4 == 3 && t == n - 3) grooveGrid[t] = 62;
+            arpGrid[t] = !arpRest && t % arpStep == 0 ? (t == 0 ? 100 : (t % (arpStep * 2) == 0 ? 86 : 64)) : 0;
+            if (!held && !rest && complexity > .65 && phraseBar % 3 == 2 && t == n - 3) replyGrid[t] = 68;
+            if (!held && !rest && complexity > .8 && phraseBar % 4 == 3 && t == n - 3) grooveGrid[t] = 62;
         }
     }
     private void changeHarmony(boolean stableAmbient) {
@@ -191,7 +192,7 @@ public final class DevelopmentScore {
     private static boolean allowed(int rank, double density) { return rank > 0 && density >= (100 - rank) / 100.0; }
 
     private void emitDrums(NoteSink sink, long at, int t, double density, double complexity, double energy) {
-        double variation = config.drumVariation == DevelopmentConfig.AUTO_VARIATION ? 1 : config.drumVariation;
+        double variation = config.drumVariation == DevelopmentConfig.AUTO_VARIATION ? (config.drumPattern == DevelopmentConfig.SEED ? 1 : 0) : config.drumVariation;
         double drumEnergy = variation == 1 ? energy : (variation == 0 ? 1 : 1 + variation * (energy - 1));
         int family = drumFamily, half = meterTicks / 2 / 3 * 3;
         if (config.drumPattern == DevelopmentConfig.SEED) {
@@ -289,7 +290,7 @@ public final class DevelopmentScore {
                     long c = grooveCursor++; int d = chord + motifDegree(c / 2 + (c % 2 == 0 ? 0 : 2), complexity, false);
                     int n = pitch(d, 1, 57, 83, lastTop);
                     if (emit(sink, at, 1, n, seconds * (t % 12 == 0 ? .36 : .19), .68 * rhythmic * energy, .4)) lastTop = n;
-                    if (complexity > .55 && t % 12 != 0 && c % 4 == 3) emit(sink, at, 2, pitch(chord + 4, 1, 64, 88, 0), seconds * .48, .3 * rhythmic * energy, .74);
+                    if (config.rhythmFamily == DevelopmentConfig.SEED && complexity > .55 && t % 12 != 0 && c % 4 == 3) emit(sink, at, 2, pitch(chord + 4, 1, 64, 88, 0), seconds * .48, .3 * rhythmic * energy, .74);
                 }
                 if (arp > 0 && allowed(arpGrid[t], density)) {
                     long c = arpCursor++; int kind = arpKind, span = complexity > .5 ? 4 : 3, index;

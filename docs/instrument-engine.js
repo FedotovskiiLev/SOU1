@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Opt-in prepared melodic voices at the same pre-effects seam as recorded drums.
+import {RecordedWeather} from './recorded-weather.js';
 import {AmbientEngine} from './audio-engine.js';
 import {RecordedDrumEngine} from './recorded-drum-engine.js';
 import {createDevelopingEngine} from './developing-engine.js';
 import {LiveMelodicPool} from './live-melodic-pool.js';
-export function createInstrumentEngine(rate,seed,{scoreMode='original',scoreConfig,drumBank,melodicBank}={}){
+export function createInstrumentEngine(rate,seed,{scoreMode='original',scoreConfig,drumBank,melodicBank,weatherBank,synthesizedBed=false,evolvingTimbre=false}={}){
  if(scoreMode!=='original'&&scoreMode!=='developing')throw new RangeError('Unknown score mode');
  const engine=scoreMode==='developing'?createDevelopingEngine(rate,seed,drumBank,scoreConfig):drumBank?new RecordedDrumEngine(rate,seed,drumBank):new AmbientEngine(rate,seed);
+ engine.evolvingTimbre=evolvingTimbre===true;
+ if(weatherBank){engine.environment=new RecordedWeather(rate,seed,weatherBank);const apply=engine.applySeed.bind(engine);engine.applySeed=()=>{apply();engine.environment.reseed(engine.seed);if(engine.playing)engine.environment.start();};}
  if(!melodicBank)return engine;
  const pool=LiveMelodicPool.fromPrepared(rate,melodicBank,{polyphony:32});
  engine.recordedMelodies=pool;engine.melodicGains=new Float64Array(5);engine.recordedMelodyGain=1;
@@ -19,13 +22,16 @@ export function createInstrumentEngine(rate,seed,{scoreMode='original',scoreConf
   const process=engine.macros.process.bind(engine.macros);
   engine.macros.process=(left,right,target)=>{
    for(let i=0;i<5;i++)engine.melodicGains[i]=engine.layerGains[i]*((i===1||i===2)?engine.recordedMelodyGain:1);
-   const before=pool.activeVoices;pool.next(engine.melodicGains,engine.playing);engine.noteOffCount+=before-pool.activeVoices;
+   const before=pool.activeVoices;pool.next(engine.melodicGains,engine.playing,engine.evolvingTimbre?engine.evolution:0,engine.frame,engine.seed);engine.noteOffCount+=before-pool.activeVoices;
    const level=1+engine.intensity*1.4;process(left+pool.outputL*level,right+pool.outputR*level,target);
   };
  }
  engine.noteOn=(frame,layer,pitch,duration,velocity,pan)=>{
   if(layer>=5){noteOn(frame,layer,pitch,duration,velocity,pan);return;}
-  if(engine.getActiveMelodicVoiceCount()>=engine.parameters.polyphony){engine.recordedMelodicDropped++;engine.droppedNotes++;return;}
+  // The synth bed shares the budget, but its omissions are not sampler drops.
+  if(engine.getActiveMelodicVoiceCount()>=engine.parameters.polyphony){if(!(synthesizedBed&&(layer===0||layer===3||layer===4)))engine.recordedMelodicDropped++;engine.droppedNotes++;return;}
+  // Keep pad, texture and bass synthesis; sample only lead/pluck and bell/reply.
+  if(synthesizedBed&&(layer===0||layer===3||layer===4)){noteOn(frame,layer,pitch,duration,velocity,pan);return;}
   const before=pool.stats.unmapped;
   if(pool.trigger(layer,pitch,duration/rate,velocity,pan)){engine.recordedMelodicAccepted++;engine.noteOnCount++;if(engine.onNoteOn)engine.onNoteOn(frame,layer,pitch,duration,velocity,pan,engine.noteOnCount);return;}
   if(pool.stats.unmapped===before){engine.recordedMelodicDropped++;engine.droppedNotes++;return;}

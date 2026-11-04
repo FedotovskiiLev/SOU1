@@ -102,7 +102,7 @@ export class DevelopmentScore {
     this.retrograde=complexity>.65?((this.plan>>>5)&1):0;
     this.transpose=complexity>.35?((this.plan>>>6)%5)-2:0;
     this.rhythmFamily=this.config.rhythmFamily==='seed'&&complexity>.35?(this.family+((this.plan>>>9)%3))%8:this.family;
-    const variation=this.config.drumVariation==='auto'?1:this.config.drumVariation;
+    const variation=this.config.drumVariation==='auto'?(this.config.drumPattern==='seed'?1:0):this.config.drumVariation;
     this.drumFamily=this.config.drumPattern==='seed'?(complexity*variation>.35?(this.seedFamily+((this.plan>>>9)%3))%8:this.seedFamily):this.config.drumPattern;
     this.arpKind=this.config.arpStrategy==='seed'&&complexity>.4?(this.arpStrategy+((this.plan>>>12)%4))%8:this.arpStrategy;
     const modulationSpan=4+Math.floor((1-evolution)*12);
@@ -122,20 +122,21 @@ export class DevelopmentScore {
   }
   planBar(complexity) {
     const n=this.meterTicks,call=(this.phraseBar%4)<2;
-    const mask=MASKS[this.rhythmFamily],groove=MASKS[(this.rhythmFamily+2)%8];
-    const shift=complexity>.55?3*((this.plan>>>14)%3):0;
-    const rest=this.phraseBar===this.restBar;
+    const held=this.config.rhythmFamily!=='seed',heldArp=this.config.arpStrategy!=='seed';
+    const mask=MASKS[this.rhythmFamily],groove=MASKS[held?this.rhythmFamily:(this.rhythmFamily+2)%8];
+    const shift=!held&&complexity>.55?3*((this.plan>>>14)%3):0;
+    const rest=!held&&this.phraseBar===this.restBar,arpRest=!heldArp&&this.phraseBar===this.restBar;
     const arpStep=this.arpKind===6?4:(complexity>.75&&this.arpKind===7?3:6);
     for(let t=0;t<n;t++){
       const x=mod(t-shift,24),y=mod(n-1-t+6,24);
       const rank=t===0?100:(t%12===0?88:(t%6===0?72:58));
-      this.leadGrid[t]=!rest&&((mask>>>x)&1)!==0?(call?rank:Math.max(30,rank-26)):0;
-      this.replyGrid[t]=!rest&&t%3===0&&((mask>>>mod(y+1,24))&1)!==0?(!call?rank:Math.max(25,rank-35)):0;
+      this.leadGrid[t]=!rest&&((mask>>>x)&1)!==0?(held||call?rank:Math.max(30,rank-26)):0;
+      this.replyGrid[t]=!rest&&t%3===0&&((mask>>>mod(y+1,24))&1)!==0?(held||!call?rank:Math.max(25,rank-35)):0;
       this.grooveGrid[t]=!rest&&((groove>>>x)&1)!==0?rank:0;
-      this.arpGrid[t]=!rest&&t%arpStep===0?(t===0?100:(t%(arpStep*2)===0?86:64)):0;
+      this.arpGrid[t]=!arpRest&&t%arpStep===0?(t===0?100:(t%(arpStep*2)===0?86:64)):0;
       // A reply pickup and a short articulated fill, never a compulsory cadence.
-      if(!rest&&complexity>.65&&this.phraseBar%3===2&&t===n-3)this.replyGrid[t]=68;
-      if(!rest&&complexity>.8&&this.phraseBar%4===3&&t===n-3)this.grooveGrid[t]=62;
+      if(!held&&!rest&&complexity>.65&&this.phraseBar%3===2&&t===n-3)this.replyGrid[t]=68;
+      if(!held&&!rest&&complexity>.8&&this.phraseBar%4===3&&t===n-3)this.grooveGrid[t]=62;
     }
   }
   changeHarmony(stableAmbient) {
@@ -167,7 +168,7 @@ export class DevelopmentScore {
   }
   allowed(rank,density) { return rank>0&&density>=(100-rank)/100; }
   emitDrums(sink,at,t,density,complexity,energy) {
-    const variation=this.config.drumVariation==='auto'?1:this.config.drumVariation;
+    const variation=this.config.drumVariation==='auto'?(this.config.drumPattern==='seed'?1:0):this.config.drumVariation;
     const drumEnergy=variation===1?energy:(variation===0?1:1+variation*(energy-1));
     const family=this.drumFamily,half=Math.floor(this.meterTicks/2/3)*3;
     if(this.config.drumPattern==='seed'){
@@ -267,7 +268,7 @@ export class DevelopmentScore {
           const c=this.grooveCursor++,d=this.chord+this.motifDegree(Math.floor(c/2)+(c%2===0?0:2),complexity,false);
           const n=this.pitch(d,1,57,83,this.lastTop);
           if(this.emit(sink,at,1,n,seconds*(t%12===0?.36:.19),.68*rhythmic*energy,.4))this.lastTop=n;
-          if(complexity>.55&&t%12!==0&&c%4===3)this.emit(sink,at,2,this.pitch(this.chord+4,1,64,88,0),seconds*.48,.3*rhythmic*energy,.74);
+          if(this.config.rhythmFamily==='seed'&&complexity>.55&&t%12!==0&&c%4===3)this.emit(sink,at,2,this.pitch(this.chord+4,1,64,88,0),seconds*.48,.3*rhythmic*energy,.74);
         }
         if(arp>0&&this.allowed(this.arpGrid[t],density)){
           const c=this.arpCursor++,kind=this.arpKind,span=complexity>.5?4:3;

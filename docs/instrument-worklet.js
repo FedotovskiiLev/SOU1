@@ -9,7 +9,7 @@ class Sou1InstrumentProcessor extends AudioWorkletProcessor {
    if(data.type==='initialize'){
     if(this.initialized)return;this.initialized=true;
     try{
-     this.engine=createInstrumentEngine(sampleRate,this.setup.seed??1,{scoreMode:this.setup.scoreMode,scoreConfig:this.setup.scoreConfig,drumBank:data.wireBank,melodicBank:data.melodicBank});
+     this.engine=createInstrumentEngine(sampleRate,this.setup.seed??1,{scoreMode:this.setup.scoreMode,scoreConfig:this.setup.scoreConfig,drumBank:data.wireBank,melodicBank:data.melodicBank,weatherBank:data.weatherBank,synthesizedBed:this.setup.synthesizedBed===true,evolvingTimbre:this.setup.evolvingTimbre===true});
      const noteOn=this.engine.noteOn.bind(this.engine);this.engine.noteOn=(...event)=>{this.history.add(...event);noteOn(...event);};
      const applySeed=this.engine.applySeed.bind(this.engine);this.engine.applySeed=()=>{this.history.clear();applySeed();};
      this.port.postMessage({type:'ready',requestId:data.requestId});

@@ -110,6 +110,11 @@ public final class MainActivity extends Activity {
                 throw new JSONException("Unsupported melodic preset");
             intent.putExtra(PlaybackService.EXTRA_MELODIC_PRESET, (String) preset);
         }
+        if (json.has("weatherMode")) {
+            String mode = json.getString("weatherMode");
+            if (!"recorded".equals(mode) && !"procedural".equals(mode)) throw new JSONException("Unsupported weather mode");
+            intent.putExtra(PlaybackService.EXTRA_WEATHER_MODE, mode);
+        }
         if (json.has("drumKit")) {
             Object kit = json.get("drumKit");
             if (!(kit instanceof String) || !PlaybackService.isSupportedDrumKit((String) kit))
@@ -119,6 +124,7 @@ public final class MainActivity extends Activity {
         // A legacy bridge PLAY must not inherit settings it cannot acknowledge.
         // MediaSession Play intentionally uses the service's restored selection instead.
         if (PlaybackService.ACTION_PLAY.equals(action)) {
+            if (!json.has("weatherMode")) intent.putExtra(PlaybackService.EXTRA_WEATHER_MODE, "procedural");
             if (!json.has("scoreMode")) intent.putExtra(PlaybackService.EXTRA_SCORE_MODE, "original");
             if (!json.has("scoreConfig")) intent.putExtra(PlaybackService.EXTRA_SCORE_CONFIG, DevelopmentConfig.DEFAULT.canonicalKey());
             if (!json.has("melodicPreset")) intent.putExtra(PlaybackService.EXTRA_MELODIC_PRESET, "procedural");
@@ -172,8 +178,10 @@ public final class MainActivity extends Activity {
                 return new JSONObject().put("schema", "sou1.native-audio.v1").put("drumKits", kits)
                         .put("scoreModes", new JSONArray().put("original").put("developing"))
                         .put("scoreConfigSchema", "sou1.development-config.v1").put("customDrums", "custom-v1")
+                        .put("weather", "cc0-v1")
                         .put("melodicPresets", new JSONArray().put("procedural").put("chamber")
-                                .put("piano-room").put("chamber-flute")).toString();
+                                .put("piano-room").put("chamber-flute").put("chamber-ambient")
+                                .put("piano-room-ambient").put("chamber-flute-ambient").put("pulse-marimba")).toString();
             } catch (JSONException impossible) { return "{}"; }
         }
         @JavascriptInterface public String midiExportStatus() { return midiStatus; }

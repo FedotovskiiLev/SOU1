@@ -8,17 +8,18 @@ export function nativeDevelopmentCapabilities(bridge){
  try{const c=JSON.parse(bridge.audioCapabilities());return c?.schema==='sou1.native-audio.v1'&&Array.isArray(c.scoreModes)&&c.scoreModes.length===2&&c.scoreModes.includes('original')&&c.scoreModes.includes('developing');}catch{return false;}
 }
 export function nativeSelectionCapabilities(bridge){
- try{const c=JSON.parse(bridge.audioCapabilities());if(c?.schema!=='sou1.native-audio.v1')return {customDrums:false,scoreConfig:false,melodies:false};return {customDrums:c.customDrums==='custom-v1',scoreConfig:c.scoreConfigSchema==='sou1.development-config.v1',melodies:Array.isArray(c.melodicPresets)&&c.melodicPresets.length===MELODIC_PRESETS.length&&new Set(c.melodicPresets).size===MELODIC_PRESETS.length&&MELODIC_PRESETS.every(k=>c.melodicPresets.includes(k))};}catch{return {customDrums:false,scoreConfig:false,melodies:false};}
+ const none={customDrums:false,scoreConfig:false,melodies:false,hybridMelodies:false,pulseMelodies:false,weather:false};
+ try{const c=JSON.parse(bridge.audioCapabilities());if(c?.schema!=='sou1.native-audio.v1')return none;const presets=c.melodicPresets,valid=Array.isArray(presets)&&new Set(presets).size===presets.length&&presets.every(k=>MELODIC_PRESETS.includes(k));const melodies=valid&&['procedural','chamber','piano-room','chamber-flute'].every(k=>presets.includes(k));return {customDrums:c.customDrums==='custom-v1',scoreConfig:c.scoreConfigSchema==='sou1.development-config.v1',melodies,hybridMelodies:melodies&&MELODIC_PRESETS.filter(k=>k.endsWith('-ambient')).every(k=>presets.includes(k)),pulseMelodies:melodies&&presets.includes('pulse-marimba'),weather:c.weather==='cc0-v1'};}catch{return none;}
 }
 const validScoreMode=value=>value===undefined||value==='original'||value==='developing';
 export class NativeDrumSession {
- constructor(bridge,kits,{now=Date.now,timeoutMs=30000,allowCustom=false,allowMelodic=false,allowConfig=false}={}){
+ constructor(bridge,kits,{now=Date.now,timeoutMs=30000,allowCustom=false,allowMelodic=false,allowHybrid=false,allowPulse=false,allowWeather=false,allowConfig=false}={}){
   if(!bridge||!Array.isArray(kits)||!Number.isFinite(timeoutMs)||timeoutMs<=0)throw Error('Native session configuration');
-  this.bridge=bridge;this.allowCustom=allowCustom;this.allowMelodic=allowMelodic;this.allowConfig=allowConfig;this.kits=new Set(kits);this.now=now;this.timeoutMs=timeoutMs;
+  this.bridge=bridge;this.allowCustom=allowCustom;this.allowMelodic=allowMelodic;this.allowHybrid=allowHybrid;this.allowPulse=allowPulse;this.allowWeather=allowWeather;this.allowConfig=allowConfig;this.kits=new Set(kits);this.now=now;this.timeoutMs=timeoutMs;
   this.phase='idle';this.owned=false;this.requestId=null;this.retiredThrough=-1;this.deadline=0;this.lastId=0;this.error='';this.data=null;this.stopFailed=false;this.hasPlayed=false;
  }
  validKit(key){return this.kits.has(key)||(this.allowCustom&&isSupportedAudioDrumKey(key));}
- validDetails(value){try{return validScoreMode(value.scoreMode)&&MELODIC_PRESETS.includes(value.melodicPreset??'procedural')&&(this.allowMelodic||(value.melodicPreset??'procedural')==='procedural')&&(this.allowConfig||scoreConfigIdentity(value.scoreConfig)===scoreConfigIdentity())&&!!scoreConfigIdentity(value.scoreConfig);}catch{return false;}}
+ validDetails(value){try{return ['procedural','recorded'].includes(value.weatherMode??'procedural')&&(this.allowWeather||(value.weatherMode??'procedural')==='procedural')&&validScoreMode(value.scoreMode)&&MELODIC_PRESETS.includes(value.melodicPreset??'procedural')&&(this.allowMelodic||(value.melodicPreset??'procedural')==='procedural')&&(this.allowHybrid||!(value.melodicPreset??'procedural').endsWith('-ambient'))&&(this.allowPulse||value.melodicPreset!=='pulse-marimba')&&(this.allowConfig||scoreConfigIdentity(value.scoreConfig)===scoreConfigIdentity())&&!!scoreConfigIdentity(value.scoreConfig);}catch{return false;}}
  read(){const value=JSON.parse(this.bridge.status());if(!value||typeof value!=='object'||Array.isArray(value))throw Error('Invalid native playback status');return value;}
  start(payload){
   if(this.requestId!==null||this.phase==='preparing'||this.phase==='playing')return false;
@@ -26,7 +27,7 @@ export class NativeDrumSession {
   if(!this.validDetails(payload))throw Error('Unknown native audio configuration');
   const id=Math.max(this.lastId+1,Math.floor(this.now())*1024);
   if(!Number.isSafeInteger(id)||id<0)throw Error('Native request clock');
-  this.lastId=id;this.owned=true;this.requestId=id;this.expectedKit=payload.drumKit;this.expectedScoreMode=payload.scoreMode??'original';this.expectedMelodic=payload.melodicPreset??'procedural';this.expectedConfig=scoreConfigIdentity(payload.scoreConfig);this.deadline=this.now()+this.timeoutMs;this.phase='preparing';this.error='';this.data=null;this.stopFailed=false;this.hasPlayed=false;
+  this.lastId=id;this.owned=true;this.requestId=id;this.expectedKit=payload.drumKit;this.expectedScoreMode=payload.scoreMode??'original';this.expectedMelodic=payload.melodicPreset??'procedural';this.expectedWeather=payload.weatherMode??'procedural';this.expectedConfig=scoreConfigIdentity(payload.scoreConfig);this.deadline=this.now()+this.timeoutMs;this.phase='preparing';this.error='';this.data=null;this.stopFailed=false;this.hasPlayed=false;
   try{if(!this.bridge.play(JSON.stringify({...payload,requestId:id})))throw Error('Native playback request rejected');}
   catch(error){this.retire();this.requestId=null;this.phase='error';this.error=error.message;throw error;}
   return true;
@@ -54,7 +55,7 @@ export class NativeDrumSession {
   if(value?.requestId===this.requestId){
    if(this.hasPlayed&&value.preparing)return this;
    if(this.stopFailed){this.data=value;if(value.preparing||value.playing){this.uncertainPhase=value.playing?'playing':'preparing';return this;}this.stopFailed=false;this.retire();this.requestId=null;this.phase='idle';this.error='';return this;}
-   if(value.drumKit!==this.expectedKit||(value.scoreMode??'original')!==this.expectedScoreMode||(value.melodicPreset??'procedural')!==this.expectedMelodic||scoreConfigIdentity(value.scoreConfig)!==this.expectedConfig){
+   if(value.drumKit!==this.expectedKit||(value.scoreMode??'original')!==this.expectedScoreMode||(value.melodicPreset??'procedural')!==this.expectedMelodic||(value.weatherMode??'procedural')!==this.expectedWeather||scoreConfigIdentity(value.scoreConfig)!==this.expectedConfig){
     this.data=value;this.phase=value.playing?'playing':'preparing';
     try{this.cancel();}catch{}this.phase='error';this.error=this.stopFailed?'Native audio selection mismatch; stop request failed':'Native audio selection mismatch';return this;
    }
@@ -78,7 +79,7 @@ export class NativeDrumSession {
   if(!this.validDetails(value)||!Number.isSafeInteger(value.requestId)||value.requestId<0||!this.validKit(value.drumKit)||typeof value.preparing!=='boolean'||typeof value.playing!=='boolean'||(value.preparing&&value.playing))return this;
   if(value.requestId<=this.retiredThrough)return this;
   this.data=value;this.error='';
-  if(value.preparing||value.playing){this.owned=false;this.requestId=value.requestId;this.expectedKit=value.drumKit;this.expectedScoreMode=value.scoreMode??'original';this.expectedMelodic=value.melodicPreset??'procedural';this.expectedConfig=scoreConfigIdentity(value.scoreConfig);this.lastId=Math.max(this.lastId,value.requestId);this.deadline=this.now()+this.timeoutMs;this.phase=value.preparing?'preparing':'playing';this.hasPlayed=value.playing;}
+  if(value.preparing||value.playing){this.owned=false;this.requestId=value.requestId;this.expectedKit=value.drumKit;this.expectedScoreMode=value.scoreMode??'original';this.expectedMelodic=value.melodicPreset??'procedural';this.expectedWeather=value.weatherMode??'procedural';this.expectedConfig=scoreConfigIdentity(value.scoreConfig);this.lastId=Math.max(this.lastId,value.requestId);this.deadline=this.now()+this.timeoutMs;this.phase=value.preparing?'preparing':'playing';this.hasPlayed=value.playing;}
   else this.phase='idle';
   return this;
  }

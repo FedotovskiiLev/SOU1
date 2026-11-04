@@ -69,7 +69,7 @@ assert.match(stop, /abandonAudioFocusRequest\(focus\)/);
 assert.match(stop, /stopForeground\(STOP_FOREGROUND_REMOVE\)/);
 assert.doesNotMatch(stop, /requestId =|audioError =/);
 assert.match(service, /destroyed = true;\s*if \(preparation != null\) preparation.close\(\)/);
-assert.match(service, /engine = new AmbientEngine\(48000, seed, banks.drums, banks.melodies,\s*"developing"\.equals\(selected.scoreMode\), selected.scoreConfig\)/);
+assert.match(service, /engine = new AmbientEngine\(48000, seed, banks.drums, banks.melodies,\s*"developing"\.equals\(selected.scoreMode\), selected.scoreConfig, selected.usesSynthesizedBed\(\), !NativeAudioSelection.PROCEDURAL.equals\(selected.melodicPreset\), banks.weather\)/);
 assert.match(coordinator, /new ArrayBlockingQueue<>\(1\)/);
 assert.match(coordinator, /private static final ThreadPoolExecutor WORKER/);
 assert.match(coordinator, /if \(closed \|\| current != this\) return/);
@@ -108,7 +108,7 @@ assert.match(service, /if \(!\(raw instanceof org.json.JSONObject\)\) throw new 
 assert.match(service, /values.put\(key, object.get\(key\)\)/);
 assert.match(service, /DevelopmentConfig.fromMap\(values\)/);
 assert.match(bridge, /\.put\("scoreConfigSchema", "sou1.development-config.v1"\)\.put\("customDrums", "custom-v1"\)/);
-assert.match(bridge, /\.put\("melodicPresets", new JSONArray\(\)\.put\("procedural"\)\.put\("chamber"\)\s*\.put\("piano-room"\)\.put\("chamber-flute"\)\)/);
+assert.match(bridge, /\.put\("melodicPresets", new JSONArray\(\)\.put\("procedural"\)\.put\("chamber"\)\s*\.put\("piano-room"\)\.put\("chamber-flute"\)\.put\("chamber-ambient"\)\s*\.put\("piano-room-ambient"\)\.put\("chamber-flute-ambient"\)\.put\("pulse-marimba"\)\)/);
 assert.match(command, /if \(!json.has\("scoreMode"\)\) intent.putExtra\(PlaybackService.EXTRA_SCORE_MODE, "original"\)/);
 assert.match(command, /if \(!json.has\("scoreConfig"\)\) intent.putExtra\(PlaybackService.EXTRA_SCORE_CONFIG, DevelopmentConfig.DEFAULT.canonicalKey\(\)\)/);
 assert.match(command, /if \(!json.has\("melodicPreset"\)\) intent.putExtra\(PlaybackService.EXTRA_MELODIC_PRESET, "procedural"\)/);
@@ -122,7 +122,7 @@ assert.match(ready, /if \(destroyed \|\| current != null \|\| selection != selec
 assert.doesNotMatch(stop, /selection = /);
 assert.match(selection, /NativeDrumBankLoader.parseCustomSelection\(key\)/);
 assert.match(selection, /NativeDrumBankLoader.prepareSelection\(selected.drumKit, rate, drumAssets\).bank/);
-assert.match(selection, /NativeMelodicBankLoader.prepare\(selected.melodicPreset, rate, melodicAssets\).bank/);
+assert.match(selection, /NativeMelodicBankLoader.prepare\(melodicBankPreset\(selected.melodicPreset\), rate, melodicAssets\).bank/);
 assert.ok(selection.indexOf('NativeDrumBankLoader.prepareSelection(') < selection.indexOf('NativeMelodicBankLoader.prepare('));
 assert.match(selection, /checkInterrupted\(\);\s*LiveMelodicPool.Bank melodies/);
 assert.doesNotMatch(transport, /NativeMelodicBankLoader|NativeAudioSelection\.prepare/);
