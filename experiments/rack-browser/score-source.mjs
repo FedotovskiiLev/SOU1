@@ -4,7 +4,7 @@ import {boundedFetch,sha256} from './bank.mjs';
 export async function loadBrowserScore({fetcher=fetch,createModule=text=>URL.createObjectURL(new Blob([text],{type:'text/javascript'})),revokeModule=url=>URL.revokeObjectURL(url),importModule=url=>import(url)}={}){
   const decoded=[];
   for(const [file,hash] of [['audio-engine.js',ENGINE_SHA],['environment-audio.js',ENV_SHA]]){
-    const bytes=await boundedFetch(new URL('../../docs/'+file,import.meta.url),128*1024,{fetcher});
+    const bytes=await boundedFetch(new URL('../../tools/instruments/legacy/'+file,import.meta.url),128*1024,{fetcher});
     if(await sha256(bytes)!==hash)throw new Error('Original score source checksum mismatch');
     decoded.push(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
   }

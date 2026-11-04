@@ -9,7 +9,7 @@ def write(path,text):
  else:path.write_text(text)
 ROOT=pathlib.Path(__file__).resolve().parent.parent
 q=json.dumps
-presets=['chamber','chamber-flute','piano-room'];locks={};methods=[]
+presets=['chamber','chamber-flute','piano-room','pulse-marimba'];locks={};methods=[]
 for preset in presets:
  raw=(ROOT/'docs/melodic-assets'/(preset+'.json')).read_bytes();m=json.loads(raw);h=hashlib.sha256(raw).hexdigest();locks[preset]={'bytes':len(raw),'sha256':h}
  samples=[]

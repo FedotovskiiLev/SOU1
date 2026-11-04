@@ -13,7 +13,7 @@ export {readJson};
 const digest=b=>createHash('sha256').update(b).digest('hex');
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
 const ENGINES=['cc0','synth'];
-const COMMON=['tools/music-for-video.mjs','tools/bounded-json.mjs','tools/render-cue.mjs','tools/instruments/event-score.mjs','tools/instruments/event-score-core.mjs','docs/audio-engine.js','docs/environment-audio.js'];
+const COMMON=['tools/music-for-video.mjs','tools/bounded-json.mjs','tools/render-cue.mjs','tools/instruments/event-score.mjs','tools/instruments/event-score-core.mjs','tools/instruments/legacy/audio-engine.js','tools/instruments/legacy/environment-audio.js'];
 const CC0=['tools/render-score-cue.mjs','tools/instruments/drum-kits.mjs','tools/instruments/rack.mjs','tools/instruments/wav.mjs','tools/instruments/load-bank.mjs','assets/cc0-mini/manifest.json'];
 export function normalizeRecipe(recipe){
   if(!plain(recipe)||Object.keys(recipe).some(k=>!['schema','engine','options'].includes(k))||recipe.schema!=='sou1.video-recipe.v1'||!ENGINES.includes(recipe.engine)||!plain(recipe.options))throw new TypeError('Expected sou1.video-recipe.v1 with engine cc0/synth and options');

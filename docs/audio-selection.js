@@ -2,7 +2,7 @@
 // Small setup/UI contracts. No sample catalogs, decoders or DSP are imported.
 import {CUSTOM_DRUM_KITS,CUSTOM_DRUM_ROLES,isSupportedDrumSelection} from './custom-drum-selection.js';
 import {DEVELOPMENT_CONFIG_DEFAULTS,normalizeDevelopmentConfig} from './development-config.js';
-export const MELODIC_PRESETS=Object.freeze(['procedural','chamber','piano-room','chamber-flute']);
+export const MELODIC_PRESETS=Object.freeze(['procedural','chamber','piano-room','chamber-flute','chamber-ambient','piano-room-ambient','chamber-flute-ambient','pulse-marimba']);
 export const DEVELOPMENT_KEYS=Object.freeze(Object.keys(DEVELOPMENT_CONFIG_DEFAULTS));
 export function isSupportedAudioDrumKey(key){return key==='procedural'||isSupportedDrumSelection(key);}
 export function normalizedDrumOverrides(input={}){

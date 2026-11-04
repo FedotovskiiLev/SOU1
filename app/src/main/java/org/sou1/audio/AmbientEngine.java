@@ -317,9 +317,11 @@ public final class AmbientEngine {
     // Constructor-only bank selection. Never publish the mutable, render-owned pool.
     private final LiveDrumPool recordedDrums;
     private final LiveMelodicPool recordedMelodies;
+    private final boolean synthesizedBed, evolvingTimbre;
     private final EventScore score;
     private final DevelopmentScore developmentScore;
     private final EnvironmentAudio environment;
+    private final RecordedWeather recordedWeather;
     private final NoteHistory noteHistory = new NoteHistory();
     /** Generated score events, including notes suppressed by voice limits or mix levels. */
     public String getScoreSnapshot() { return noteHistory.json(sampleRate); }
@@ -358,6 +360,8 @@ public final class AmbientEngine {
     private final double[] drumGains = {.65, .4, .3, .35, .2};
     private final double[] melodicGains = new double[5];
     private final double smoothing, drumSmoothing, dcPole;
+    private final double noisePole;
+    private double evolution;
     private volatile Parameters parameters = Parameters.DEFAULT;
     private volatile boolean requestedPlaying;
     private double intensity = .5, brightness = .45, motion = .35, timbre = .5;
@@ -374,7 +378,8 @@ public final class AmbientEngine {
 
     private static final class Voice {
         boolean active, off;
-        double phase, phaseB, frequency, velocity, panL, panR, filtered;
+        double phase, phaseB, phaseC, frequency, velocity, panL, panR, filtered, noiseLow;
+        int noiseState;
         long age, duration, release;
         int retire;
         int instrument, midi;
@@ -421,9 +426,24 @@ public final class AmbientEngine {
     public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank,
                          LiveMelodicPool.Bank melodicBank, boolean developing,
                          DevelopmentConfig developmentConfig) {
+        this(sampleRate, seed, drumBank, melodicBank, developing, developmentConfig, false, false);
+    }
+
+    /** Explicit hybrid palettes retain synthesis for pad/texture/bass; legacy constructors stay unchanged. */
+    public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank,
+                         LiveMelodicPool.Bank melodicBank, boolean developing,
+                         DevelopmentConfig developmentConfig, boolean synthesizedBed, boolean evolvingTimbre) {
+        this(sampleRate, seed, drumBank, melodicBank, developing, developmentConfig, synthesizedBed, evolvingTimbre, null);
+    }
+    public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank,
+                         LiveMelodicPool.Bank melodicBank, boolean developing,
+                         DevelopmentConfig developmentConfig, boolean synthesizedBed, boolean evolvingTimbre, RecordedWeather.Bank weatherBank) {
         if (sampleRate < 8000 || sampleRate > 192000)
             throw new IllegalArgumentException("sampleRate must be 8000..192000");
         this.sampleRate = sampleRate;
+        this.synthesizedBed = synthesizedBed;
+        this.evolvingTimbre = evolvingTimbre;
+        noisePole = 1 - StrictMath.exp(-2 * StrictMath.PI * 1100 / sampleRate);
         if (melodicBank != null && melodicBank.sampleRate != sampleRate)
             throw new IllegalArgumentException("melodic bank sampleRate must match engine");
         recordedMelodies = melodicBank == null ? null : new LiveMelodicPool(melodicBank, 32);
@@ -436,6 +456,7 @@ public final class AmbientEngine {
                 developmentConfig == null ? DevelopmentConfig.DEFAULT : developmentConfig) : null;
         noteHistory.clear(seed);
         environment = new EnvironmentAudio(sampleRate, seed);
+        recordedWeather = weatherBank == null ? null : new RecordedWeather(sampleRate, seed, weatherBank);
         smoothing = 1.0 - StrictMath.exp(-1.0 / (sampleRate * 1.5));
         drumSmoothing = 1.0 - StrictMath.exp(-1.0 / (sampleRate * .05));
         dcPole = StrictMath.exp(-2.0 * StrictMath.PI * 12.0 / sampleRate);
@@ -488,6 +509,7 @@ public final class AmbientEngine {
     private void applyReseed() {
         noteHistory.clear(pendingSeed);
         score.reseed(pendingSeed);
+        if (recordedWeather != null) { recordedWeather.reseed(pendingSeed); if (requestedPlaying) recordedWeather.start(); }
         if (developmentScore != null) developmentScore.reseed(pendingSeed);
         frame = 0;
         for (Voice v : voices) { if (v.active && !v.off) noteOffCount++; v.active = false; }
@@ -527,6 +549,7 @@ public final class AmbientEngine {
         reseeding = false;
         seedGain = 1;
         environment.reset();
+        if (recordedWeather != null) recordedWeather.reset();
         macros.reset();
         outputL = outputR = previousL = previousR = dcL = dcR = 0;
         noteOnCount = noteOffCount = droppedNotes = 0;
@@ -562,6 +585,7 @@ public final class AmbientEngine {
     private void prepareEnvironment(Parameters target, boolean playing) {
         environment.setParameters(target.environment);
         if (playing) environment.start(); else environment.stop();
+        if (recordedWeather != null) { recordedWeather.setParameters(target.environment); if (playing) recordedWeather.start(); else recordedWeather.stop(); }
         if (recordedMelodies != null) {
             recordedMelodies.setEnabled(playing);
             recordedMelodies.setMelodyEnabled(target.melodyEnabled);
@@ -589,7 +613,8 @@ public final class AmbientEngine {
             else droppedNotes++;
             return;
         }
-        if (recordedMelodies != null) {
+        boolean melodicFallback = false;
+        if (recordedMelodies != null && !(synthesizedBed && (instrument == 0 || instrument == 3 || instrument == 4))) {
             // Sampler and missing-range oscillator fallbacks share one melodic budget.
             if (getActiveVoiceCount() >= voiceLimit) {
                 recordedMelodicDropped++; droppedNotes++; return;
@@ -602,6 +627,7 @@ public final class AmbientEngine {
                 recordedMelodicDropped++; droppedNotes++; return;
             }
             recordedMelodicUnmapped++;
+            melodicFallback = true;
             // Only an actual missing mapping can take the original-pitch fallback.
         }
         Voice v = null;
@@ -614,7 +640,8 @@ public final class AmbientEngine {
         v.active = true;
         v.off = false;
         v.retire = 0;
-        v.phase = v.phaseB = v.filtered = 0;
+        v.phase = v.phaseB = v.phaseC = v.filtered = v.noiseLow = 0;
+        v.noiseState = (int) (score.seed + noteOnCount * 1664525);
         v.age = 0;
         v.duration = duration;
         v.release = Math.round(sampleRate * (instrument == 0 ? 4 : instrument == 3 ? 2 : .3));
@@ -625,7 +652,7 @@ public final class AmbientEngine {
         v.panL = StrictMath.sqrt(1 - pan);
         v.panR = StrictMath.sqrt(pan);
         noteOnCount++;
-        if (recordedMelodies != null) melodicFallbacks++;
+        if (melodicFallback) melodicFallbacks++;
     }
 
     private void drumOn(int instrument, long duration, double velocity, double pan) {
@@ -648,6 +675,7 @@ public final class AmbientEngine {
         brightness += smoothing * (target.brightness - brightness);
         motion += smoothing * (target.motion - motion);
         timbre += smoothing * (target.timbre - timbre);
+        evolution += smoothing * (target.evolution - evolution);
         for (int i = 0; i < layerGains.length; i++) {
             layerGains[i] += smoothing * (target.layers[i] - layerGains[i]);
             drumGains[i] += drumSmoothing * (target.drums[i] - drumGains[i]);
@@ -683,7 +711,8 @@ public final class AmbientEngine {
             if (v.age >= v.duration + v.release) { v.active = false; continue; }
             double t = v.age / (double) sampleRate, p = v.phase;
             int k = v.instrument;
-            double attack = k == 0 ? 3 : k == 3 ? 5 : k == 2 ? .04 : k == 1 ? .025 : .05;
+            double morph = evolvingTimbre ? evolution : 0;
+            double attack = k == 0 ? 3 : k == 3 ? 5 : k == 2 ? .04 : k == 1 ? .025 + .01 * morph : .05;
             double envelope = Math.min(1, t / attack);
             envelope = envelope * envelope * (3 - 2 * envelope);
             if (v.off) {
@@ -707,6 +736,35 @@ public final class AmbientEngine {
             } else if (k == 3)
                 value = (sine(p) + sine(v.phaseB) * .5) * (.6 + .4 * sine(t * .11)) * .04;
             else value = (sine(p) + h2 * .15) * StrictMath.exp(-t / .65) * .17;
+            if (morph > 0) {
+                // Identical bounded spectral motion to the browser voice path.
+                double clock = frame / (double) sampleRate, seedPhase = (score.seed % 997) / 997.0;
+                double a = .5 + .5 * sine(clock * (.025 + .035 * motion) + seedPhase + v.midi * .007 + k * .19);
+                double b = .5 + .5 * sine(clock * .047 + seedPhase * .73 + v.midi * .013);
+                double h4 = v.frequency * 4 < sampleRate * .45 ? sine(p * 4) : 0;
+                double h5 = v.frequency * 5 < sampleRate * .45 ? sine(p * 5) : 0;
+                v.noiseState = v.noiseState * 1664525 + 1013904223;
+                v.noiseLow += noisePole * ((v.noiseState & 0xffffffffL) / 2147483648.0 - 1 - v.noiseLow);
+                double fundamental = sine(p), body = sine(v.phaseC), rich;
+                if (k == 0)
+                    rich = (fundamental * (.57 + .13 * a) + sine(v.phaseB) * (.19 + .10 * b)
+                            + h2 * (.04 + .42 * a) + h3 * (.015 + .22 * b) + h4 * (.015 + .12 * a * (1 - b))
+                            + h5 * .05 * b + v.noiseLow * .05) * (.86 + .14 * sine(t * .055)) * .075;
+                else if (k == 1)
+                    rich = (fundamental * (.62 + .12 * a) + sine(v.phaseB) * (.12 + .08 * b) + body * .25
+                            + h2 * (.18 + .12 * b) + h3 * (.04 + .06 * a) + v.noiseLow * .055)
+                            * StrictMath.exp(-t / (.65 + .7 * timbre)) * .19;
+                else if (k == 2) {
+                    double metallic = v.frequency * 2.71 < sampleRate * .45 ? sine(v.phaseB) : 0;
+                    rich = ((fundamental * .70 + body * .25 + h2 * .13 * a) * StrictMath.exp(-t / 2.8)
+                            + metallic * .07 * StrictMath.exp(-t / .8) + v.noiseLow * .035 * StrictMath.exp(-t / 1.2)) * .15;
+                } else if (k == 3)
+                    rich = (fundamental * (.65 + .2 * b) + sine(v.phaseB) * (.34 + .18 * a)
+                            + h2 * (.08 + .12 * (1 - a)) + h3 * .09 * b + v.noiseLow * .08) * (.6 + .4 * sine(t * .11)) * .04;
+                else rich = (fundamental * (.75 + .1 * a) + body * .20 + h2 * (.1 + .12 * b)
+                            + h3 * .04 + v.noiseLow * .025) * StrictMath.exp(-t / .65) * .17;
+                value += morph * (rich - value);
+            }
             // Gentle per-voice lowpass rounds the additive attack spectra.
             v.filtered += tone * (value - v.filtered);
             value = v.filtered;
@@ -720,6 +778,7 @@ public final class AmbientEngine {
             double increment = v.frequency * (1 + .0015 * motion * sine(t * .23)) / sampleRate;
             v.phase = wrap(v.phase + increment);
             v.phaseB = wrap(v.phaseB + increment * (k == 2 ? 2.71 : 1.003));
+            v.phaseC = wrap(v.phaseC + increment * .5);
             v.age++;
         }
         for (DrumVoice v : drumVoices) {
@@ -764,7 +823,7 @@ public final class AmbientEngine {
             for (int i = 0; i < melodicGains.length; i++)
                 melodicGains[i] = layerGains[i] * ((i == 1 || i == 2) ? melodyGain : 1);
             int before = recordedMelodies.getActiveVoices();
-            recordedMelodies.next(melodicGains, playing);
+            recordedMelodies.next(melodicGains, playing, evolvingTimbre ? evolution : 0, frame, score.seed);
             // Sample release/finite tails retire independently of the exported gate.
             noteOffCount += before - recordedMelodies.getActiveVoices();
             left += recordedMelodies.outputL;
@@ -772,7 +831,8 @@ public final class AmbientEngine {
         }
         left *= 1 + intensity * 1.4;
         right *= 1 + intensity * 1.4;
-        environment.next();
+        if (recordedWeather == null) environment.next();
+        else { recordedWeather.next(); environment.outputL = recordedWeather.outputL; environment.outputR = recordedWeather.outputR; }
         if (recordedDrums == null) {
             macros.process(left + environment.outputL, right + environment.outputR, target);
         } else {

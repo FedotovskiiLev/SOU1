@@ -1,0 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+import{readFile}from'node:fs/promises';import assert from'node:assert/strict';import{prepareWeatherBank}from'../docs/weather-bank.js';import{RecordedWeather}from'../docs/recorded-weather.js';
+const raw=await readFile(process.argv[2]),view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength),rate=8000;
+const{weatherBank}=await prepareWeatherBank(rate,{fetcher:async u=>new Response(await readFile(u)),assetBaseUrl:new URL('../docs/weather-assets/',import.meta.url)});const e=new RecordedWeather(rate,7311,weatherBank);e.setParameters({rainType:3,rain:.7,thunder:.8,wind:.6});e.start();let max=0;
+for(let i=0;i<rate*42;i++){if(i===rate*9)e.setParameters({rainType:1,rain:.4,thunder:.8,wind:.3});if(i===rate*22){e.reseed(42);e.start();}if(i===rate*37)e.stop();e.next();max=Math.max(max,Math.abs(e.outputL-view.getFloat64(i*16,false)),Math.abs(e.outputR-view.getFloat64(i*16+8,false)));}assert.ok(max<1e-8,`weather JS/JVM delta ${max}`);assert.ok(e.isSilent());console.log(JSON.stringify({scope:'actual prepared weather JS/JVM42s',maxAbsolutePcmDelta:max,frames:42*rate}));

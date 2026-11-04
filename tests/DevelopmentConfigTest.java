@@ -102,6 +102,28 @@ public final class DevelopmentConfigTest {
         long allocated=bean.getThreadAllocatedBytes(id)-before;check(allocated==0,"configured score hot path allocated "+allocated+" bytes");
         System.out.println("PASS configured score: 0 allocated bytes after warmup, including reset/reseed and modulation/drum overrides");
     }
+    static void heldPatterns(){
+        int[] meters={48,36,60,42,54,72};
+        for(boolean drums:new boolean[]{false,true})for(int meter=0;meter<6;meter++)for(int pattern=0;pattern<8;pattern++){
+            String reference=null;
+            for(long seed:new long[]{1,91,0x4405a035L}){
+                Parameters p=DevelopmentScoreTest.params(0,0,drums?0:1,0,120,1,1,0,1,32,!drums,drums);
+                DevelopmentConfig c=config(-1,-1,meter,drums?-1:pattern,-1,drums?pattern:-1,"auto",-1);
+                DevelopmentScore s=new DevelopmentScore(8000,seed,c);long frames=4000L*meters[meter]/12;
+                StringBuilder[] bars=new StringBuilder[32];for(int i=0;i<bars.length;i++)bars[i]=new StringBuilder();
+                s.advanceTo(frames*bars.length-1,p,(at,k,n,d,v,pan)->{
+                    if(drums?k<5:k!=1)return;int bar=(int)(at/frames);
+                    bars[bar].append(at%frames).append(':').append(k).append(':').append(d);
+                    if(drums)bars[bar].append(':').append(n).append(':').append(v).append(':').append(pan);
+                    bars[bar].append(';');
+                });
+                check(s.suppressedEvents==0,"held pattern regression must not hide voice omissions");
+                String first=bars[0].toString();check(!first.isEmpty(),"selected pattern emits notes");
+                for(StringBuilder bar:bars)check(bar.toString().equals(first),"named pattern holds through phrases");
+                if(reference==null)reference=first;else check(reference.equals(first),"named pattern survives reseed in fixed meter");
+            }
+        }
+    }
     static void vectors(Path cases,Path out)throws IOException{
         Files.createDirectories(out);long events=0;int count=0;
         try(PrintWriter manifest=new PrintWriter(Files.newBufferedWriter(out.resolve("configured.jsonl")))){
@@ -123,6 +145,6 @@ public final class DevelopmentConfigTest {
     }
     public static void main(String[] args)throws Exception{
         if(args.length==3&&args[0].equals("vectors")){vectors(Paths.get(args[1]),Paths.get(args[2]));return;}
-        schema();behavior();allocations();System.out.println("PASS native development config: "+checks+" schema/key/immutability/behavior checks");
+        schema();behavior();heldPatterns();allocations();System.out.println("PASS native development config: "+checks+" schema/key/immutability/behavior checks");
     }
 }

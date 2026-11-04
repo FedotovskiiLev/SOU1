@@ -1,0 +1,9 @@
+# Pulse live preset
+
+The fifth preset deliberately loads seed7311, Original score,112BPM, VCSL acoustic base drums and the explicit `pulse-marimba` palette while stopped. Existing drum overrides, composition choices and their locks remain stored. Afterward the controls, palette and seed are editable. Other presets retain their previous selection-preserving behavior.
+
+The favorite source recipe was the36-second offline `score-percussion.json` cue from70bf98168b1c854f8ce79676e02acc4bc44bac93. Its first539 generated events match this live recipe at48kHz. Pulse keeps generating beyond that excerpt: no song recording is looped. Pluck/bell use VCSL marimba60..91; out-of-range lead notes explicitly use a sine, matching the offline router. Pad/texture/bass use generated sine loops. These waveforms are locally generated and dedicated to CC0; VCSL attribution and source hashes remain in the palette manifest. Application code remains AGPL-3.0-only.
+
+This is a live adaptation, not bit-identical audio: prepared32kHz marimba resampling, sampler attack/release and looping sine implementation, evolving voice colour, the live intensity/master/effects path and user controls differ from the offline rack. The offline+12dB gain is intentionally not applied to the live output. At8kHz, a72-second default render had peak0.0792927 before the UI volume,736 accepted recorded notes, zero dropped notes and zero fallback calls. These numbers are signal checks, not a listening judgment.
+
+`tools/instruments/legacy/` preserves the byte-pinned original DSP for historical offline cue reproduction. `tests/pulse-preset.test.mjs` covers the recipe, real marimba routing, long playback, signal bounds and Stop; UI tests cover explicit selection, reload, locks and playback guards. Native catalog/selection has the same palette; native compile and PCM parity require the CI JDK because this laptop currently has only a JRE.

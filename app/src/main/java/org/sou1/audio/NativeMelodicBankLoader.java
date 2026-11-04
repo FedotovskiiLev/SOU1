@@ -17,7 +17,7 @@ import java.util.List;
 public final class NativeMelodicBankLoader {
     private NativeMelodicBankLoader(){}
     @FunctionalInterface public interface AssetReader {InputStream open(String path)throws IOException;}
-    public static final List<String> PRESETS=Collections.unmodifiableList(Arrays.asList("chamber","chamber-flute","piano-room"));
+    public static final List<String> PRESETS=Collections.unmodifiableList(Arrays.asList("chamber","chamber-flute","piano-room","pulse-marimba"));
     public static final class Prepared {
         public final LiveMelodicPool.Bank bank;
         public final String preset,manifestSha256;

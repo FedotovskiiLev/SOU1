@@ -21,7 +21,8 @@ public final class RecordedMelodicEngineVectors {
             NativeDrumBankLoader.Prepared drums=NativeDrumBankLoader.prepare("fsa-x0xproc2",rate,p->Files.newInputStream(drumAssets.resolve(p)));
             for(String preset:new String[]{"chamber","piano-room","chamber-flute"}){
                 NativeMelodicBankLoader.Prepared melody=NativeMelodicBankLoader.prepare(preset,rate,p->Files.newInputStream(melodicAssets.resolve(p)));
-                AmbientEngine e=new AmbientEngine(rate,7311,drums.bank,melody.bank,true);e.setParameters(DevelopingEngineTest.knobs(0,true));e.start();
+                boolean hybrid=Boolean.getBoolean("sou1.hybrid");
+                AmbientEngine e=new AmbientEngine(rate,7311,drums.bank,melody.bank,true,null,hybrid,hybrid);e.setParameters(DevelopingEngineTest.knobs(0,true));e.start();
                 int total=rate*8;ByteBuffer pcm=ByteBuffer.allocate(total*8).order(ByteOrder.LITTLE_ENDIAN);float[] buffer=new float[256];
                 int[] boundaries={rate*2,rate*4,rate*6,total};int boundary=0;StringBuilder snapshots=new StringBuilder("[");
                 for(int at=0;at<total;){

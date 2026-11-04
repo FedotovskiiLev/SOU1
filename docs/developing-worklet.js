@@ -6,6 +6,7 @@ class Sou1DevelopingProcessor extends AudioWorkletProcessor {
   constructor(options) {
     super();
     this.engine = createDevelopingEngine(sampleRate, options?.processorOptions?.seed ?? 1, options?.processorOptions?.wireBank, options?.processorOptions?.scoreConfig);
+    this.engine.evolvingTimbre = options?.processorOptions?.evolvingTimbre === true;
     this.history = new NoteHistory();
     const noteOn = this.engine.noteOn.bind(this.engine);
     this.engine.noteOn = (...event) => { this.history.add(...event); noteOn(...event); };

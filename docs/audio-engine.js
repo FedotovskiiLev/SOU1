@@ -113,7 +113,7 @@ export class EventScore {
 
 }
 const kIsMelody=k=>k===1||k===2;
-function voice() {return {active:false,phase:0,phaseB:0,age:0,duration:0,release:0,frequency:0,velocity:0,instrument:0,panL:0,panR:0,midi:0,off:false,filtered:0,noiseState:1};}
+function voice() {return {active:false,phase:0,phaseB:0,phaseC:0,age:0,duration:0,release:0,frequency:0,velocity:0,instrument:0,panL:0,panR:0,midi:0,off:false,filtered:0,noiseLow:0,noiseState:1};}
 export class AmbientEngine {
   constructor(sampleRate,seed=1) {
     if(!Number.isInteger(sampleRate)||sampleRate<8000||sampleRate>192000) throw new RangeError('sampleRate must be an integer in 8000..192000');
@@ -123,6 +123,7 @@ export class AmbientEngine {
     this.smoothing=1-Math.exp(-1/(sampleRate*1.5));this.dcPole=Math.exp(-2*Math.PI*12/sampleRate);
     this.layerGains=new Float64Array([.65,.55,.35,.20,.15]);this.drumGains=new Float64Array([.65,.4,.3,.35,.2]);this.drumSmoothing=1-Math.exp(-1/(sampleRate*.05));
     this.intensity=.5;this.brightness=.45;this.motion=.35;this.timbre=.5;
+    this.evolvingTimbre=false;this.evolution=0;this.noisePole=1-Math.exp(-2*Math.PI*1100/sampleRate);
     this.frame=0;this.fade=0;this.playing=false;this.outputL=this.outputR=this.previousL=this.previousR=this.dcL=this.dcR=0;
     this.noteOnCount=0;this.noteOffCount=0;this.droppedNotes=0;this.pendingSeed=null;this.seedGain=1;this.seedFading=false;
   }
@@ -151,7 +152,7 @@ export class AmbientEngine {
   noteOn(frame,instrument,pitch,duration,velocity,pan) {
     let v=null;const first=instrument<5?0:32,last=instrument<5?this.parameters.polyphony:44;for(let i=first;i<last;i++)if(!this.voices[i].active){v=this.voices[i];break;}
     if(!v){this.droppedNotes++;return;}
-    v.active=true;v.off=false;v.filtered=0;v.noiseState=(this.seed+this.noteOnCount*1664525)>>>0;v.phase=0;v.phaseB=0;v.age=0;v.duration=duration;v.release=Math.round(this.sampleRate*(instrument===0?4:instrument===3?2:instrument>=5?.08:.3));
+    v.active=true;v.off=false;v.filtered=v.noiseLow=0;v.noiseState=(this.seed+this.noteOnCount*1664525)>>>0;v.phase=v.phaseB=v.phaseC=0;v.age=0;v.duration=duration;v.release=Math.round(this.sampleRate*(instrument===0?4:instrument===3?2:instrument>=5?.08:.3));
     v.id=this.noteOnCount+1;v.instrument=instrument;v.frequency=440*Math.pow(2,(pitch-69)/12);v.midi=pitch;v.velocity=velocity;v.panL=Math.sqrt(1-pan);v.panR=Math.sqrt(pan);this.noteOnCount++;if(this.onNoteOn)this.onNoteOn(frame,instrument,pitch,duration,velocity,pan,v.id);
   }
   noteOff(frame,v){v.off=true;this.noteOffCount++;if(this.onNoteOff)this.onNoteOff(frame,v.instrument,v.midi,v.id);}
@@ -162,6 +163,7 @@ export class AmbientEngine {
   }
   next(target,playing) {
     this.intensity+=this.smoothing*(target.intensity-this.intensity);this.brightness+=this.smoothing*(target.brightness-this.brightness);this.motion+=this.smoothing*(target.motion-this.motion);this.timbre+=this.smoothing*(target.timbre-this.timbre);
+    this.evolution+=this.smoothing*(target.evolution-this.evolution);
     for(let i=0;i<5;i++){this.layerGains[i]+=this.smoothing*(target[LAYERS[i]]-this.layerGains[i]);this.drumGains[i]+=this.drumSmoothing*(target[DRUMS[i]]-this.drumGains[i]);}
     if(this.pendingSeed!==null){this.seedGain=Math.max(0,this.seedGain-1/(this.sampleRate*.08));if(this.seedGain===0||(!playing&&this.fade===0))this.applySeed();}
     else this.seedGain=Math.min(1,this.seedGain+1/(this.sampleRate*.08));
@@ -174,7 +176,8 @@ export class AmbientEngine {
       if((v.age>=v.duration||(i<32&&i>=target.polyphony)||(kIsMelody(v.instrument)&&!target.melodyEnabled)||(v.instrument>=5&&!target.drumsEnabled))&&!v.off){if(v.age<v.duration){v.duration=v.age;v.release=Math.min(v.release,Math.round(this.sampleRate*.08));}this.noteOff(this.frame,v);}
       if(v.age>=v.duration+v.release){v.active=false;continue;}
       const t=v.age/this.sampleRate,p=v.phase,k=v.instrument;
-      const attack=k===0?3:k===3?5:k===2?.04:k===1?.025:k>=5?.003:.05;
+      const morph=this.evolvingTimbre?this.evolution:0;
+      const attack=k===0?3:k===3?5:k===2?.04:k===1?.025+.01*morph:k>=5?.003:.05;
       let env=Math.min(1,t/attack);env=env*env*(3-2*env);
       if(v.off){const r=Math.max(0,1-(v.age-v.duration)/v.release);env*=r*r*(3-2*r);}
       let value=0;
@@ -195,11 +198,28 @@ export class AmbientEngine {
         else if(k===8)value=(sine(p)+h2*.2)*Math.exp(-t*12)*.24;
         else value=(noise*.65+sine(p*3)*.1)*Math.exp(-t*3)*.10;
       }
+      if(morph>0&&k<5){
+        // Seeded, continuous spectral motion within each held note. All pitched
+        // partials are band limited; a separate phase keeps the lower body continuous.
+        const clock=this.frame/this.sampleRate,seedPhase=(this.seed%997)/997;
+        const a=.5+.5*sine(clock*(.025+.035*this.motion)+seedPhase+v.midi*.007+k*.19);
+        const b=.5+.5*sine(clock*.047+seedPhase*.73+v.midi*.013);
+        const h4=v.frequency*4<this.sampleRate*.45?sine(p*4):0,h5=v.frequency*5<this.sampleRate*.45?sine(p*5):0;
+        v.noiseState=(Math.imul(v.noiseState,1664525)+1013904223)>>>0;
+        v.noiseLow+=this.noisePole*(v.noiseState/2147483648-1-v.noiseLow);
+        const fundamental=sine(p),body=sine(v.phaseC);let rich;
+        if(k===0)rich=(fundamental*(.57+.13*a)+sine(v.phaseB)*(.19+.10*b)+h2*(.04+.42*a)+h3*(.015+.22*b)+h4*(.015+.12*a*(1-b))+h5*.05*b+v.noiseLow*.05)*(.86+.14*sine(t*.055))*.075;
+        else if(k===1)rich=(fundamental*(.62+.12*a)+sine(v.phaseB)*(.12+.08*b)+body*.25+h2*(.18+.12*b)+h3*(.04+.06*a)+v.noiseLow*.055)*Math.exp(-t/(.65+.7*this.timbre))*.19;
+        else if(k===2){const metallic=v.frequency*2.71<this.sampleRate*.45?sine(v.phaseB):0;rich=((fundamental*.70+body*.25+h2*.13*a)*Math.exp(-t/2.8)+metallic*.07*Math.exp(-t/.8)+v.noiseLow*.035*Math.exp(-t/1.2))*.15;}
+        else if(k===3)rich=(fundamental*(.65+.2*b)+sine(v.phaseB)*(.34+.18*a)+h2*(.08+.12*(1-a))+h3*.09*b+v.noiseLow*.08)*(.6+.4*sine(t*.11))*.04;
+        else rich=(fundamental*(.75+.1*a)+body*.20+h2*(.1+.12*b)+h3*.04+v.noiseLow*.025)*Math.exp(-t/.65)*.17;
+        value+=morph*(rich-value);
+      }
       // Gentle per-voice lowpass tames attack spectra, especially metallic layers.
       const tone=k>=5?drumTone:melodicTone;
       v.filtered+=tone*(value-v.filtered);value=v.filtered;
       value*=env*v.velocity*(k<5?this.layerGains[k]:this.drumGains[k-5]);left+=value*v.panL;right+=value*v.panR;
-      const inc=(k===5?45+90*Math.exp(-t*38):k===8?110+45*Math.exp(-t*20):v.frequency)*(1+.0015*this.motion*sine(t*.23))/this.sampleRate;v.phase=wrap(v.phase+inc);v.phaseB=wrap(v.phaseB+inc*(k===2?2.71:1.003));v.age++;
+      const inc=(k===5?45+90*Math.exp(-t*38):k===8?110+45*Math.exp(-t*20):v.frequency)*(1+.0015*this.motion*sine(t*.23))/this.sampleRate;v.phase=wrap(v.phase+inc);v.phaseB=wrap(v.phaseB+inc*(k===2?2.71:1.003));v.phaseC=wrap(v.phaseC+inc*.5);v.age++;
     }
     left*=1+this.intensity*1.4;right*=1+this.intensity*1.4;
     this.environment.next();this.macros.process(left+this.environment.outputL,right+this.environment.outputR,target);
