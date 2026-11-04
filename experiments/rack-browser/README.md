@@ -132,3 +132,53 @@ Required before production integration:
 Production oscillator defaults, Android sources, service-worker cache,
 workflows, signing and releases are unchanged by this experiment. Code remains
 AGPL-3.0-only; recorded banks retain their separate CC0 provenance.
+
+## Continuing composition experiment (2026-11-04)
+
+Open `session.html` from the same localhost/HTTPS server. This separate opt-in page
+keeps SOU1's continuing background-music direction: new phrases are prepared while
+previous phrases play. It does not replace the production app or the finite rack
+page, and it is not an AudioWorklet or an Android background-audio implementation.
+
+- Prepare loads and verifies the selected recorded bank once in a dedicated worker,
+  then prepares two phrases. Start requires another explicit click. The main thread
+  only schedules prepared AudioBuffers; composition and DSP stay in the worker.
+- The first phrase has the requested seed. Later seeds are a deterministic function
+  of that seed and phrase index. Style, meter, key, tempo, bank and expression stay
+  fixed until another Prepare. All notes still come from the unchanged canonical
+  expressive composer; this transport does not rewrite them.
+- Each phrase is a complete finite composition with its own cadence, not a claim of
+  long-form musical development across boundaries. Two-second release tails overlap
+  the next phrase. Starts use absolute beat time, rather than accumulating rounded
+  sample lengths. At 44.1/48 kHz, a phrase's final active frame can differ from the
+  ideal boundary by at most half a sample.
+- The scheduling horizon holds one current and one future phrase, with at most an
+  older release tail and one ready phrase. One additional worker render may be in
+  flight. Every PCM buffer is bounded by 30 seconds, events by the composer, and
+  sample-bank budgets remain enforced. No unbounded session PCM or MIDI history is
+  stored. A one-million-phrase safety limit is checked, not silently wrapped.
+- The shortest permitted phrase is two seconds. At most two phrase buffers overlap;
+  a constant 0.45 master headroom factor precedes listening volume. There is no
+  limiter, normalization, crossfade of note attacks or claim about hardware levels.
+- If preparation, main-thread allocation or timer delivery misses the next start,
+  the session fades/stops with an actionable error. It never skips ahead or starts
+  a late phrase immediately. This is a safety behavior, not proof of glitch-free
+  real-time operation on a device. Starting requires at least 25 ms of lead after
+  buffer allocation; the initial target is 100 ms after the explicit Start click.
+- Stop cancels the worker, ready buffers, future sources and timer. Hidden pages stop;
+  a suspended audio context stops with an explanation. Back/forward restoration
+  starts empty. New settings/reseed require Prepare; no old response can restore
+  cancelled playback.
+- Save latest phrase MIDI exports the latest prepared/scheduled phrase only. It may
+  be ahead of the currently audible phrase. It is not the whole session, and it does
+  not embed audio samples or two-second instrument release tails.
+
+Validation: Node mock-Web-Audio lifecycle tests, 180 sequential phrase schedules,
+real Node worker threads over loopback HTTP with a single bank load, exact
+Float32/MIDI parity against four canonical phrases, invalid response checks,
+fractional-BPM and delayed-copy regressions, and mock-DOM interaction. These do not
+qualify actual browser Worker/CSP/AudioContext behavior, perceptual transitions,
+background performance, REAPER or Android. The prior real-browser preview remains
+blocked by the available local hosting environment; no browser security workaround
+was attempted. No production files, pinned composer sources, sample data or app
+release were changed.

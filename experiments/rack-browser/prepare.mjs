@@ -43,7 +43,7 @@ export async function loadBrowserScoreBank(drumKit='vcsl',{fetcher=fetch,onProgr
   return {instruments,instrumentBanks,banks,decodedBytes,encodedBytes,mappedBytes};
 }
 
-export async function prepareBrowserRender(input={}, {fetcher=fetch,onProgress=()=>{},scoreLoader=loadBrowserScore,assetBaseUrl=new URL('../../',import.meta.url)}={}) {
+export async function prepareBrowserRender(input={}, {fetcher=fetch,onProgress=()=>{},scoreLoader=loadBrowserScore,assetBaseUrl=new URL('../../',import.meta.url),bankLoader=loadBrowserScoreBank}={}) {
   const request=validateBrowserRequest(input);
   let plan;
   if(request.composer==='expressive')plan=composeExpressivePlan(request.options);
@@ -51,7 +51,7 @@ export async function prepareBrowserRender(input={}, {fetcher=fetch,onProgress=(
     const {EventScore}=await scoreLoader({fetcher});
     plan=composeWithScore(EventScore,request.options);
   }
-  const bank=await loadBrowserScoreBank(request.drumKit,{fetcher,assetBaseUrl,onProgress:p=>onProgress(p*.3)});
+  const bank=await bankLoader(request.drumKit,{fetcher,assetBaseUrl,onProgress:p=>onProgress(p*.3)});
   const result=renderBrowserPlan(plan,bank.instruments,p=>onProgress(.3+p*.7));
   const midi=request.composer==='expressive'?exportScoreMidi(plan):null;
   return {...result,...(midi?{midiBytes:midi.bytes}:{}),report:{...result.report,

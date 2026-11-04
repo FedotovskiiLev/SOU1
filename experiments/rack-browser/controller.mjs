@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Browser lifecycle controller; dependencies injected for non-browser tests.
-function validMidi(bytes){
+export function validMidi(bytes){
   if(!(bytes instanceof Uint8Array)||bytes.length<26||bytes.length>2*1024*1024)return false;
   const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),tag=at=>String.fromCharCode(...bytes.subarray(at,at+4));
   if(tag(0)!=='MThd'||v.getUint32(4)!==6||v.getUint16(8)!==1||v.getUint16(12)!==960)return false;

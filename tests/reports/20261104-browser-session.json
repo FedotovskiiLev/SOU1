@@ -1,0 +1,53 @@
+{
+  "schema": "sou1.validation.v1",
+  "date": "2026-11-04",
+  "scope": "Isolated continuing composition transport; no production integration or release",
+  "baseCommit": "83de65b87f2dbc8a596f003b0668ff33cbdc7a36",
+  "localTests": {
+    "command": "node --test tests/*.test.mjs",
+    "passed": 247,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 79718.91812
+  },
+  "focusedSessionTests": 15,
+  "independentReview": {
+    "testsPassed": 16,
+    "remainingBlockingFindings": 0,
+    "fixed": [
+      "Re-check the audio clock after AudioBuffer allocation/copy and before source.start",
+      "Use canonical arithmetic order when converting fractional BPM into active frames"
+    ]
+  },
+  "verified": [
+    "180 sequential phrase transitions with bounded ready/source queues",
+    "Deterministic session seeds and absolute musical timing",
+    "Actual Node worker_threads plus loopback HTTP: bank loaded once, four phrases with exact Float32 PCM and MIDI parity",
+    "Mock Web Audio stop, cancellation, stale responses, interrupted resume, context suspension, render failures and deadlines",
+    "Mock DOM explicit start, per-phrase MIDI download, hidden-page stop and BFCache reset",
+    "Production JS, sample assets, original finite transport behavior and three canonical composition modules unchanged"
+  ],
+  "limits": {
+    "phraseSecondsIncludingTail": 30,
+    "releaseTailSeconds": 2,
+    "headroom": 0.45,
+    "preparedPhrasesAtStart": 2,
+    "playingReadyQueueMax": 1,
+    "scheduledSourcesMaxIncludingOldTail": 3,
+    "phraseIndexMax": 1000000
+  },
+  "notVerified": [
+    "Actual browser ES-module/Worker/CSP execution",
+    "Actual AudioContext scheduling, sound output and listening quality at phrase boundaries",
+    "Performance on a user device, background audio or Android",
+    "Whole-session MIDI export or REAPER import",
+    "Production PWA/Android integration"
+  ],
+  "browserBlocker": "The available cloud browser could not reach the localhost preview. A normal alternate startup failed in the execution environment. Security restrictions were not bypassed.",
+  "qualification": "Node and mock-UI evidence only; not an actual-browser readiness claim",
+  "canonicalCoreSha256": {
+    "tools/composition/variety-score.mjs": "46b5b4b030d7e4519f8ceca468f668ac28986356ad0d28538e5b6200e8624bb6",
+    "tools/composition/expressive-score.mjs": "7f6bde7a2cf9651e7e374c3aa21e7cae04d32634719f5d31af06102dda37a246",
+    "tools/composition/score-midi.mjs": "77de878b352020953c9932e69cad6a6767906de9c8df0159443700c76b5d7019"
+  }
+}
