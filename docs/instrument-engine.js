@@ -28,7 +28,8 @@ export function createInstrumentEngine(rate,seed,{scoreMode='original',scoreConf
  }
  engine.noteOn=(frame,layer,pitch,duration,velocity,pan)=>{
   if(layer>=5){noteOn(frame,layer,pitch,duration,velocity,pan);return;}
-  if(engine.getActiveMelodicVoiceCount()>=engine.parameters.polyphony){engine.recordedMelodicDropped++;engine.droppedNotes++;return;}
+  // The synth bed shares the budget, but its omissions are not sampler drops.
+  if(engine.getActiveMelodicVoiceCount()>=engine.parameters.polyphony){if(!(synthesizedBed&&(layer===0||layer===3||layer===4)))engine.recordedMelodicDropped++;engine.droppedNotes++;return;}
   // Keep pad, texture and bass synthesis; sample only lead/pluck and bell/reply.
   if(synthesizedBed&&(layer===0||layer===3||layer===4)){noteOn(frame,layer,pitch,duration,velocity,pan);return;}
   const before=pool.stats.unmapped;
