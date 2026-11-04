@@ -1,5 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Browser lifecycle controller; dependencies injected for non-browser tests.
+function validMidi(bytes){
+  if(!(bytes instanceof Uint8Array)||bytes.length<26||bytes.length>2*1024*1024)return false;
+  const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),tag=at=>String.fromCharCode(...bytes.subarray(at,at+4));
+  if(tag(0)!=='MThd'||v.getUint32(4)!==6||v.getUint16(8)!==1||v.getUint16(12)!==960)return false;
+  const tracks=v.getUint16(10);if(tracks<1||tracks>32)return false;
+  let at=14;
+  for(let i=0;i<tracks;i++){
+    if(at+8>bytes.length||tag(at)!=='MTrk')return false;
+    const size=v.getUint32(at+4);at+=8;
+    if(size<4||at+size>bytes.length||bytes[at+size-3]!==255||bytes[at+size-2]!==47||bytes[at+size-1]!==0)return false;
+    at+=size;
+  }
+  return at===bytes.length;
+}
 export class PlaybackController {
   constructor({makeWorker,makeContext,onChange=()=>{}}){this.makeWorker=makeWorker;this.makeContext=makeContext;this.onChange=onChange;this.state='idle';this.generation=0;this.playToken=0;this.volume=.35;this.worker=null;this.context=null;this.source=null;this.gain=null;this.pcm=null;this.error=null;}
   emit(){this.onChange({state:this.state,error:this.error,report:this.pcm?.report??null});}
@@ -11,7 +25,7 @@ export class PlaybackController {
       if(generation!==this.generation||this.worker!==worker)return;
       if(data.type==='progress'){this.onChange({state:this.state,progress:Math.max(0,Math.min(1,data.value))});return;}
       if(data.type==='ready'){
-        try{const {left,right,sampleRate}=data;if(!(left instanceof Float32Array)||!(right instanceof Float32Array)||left.length!==right.length||!left.length||![44100,48000].includes(sampleRate)||left.length>30*sampleRate)throw new Error('Invalid worker PCM');for(const b of [left,right])for(const x of b)if(!Number.isFinite(x)||Math.abs(x)>=1)throw new Error('Invalid worker sample');this.pcm={left,right,sampleRate,report:data.report};this.state='ready';}
+        try{const {left,right,sampleRate}=data;if(!(left instanceof Float32Array)||!(right instanceof Float32Array)||left.length!==right.length||!left.length||![44100,48000].includes(sampleRate)||left.length>30*sampleRate)throw new Error('Invalid worker PCM');for(const b of [left,right])for(const x of b)if(!Number.isFinite(x)||Math.abs(x)>=1)throw new Error('Invalid worker sample');const midiBytes=data.midiBytes;if(midiBytes!==undefined&&!validMidi(midiBytes))throw new Error('Invalid worker MIDI');this.pcm={left,right,sampleRate,report:data.report,...(midiBytes?{midiBytes:midiBytes.slice()}: {})};this.state='ready';}
         catch(e){this.pcm=null;this.state='error';this.error=e.message;}
         this.worker=null;worker.terminate();this.emit();
       }else if(data.type==='error'){this.worker=null;worker.terminate();this.pcm=null;this.state='error';this.error=data.message||'Worker failed';this.emit();}

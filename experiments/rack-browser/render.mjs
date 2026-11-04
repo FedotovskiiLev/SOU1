@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import {InstrumentRack,SineInstrument} from '../../tools/instruments/rack.mjs';
 export function renderBrowserPlan(plan,instruments,onProgress=()=>{}){
-  if(plan.options.duration>30||plan.frames>30*48000)throw new RangeError('Browser prototype duration limit: 30 seconds');
+  if(!plan||!plan.options||![44100,48000].includes(plan.options.sampleRate)||!Number.isSafeInteger(plan.frames)||plan.frames<1||plan.frames>30*plan.options.sampleRate||!Number.isSafeInteger(plan.activeFrames)||plan.activeFrames<1||plan.activeFrames>=plan.frames)throw new RangeError('Browser prototype duration limit: 30 seconds with a finite release tail');
   const registry=new Map(instruments);for(const [id,gain] of [['sine-pad',.14],['sine-texture',.05],['sine-bass',.20],['sine-fallback',.14]])registry.set(id,new SineInstrument({gain}));
   const rack=new InstrumentRack(plan.options.sampleRate,registry,{polyphony:48});rack.schedule(plan.events);
   const left=new Float32Array(plan.frames),right=new Float32Array(plan.frames),gain=10**(plan.options.outputGainDb/20);let peak=0,sum=0;
