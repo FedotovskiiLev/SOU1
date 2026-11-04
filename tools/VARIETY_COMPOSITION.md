@@ -81,7 +81,7 @@ const {wav, report, events} = await renderVarietyCue(plan.options);
 ```
 
 `plan.sourceEvents` contains `frame`, `sourceInstrument`, `pitch`, `duration`,
-`velocity`, `pan` plus audit labels `bar`, `beat`, `role`, `section`. Layer
+`velocity`, `pan` plus audit labels `bar`, `beat`, `gateBeats`, `role`, `section`. Layer
 numbers match the old EventScore. `plan.events` is directly schedulable on the
 existing `InstrumentRack`; the same marimba, sine pad/bass and VCSL drum sounds
 are used for every style. No new instrument or external melody is embedded.
@@ -115,3 +115,70 @@ claimed by a local test report.
 Code retains this repository's AGPL-3.0-only notice. The existing CC0 bank and
 its source notices remain separate and unchanged. No third-party synth code or
 new sample library is redistributed by this change.
+
+## Further MIDI / phrasing variety
+
+`composeExpressivePlan` is an optional second arrangement step, leaving all
+existing `composeVarietyPlan` note bytes unchanged. Five independent phrasing
+strategies combine with the six base forms (30 combinations):
+
+- `lyrical`: fewer attacks, linked longer gates, smaller passing leaps and a
+  phrase-level dynamic arch.
+- `dialogue`: the lead asks in the first half-bar and a separate voice answers
+  in the second. The original countermelody is replaced, not just layered on.
+- `angular`: displaced, short fragments, larger diatonic leaps and gaps.
+- `ornamented`: diatonic grace/turn notes resolve into the target note.
+- `triplet`: offbeats move onto thirds, with matching gate/bass/hat treatment.
+
+`phraseBars` (2, 4 or 8) changes the dynamic-arch length; `dynamics`, `humanize`
+and `articulation` range 0..1. Articulation affects detached/ornamented/swung
+gates; lyrical and dialogue gates follow their own phrase rules. Seeded
+humanization is bounded to ±0.025 quarter-note beats and small velocity changes
+at maximum strength. It never moves a note into another bar. These are
+algorithmic arrangements, not a claim to reproduce a human performance.
+
+```sh
+node tools/render-variety-cue.mjs --expressive examples/expressive/song-dialogue.json output/dialogue
+node tools/render-variety-cue.mjs --replay output/dialogue.json output/dialogue-again
+node tools/export-score-midi.mjs --expressive examples/expressive/song-dialogue.json output/dialogue.mid
+node tools/export-score-midi.mjs examples/variety/motor.json output/motor.mid
+node --test tests/expressive-score.test.mjs
+```
+
+```js
+import {composeExpressivePlan} from './composition/expressive-score.mjs';
+import {exportScoreMidi} from './composition/score-midi.mjs';
+import {renderExpressiveCue} from './render-variety-cue.mjs';
+const recipe = {score:{style:'song',seed:477,mode:'major'}, phrasing:'dialogue',
+  phraseBars:4, dynamics:.8, humanize:.25, articulation:.8};
+const plan = composeExpressivePlan(recipe);
+const midi = exportScoreMidi(plan); // Uint8Array bytes plus a conversion report
+const audio = await renderExpressiveCue(recipe);
+```
+
+MIDI is Standard MIDI File type 1, 960 ticks/quarter, with the actual tempo,
+time signature, named melodic parts, one combined percussion track and section
+markers. The combined channel-10 track guarantees note-off-before-retrigger
+ordering even when two source drum layers use the same MIDI key. Unlike the retained-history
+export, this exports the complete finite score rather than the last 512 notes.
+It preserves elapsed score timing within MIDI quantization and ends after the
+final bar, without the WAV transport's two-second tail.
+
+MIDI1 cannot encode independent overlapping voices of the same pitch/channel.
+The exporter coalesces simultaneous duplicates or shortens a preceding
+overlap and reports every edit. High-tom articulation key 49 is translated to
+GM tom 50 to avoid the crash-cymbal key on channel 10. Melodic pan is a
+per-track average; simultaneous per-note pan is not claimed. Program changes
+are only GM suggestions. A host still needs the desired synths, saved patches
+and separate drum instruments. No REAPER import or exact plugin-state recall
+is established by these byte-level tests.
+
+Musical `gateBeats` is retained before conversion to sample frames. Expression
+operates on those beat values, so a rounded half-beat cannot become two thirds
+at one sample rate and one third at another. All marker metadata is bounded
+and validated against the finite score.
+
+New expressive receipts include their own recipe and fingerprint. Legacy
+audio recipes still produce the same audio, but old receipts must be replayed
+with their matching code version because source fingerprints intentionally
+change when the renderer gains a new module.

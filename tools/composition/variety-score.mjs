@@ -73,7 +73,7 @@ export function composeVarietyPlan(input = {}) {
     const start=(bar*beatsPerBar+beat)*beatFrames, frame=Math.round(start);
     if (frame<0 || frame>=activeFrames) return;
     if(sourceEvents.length>=4096)throw new RangeError('Composition exceeds 4096-event budget');
-    sourceEvents.push({frame,sourceInstrument:layer,pitch,duration:Math.max(1,Math.min(activeFrames-frame,Math.round(gate*beatFrames))),velocity:Math.max(0,Math.min(1,velocity)),pan,bar,beat,role,section});
+    sourceEvents.push({frame,sourceInstrument:layer,pitch,duration:Math.max(1,Math.min(activeFrames-frame,Math.round(gate*beatFrames))),gateBeats:Math.min(gate,o.bars*beatsPerBar-bar*beatsPerBar-beat),velocity:Math.max(0,Math.min(1,velocity)),pan,bar,beat,role,section});
   }
   for(let bar=0;bar<o.bars;bar++) {
     const phrase=Math.floor(bar/s.phraseBars), position=bar%s.phraseBars;

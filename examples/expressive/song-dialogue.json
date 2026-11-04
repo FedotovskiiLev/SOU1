@@ -1,0 +1,15 @@
+{
+  "score": {
+    "style": "song",
+    "seed": 477,
+    "bars": 16,
+    "bpm": 91,
+    "mode": "major",
+    "root": 60
+  },
+  "phrasing": "dialogue",
+  "dynamics": 0.8,
+  "humanize": 0.25,
+  "articulation": 0.8,
+  "phraseBars": 4
+}

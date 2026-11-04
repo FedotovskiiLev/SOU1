@@ -1,0 +1,297 @@
+{
+  "checkedAtUtc": "2026-11-04T09:00:00Z",
+  "baseCommit": "963a6433a64558d0832e3a17926b7ae2cdb31d0a",
+  "scope": "Five independently combinable phrasing strategies over six base composition strategies, finite expressive renderer, complete Standard MIDI type1 export and CLI. Existing live PWA/Android, drum bank and old offline recipe APIs are unchanged.",
+  "tests": {
+    "command": "node --test --test-reporter=tap tests/*.test.mjs",
+    "total": 173,
+    "pass": 173,
+    "fail": 0,
+    "skipped": 0,
+    "newExpressiveMidiTests": 19
+  },
+  "independentChecks": {
+    "symbolicFuzzConfigurations": 1800,
+    "crossRatePairs": 270,
+    "crossRateIdentityOrGateMismatches": 0,
+    "maximumGateDifferenceSeconds": 2.31e-05,
+    "targetedSuitesPassed": 41,
+    "targetedSuitesFailed": 0,
+    "findingsFixed": [
+      "Lyrical gates now stop before every retained following note, including phrase-ending bars.",
+      "Expression uses pre-sample-rounding musical gateBeats, avoiding half-beat rounding ambiguity between 44.1/48kHz.",
+      "MIDI bar/marker/style metadata is bounded and checked against the finite score duration.",
+      "All shared percussion-channel notes use one MIDI track, preserving note-off-before-retrigger order across source layers."
+    ],
+    "finalFixtures": "PASS: lyrical overlaps zero across six strategies; percussion OFF then ON at tick960; out-of-range markers and oversized metadata rejected."
+  },
+  "completeRenders": [
+    {
+      "name": "broken-triplet",
+      "frames": 1741714,
+      "duration": 36.28570833333333,
+      "events": 386,
+      "peakDbfs": -14.171753811158155,
+      "rmsDbfs": -27.983345210315093,
+      "sha256": "ee12f16f3f5e382909a7a21ffa57f4b8b805acaad151660842266bd547768221",
+      "rack": {
+        "accepted": 386,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 77,
+        "activeVoices": 0
+      }
+    },
+    {
+      "name": "canon-ornamented",
+      "frames": 1598609,
+      "duration": 33.30435416666667,
+      "events": 255,
+      "peakDbfs": -15.799351194825931,
+      "rmsDbfs": -25.792445122677602,
+      "sha256": "307bf64cf99aac6d0fdcf2f1b073a31a6e19fdf1b60ed6bca4e068cd41b98ba2",
+      "rack": {
+        "accepted": 255,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 0,
+        "activeVoices": 0
+      }
+    },
+    {
+      "name": "motor-angular",
+      "frames": 1376000,
+      "duration": 28.666666666666668,
+      "events": 323,
+      "peakDbfs": -14.032862957973185,
+      "rmsDbfs": -26.59994151553265,
+      "sha256": "883f74803c52bbf9753488266b67729e2f7a7b8fe711bdd202464b8d0f4b3e73",
+      "rack": {
+        "accepted": 323,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 104,
+        "activeVoices": 0
+      }
+    },
+    {
+      "name": "song-dialogue",
+      "frames": 2121495,
+      "duration": 44.1978125,
+      "events": 272,
+      "peakDbfs": -14.156373553797067,
+      "rmsDbfs": -27.03930629277655,
+      "sha256": "6285202ae564f6821b8e14b0b7cb0d1d3b1e6a4088646598e68044a93c132981",
+      "rack": {
+        "accepted": 272,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 75,
+        "activeVoices": 0
+      }
+    },
+    {
+      "name": "waltz-lyrical",
+      "frames": 1267525,
+      "duration": 26.406770833333333,
+      "events": 229,
+      "peakDbfs": -13.313966801751517,
+      "rmsDbfs": -24.940234034134903,
+      "sha256": "55205743ffb3a1a82d8b8d1f21126887bcc64692d3dfaef58f1dcaa8dcf2e2c8",
+      "rack": {
+        "accepted": 229,
+        "dropped": 0,
+        "unmapped": 0,
+        "choked": 44,
+        "activeVoices": 0
+      }
+    }
+  ],
+  "legacyAudioUnchanged": [
+    {
+      "style": "drift",
+      "sha256": "6c9301255b178b0d6f8102e31452559d01131ea36fe902f2cb8fe997c7fb9934",
+      "unchanged": true
+    },
+    {
+      "style": "waltz",
+      "sha256": "81123b1afdbd1f3a342ed3356545fbb848a9cd4e65f734dba7bbfe929c39c2e8",
+      "unchanged": true
+    },
+    {
+      "style": "broken",
+      "sha256": "317858d2602284148c57dced07919d34d27f4c4696397a30d8f16079be0c3bfd",
+      "unchanged": true
+    },
+    {
+      "style": "motor",
+      "sha256": "a1a208093b80191a59775f1168693d3c903562c1d960383c112639d9c8cd7f00",
+      "unchanged": true
+    },
+    {
+      "style": "song",
+      "sha256": "53d8dc14984f80dba08c6cea8facada34af4f658e2a7b690afe64c32280463a6",
+      "unchanged": true
+    },
+    {
+      "style": "canon",
+      "sha256": "183d5e53d184325a0a77747879dc9a206734bd4f994e5bd5b1168ed5ce4331a5",
+      "unchanged": true
+    }
+  ],
+  "midiExamples": [
+    {
+      "name": "broken-triplet",
+      "events": 386,
+      "duration": 36.28570833333333,
+      "midi": {
+        "schema": "sou1.score-midi.v1",
+        "format": 1,
+        "ppq": 960,
+        "tracks": 6,
+        "bpm": 112,
+        "encodedMicrosecondsPerQuarter": 535714,
+        "meter": [
+          4,
+          4
+        ],
+        "sourceNotes": 386,
+        "exportedNotes": 386,
+        "coalescedSameTick": 0,
+        "shortenedOverlaps": 0,
+        "translatedTomKeys": 3,
+        "endTick": 61440,
+        "limitations": [
+          "MIDI1 overlaps of equal pitch/channel are shortened or coalesced and counted.",
+          "Pan is a per-melodic-track average; MIDI1 cannot preserve simultaneous independent per-note pan on one channel. Drum pan is left to the host.",
+          "GM programs only suggest playback; exact Surge/plugin timbres require the host and a saved patch.",
+          "SMF byte/parser checks do not establish successful REAPER or hardware playback."
+        ]
+      }
+    },
+    {
+      "name": "canon-ornamented",
+      "events": 255,
+      "duration": 33.30435416666667,
+      "midi": {
+        "schema": "sou1.score-midi.v1",
+        "format": 1,
+        "ppq": 960,
+        "tracks": 5,
+        "bpm": 92,
+        "encodedMicrosecondsPerQuarter": 652174,
+        "meter": [
+          6,
+          8
+        ],
+        "sourceNotes": 255,
+        "exportedNotes": 255,
+        "coalescedSameTick": 0,
+        "shortenedOverlaps": 0,
+        "translatedTomKeys": 0,
+        "endTick": 46080,
+        "limitations": [
+          "MIDI1 overlaps of equal pitch/channel are shortened or coalesced and counted.",
+          "Pan is a per-melodic-track average; MIDI1 cannot preserve simultaneous independent per-note pan on one channel. Drum pan is left to the host.",
+          "GM programs only suggest playback; exact Surge/plugin timbres require the host and a saved patch.",
+          "SMF byte/parser checks do not establish successful REAPER or hardware playback."
+        ]
+      }
+    },
+    {
+      "name": "motor-angular",
+      "events": 323,
+      "duration": 28.666666666666668,
+      "midi": {
+        "schema": "sou1.score-midi.v1",
+        "format": 1,
+        "ppq": 960,
+        "tracks": 6,
+        "bpm": 126,
+        "encodedMicrosecondsPerQuarter": 476190,
+        "meter": [
+          7,
+          8
+        ],
+        "sourceNotes": 323,
+        "exportedNotes": 323,
+        "coalescedSameTick": 0,
+        "shortenedOverlaps": 0,
+        "translatedTomKeys": 3,
+        "endTick": 53760,
+        "limitations": [
+          "MIDI1 overlaps of equal pitch/channel are shortened or coalesced and counted.",
+          "Pan is a per-melodic-track average; MIDI1 cannot preserve simultaneous independent per-note pan on one channel. Drum pan is left to the host.",
+          "GM programs only suggest playback; exact Surge/plugin timbres require the host and a saved patch.",
+          "SMF byte/parser checks do not establish successful REAPER or hardware playback."
+        ]
+      }
+    },
+    {
+      "name": "song-dialogue",
+      "events": 272,
+      "duration": 44.1978125,
+      "midi": {
+        "schema": "sou1.score-midi.v1",
+        "format": 1,
+        "ppq": 960,
+        "tracks": 6,
+        "bpm": 91,
+        "encodedMicrosecondsPerQuarter": 659341,
+        "meter": [
+          4,
+          4
+        ],
+        "sourceNotes": 272,
+        "exportedNotes": 272,
+        "coalescedSameTick": 0,
+        "shortenedOverlaps": 0,
+        "translatedTomKeys": 3,
+        "endTick": 61440,
+        "limitations": [
+          "MIDI1 overlaps of equal pitch/channel are shortened or coalesced and counted.",
+          "Pan is a per-melodic-track average; MIDI1 cannot preserve simultaneous independent per-note pan on one channel. Drum pan is left to the host.",
+          "GM programs only suggest playback; exact Surge/plugin timbres require the host and a saved patch.",
+          "SMF byte/parser checks do not establish successful REAPER or hardware playback."
+        ]
+      }
+    },
+    {
+      "name": "waltz-lyrical",
+      "events": 229,
+      "duration": 26.406770833333333,
+      "midi": {
+        "schema": "sou1.score-midi.v1",
+        "format": 1,
+        "ppq": 960,
+        "tracks": 5,
+        "bpm": 118,
+        "encodedMicrosecondsPerQuarter": 508475,
+        "meter": [
+          3,
+          4
+        ],
+        "sourceNotes": 229,
+        "exportedNotes": 229,
+        "coalescedSameTick": 0,
+        "shortenedOverlaps": 0,
+        "translatedTomKeys": 3,
+        "endTick": 46080,
+        "limitations": [
+          "MIDI1 overlaps of equal pitch/channel are shortened or coalesced and counted.",
+          "Pan is a per-melodic-track average; MIDI1 cannot preserve simultaneous independent per-note pan on one channel. Drum pan is left to the host.",
+          "GM programs only suggest playback; exact Surge/plugin timbres require the host and a saved patch.",
+          "SMF byte/parser checks do not establish successful REAPER or hardware playback."
+        ]
+      }
+    }
+  ],
+  "githubCi": "No GitHub CI pass claimed; these are local Node tests and renderer/parser checks.",
+  "limits": [
+    "No REAPER/hardware MIDI playback verified.",
+    "No browser, live AudioWorklet or Android integration claimed.",
+    "MIDI1 duplicate pitches/overlaps may be coalesced/shortened and are explicitly counted; pan is per-track average. The five supplied final MIDI examples require no coalescing or gate shortening.",
+    "CC0 validation renders do not use Surge XT or the new FSA kit. Those are separate host/instrument integration work.",
+    "No subjective listening judgment or readiness/release claim."
+  ]
+}
