@@ -31,10 +31,12 @@ public final class DevelopmentScore {
         (1<<3)|(1<<6)|(1<<12)|(1<<21), (1<<0)|(1<<9)|(1<<18)
     };
     public final int rate;
+    public final DevelopmentConfig config;
     public long seed, next, tick, step, bar, phrase, chordChanges, eventCount, suppressedEvents;
     public double beatNext, elapsedFrames;
     public int root, mode, meterTicks, phraseBars, motifLength, family, harmonicFamily, arpStrategy;
-    public int barTick, phraseBar, chord;
+    public int barTick, phraseBar, chord, anchorRoot, seedFamily, drumFamily;
+    public long modulationPhrase, modulationChanges;
     private long variant, plan, harmonyTick, harmonicStep;
     private int state, eventsThisTick, melodicLimit, ambientChord;
     private double harmonyAt, padAt, textureAt, ambientAt, phraseEnergy, norm;
@@ -45,10 +47,13 @@ public final class DevelopmentScore {
     private final int[] grooveGrid = new int[72], arpGrid = new int[72], voicing = new int[4];
     private final double[] busyUntil = new double[44];
 
-    public DevelopmentScore(int rate, long seed) {
+    public DevelopmentScore(int rate, long seed) { this(rate, seed, DevelopmentConfig.DEFAULT); }
+    public DevelopmentScore(int rate, long seed, DevelopmentConfig config) {
         if (rate < 8000 || rate > 192000)
             throw new IllegalArgumentException("sampleRate must be 8000..192000");
+        if (config == null) throw new IllegalArgumentException("config must not be null");
         this.rate = rate;
+        this.config = config;
         this.seed = seed & 0xffffffffL;
         reset();
     }
@@ -62,10 +67,16 @@ public final class DevelopmentScore {
     public void reseed(long seed) { this.seed = seed & 0xffffffffL; reset(); }
     public void reset() {
         variant = hash((int) seed ^ 0x9e3779b9); state = (int) hash((int) seed ^ 0x243f6a88);
-        root = 48 + (int) (variant % 12); mode = (int) (variant / 16 % 7);
-        meterTicks = METERS[(int) (variant / 128 % 6)]; phraseBars = PHRASES[(int) (variant / 1024 % 5)];
-        motifLength = LENGTHS[(int) (variant / 8192 % 6)]; family = (int) (variant / 65536 % 8);
-        harmonicFamily = (int) (variant / 524288 % 4); arpStrategy = (int) (variant / 2097152 % 8);
+        root = 48 + (config.tonic == DevelopmentConfig.SEED ? (int) (variant % 12) : config.tonic);
+        anchorRoot = root; mode = config.mode == DevelopmentConfig.SEED ? (int) (variant / 16 % 7) : config.mode;
+        meterTicks = METERS[config.meter == DevelopmentConfig.SEED ? (int) (variant / 128 % 6) : config.meter];
+        phraseBars = PHRASES[(int) (variant / 1024 % 5)];
+        motifLength = LENGTHS[(int) (variant / 8192 % 6)]; seedFamily = (int) (variant / 65536 % 8);
+        family = config.rhythmFamily == DevelopmentConfig.SEED ? seedFamily : config.rhythmFamily;
+        harmonicFamily = (int) (variant / 524288 % 4);
+        arpStrategy = config.arpStrategy == DevelopmentConfig.SEED ? (int) (variant / 2097152 % 8) : config.arpStrategy;
+        drumFamily = config.drumPattern == DevelopmentConfig.SEED ? seedFamily : config.drumPattern;
+        modulationPhrase = modulationChanges = 0;
         beatNext = elapsedFrames = 0; next = tick = step = bar = phrase = 0; barTick = phraseBar = 0;
         chord = ambientChord = 0; chordChanges = 0; harmonyAt = 0; harmonyTick = harmonicStep = 0;
         eventCount = suppressedEvents = 0; eventsThisTick = 0; melodicLimit = 16;
@@ -111,8 +122,17 @@ public final class DevelopmentScore {
         inversion = complexity > .5 && ((plan >>> 4) & 1) != 0 ? -1 : 1;
         retrograde = complexity > .65 ? (int) ((plan >>> 5) & 1) : 0;
         transpose = complexity > .35 ? (int) ((plan >>> 6) % 5) - 2 : 0;
-        rhythmFamily = complexity > .35 ? (family + (int) ((plan >>> 9) % 3)) % 8 : family;
-        arpKind = complexity > .4 ? (arpStrategy + (int) ((plan >>> 12) % 4)) % 8 : arpStrategy;
+        rhythmFamily = config.rhythmFamily == DevelopmentConfig.SEED && complexity > .35 ? (family + (int) ((plan >>> 9) % 3)) % 8 : family;
+        double variation = config.drumVariation == DevelopmentConfig.AUTO_VARIATION ? 1 : config.drumVariation;
+        drumFamily = config.drumPattern == DevelopmentConfig.SEED
+                ? (complexity * variation > .35 ? (seedFamily + (int) ((plan >>> 9) % 3)) % 8 : seedFamily) : config.drumPattern;
+        arpKind = config.arpStrategy == DevelopmentConfig.SEED && complexity > .4 ? (arpStrategy + (int) ((plan >>> 12) % 4)) % 8 : arpStrategy;
+        int modulationSpan = 4 + (int) Math.floor((1 - evolution) * 12);
+        if (DevelopmentConfig.MODULATING.equals(config.harmony) && phrase - modulationPhrase >= modulationSpan) {
+            root = root == anchorRoot ? 48 + mod(anchorRoot - 48 + (((plan >>> 3) & 1) != 0 ? 5 : 7), 12) : anchorRoot;
+            modulationPhrase = phrase; modulationChanges++; chordChanges++;
+            padAt = textureAt = elapsedFrames;
+        }
         phraseEnergy = .72 + ((plan >>> 16) % 25) / 100.0;
         restBar = phrase > 0 && (plan >>> 21) % 3 == 0 ? phraseBars - 1 : -1;
         int mutationSpan = 4 + (int) Math.floor((1 - evolution) * 8);
@@ -170,6 +190,42 @@ public final class DevelopmentScore {
     }
     private static boolean allowed(int rank, double density) { return rank > 0 && density >= (100 - rank) / 100.0; }
 
+    private void emitDrums(NoteSink sink, long at, int t, double density, double complexity, double energy) {
+        double variation = config.drumVariation == DevelopmentConfig.AUTO_VARIATION ? 1 : config.drumVariation;
+        double drumEnergy = variation == 1 ? energy : (variation == 0 ? 1 : 1 + variation * (energy - 1));
+        int family = drumFamily, half = meterTicks / 2 / 3 * 3;
+        if (config.drumPattern == DevelopmentConfig.SEED) {
+            if (t == 0 || (t == half && (family % 3 != 1 || density > .6)) || (complexity * variation > .6 && density > .6 && t == meterTicks - 9))
+                emit(sink, at, 5, 36, .22, (t == 0 ? .79 : .57) * drumEnergy, .48);
+            if (t == (meterTicks >= 48 ? 12 : half) || (meterTicks >= 48 && t == meterTicks - 12))
+                emit(sink, at, 6, 38, .19, .61 * drumEnergy, .53);
+            int hatStep = family == 1 || family == 4 ? 4 : (density > .8 && complexity > .7 ? 3 : 6);
+            if (t % hatStep == 0 && (t % 12 == 0 || density > .3) && !(variation > 0 && phraseBar == restBar && t % 12 != 0))
+                emit(sink, at, 7, 42, .075, (t % 12 == 0 ? .36 : .2) * drumEnergy, .64);
+        } else {
+            int x = t % 48; boolean kick, snare;
+            if (family == 0) { kick = t % 12 == 0; snare = t % 24 == 12; }
+            else if (family == 1) { kick = t == 0 || (density > .55 && t == half - 6); snare = t == half; }
+            else if (family == 2) { kick = t % 24 == 0 || t % 24 == 9 || t % 24 == 18; snare = t == 12 || t == meterTicks - 6; }
+            else if (family == 3) { kick = x == 0 || x == 18 || x == 36; snare = x == 9 || x == 30 || x == 42; }
+            else if (family == 4) { kick = t % 24 == 0 || t % 24 == 16; snare = t % 24 == 12; }
+            else if (family == 5) { kick = t == 0; snare = t == half; }
+            else if (family == 6) { kick = t % 24 == 6 || t % 24 == 18; snare = t % 24 == 12; }
+            else { kick = t == 0; snare = t == half; }
+            if (variation > 0 && complexity * variation > .6 && density > .6 && t == meterTicks - 9) kick = true;
+            if (kick) emit(sink, at, 5, 36, .22, (t == 0 ? .79 : .57) * drumEnergy, .48);
+            if (snare) emit(sink, at, 6, 38, .19, .61 * drumEnergy, .53);
+            int hatStep = family == 4 ? 4 : (family == 5 || family == 7 ? 12 : (density > .8 && complexity > .7 ? 3 : 6));
+            int hatOffset = family == 6 ? 3 : 0;
+            if (mod(t - hatOffset, hatStep) == 0 && (t % 12 == 0 || density > .3) && !(variation > 0 && phraseBar == restBar && t % 12 != 0))
+                emit(sink, at, 7, 42, .075, (t % 12 == 0 ? .36 : .2) * drumEnergy, .64);
+            if (family == 7 && t % 12 == 6) emit(sink, at, 8, 45 + 2 * ((t / 12) % 3), .25, .4 * drumEnergy, .35);
+        }
+        if (variation > 0 && complexity * variation > .55 && density > .45 && phraseBar == phraseBars - 1 && t >= meterTicks - 9 && t % 3 == 0)
+            emit(sink, at, 8, 45 + 2 * ((meterTicks - t) / 3 % 3), .25, .4 * drumEnergy, .35 + (t % 3) * .1);
+        if (variation > .25 && phraseBar == 0 && t == 0 && phrase % 2 == 0) emit(sink, at, 9, 49, 1.4, .32 * drumEnergy, .66);
+    }
+
     /** Parameters is already normalized; BPM uses the same value as the engine snapshot. */
     public void advanceTo(long frame, Parameters p, NoteSink sink) {
         if (frame < -1 || frame > MAX_SAFE_FRAME) throw new IllegalArgumentException("safe nonnegative integer sample frame required");
@@ -190,8 +246,8 @@ public final class DevelopmentScore {
             long at = Math.round(beatNext); int t = barTick;
             eventsThisTick = 0;
             if (t == 0) { if (phraseBar == 0) planPhrase(complexity, evolution); planBar(complexity); }
-            if ((drive == 0 && elapsedFrames - harmonyAt >= ambientSpan) ||
-                    (drive > 0 && t == 0 && tick - harmonyTick >= meterTicks * harmonicSpan)) changeHarmony(drive == 0 && evolution == 0);
+            if (!DevelopmentConfig.FIXED.equals(config.harmony) && ((drive == 0 && elapsedFrames - harmonyAt >= ambientSpan) ||
+                    (drive > 0 && t == 0 && tick - harmonyTick >= meterTicks * harmonicSpan))) changeHarmony(drive == 0 && evolution == 0);
             double strength = Math.max(ambient, drive * .55), energy = phraseEnergy * (phraseBar == restBar ? .72 : 1);
             if (elapsedFrames >= padAt) {
                 double gate = drive == 0 ? 22 - 6 * evolution : (meterTicks / 12.0) * seconds * (.82 + ratio * 1.5);
@@ -257,19 +313,7 @@ public final class DevelopmentScore {
                 int n = pitch(d, -1, 33, 52, lastBass); lastBass = n;
                 emit(sink, at, 4, n, seconds * (rhythmic > counter ? .45 : 1.25), .65 * drive * energy, .48);
             }
-            if (drums) {
-                int family = rhythmFamily, half = meterTicks / 2 / 3 * 3;
-                if (t == 0 || (t == half && (family % 3 != 1 || density > .6)) || (complexity > .6 && density > .6 && t == meterTicks - 9))
-                    emit(sink, at, 5, 36, .22, (t == 0 ? .79 : .57) * energy, .48);
-                if (t == (meterTicks >= 48 ? 12 : half) || (meterTicks >= 48 && t == meterTicks - 12))
-                    emit(sink, at, 6, 38, .19, .61 * energy, .53);
-                int hatStep = family == 1 || family == 4 ? 4 : (density > .8 && complexity > .7 ? 3 : 6);
-                if (t % hatStep == 0 && (t % 12 == 0 || density > .3) && !(phraseBar == restBar && t % 12 != 0))
-                    emit(sink, at, 7, 42, .075, (t % 12 == 0 ? .36 : .2) * energy, .64);
-                if (complexity > .55 && density > .45 && phraseBar == phraseBars - 1 && t >= meterTicks - 9 && t % 3 == 0)
-                    emit(sink, at, 8, 45 + 2 * ((meterTicks - t) / 3 % 3), .25, .4 * energy, .35 + (t % 3) * .1);
-                if (phraseBar == 0 && t == 0 && phrase % 2 == 0) emit(sink, at, 9, 49, 1.4, .32 * energy, .66);
-            }
+            if (drums) emitDrums(sink, at, t, density, complexity, energy);
             double delta = rate * seconds / 12 * (1 + (tick % 12 < 6 ? 1 : -1) * .44 * swing);
             beatNext += delta; elapsedFrames += delta; tick++; step = tick;
             if (++barTick == meterTicks) {

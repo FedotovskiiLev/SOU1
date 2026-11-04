@@ -93,8 +93,22 @@ public final class NativeDrumBankLoader {
         public final List<Source> banks;
         public final Map<String, String> instrumentBanks;
         public final List<Conversion> converted;
+        /** Null for the unchanged original whole-kit path. */
+        public final CustomSelection selection;
+        public final Map<String, RoleSource> roleSources;
+        public final List<List<SampleOrigin>> sampleOrigins;
+        public final Memory memory;
         private Report(String kit, int rate, Plan plan, List<Source> sources,
                        Map<String, String> provenance, List<Conversion> conversions) {
+            this(kit, rate, plan, sources, provenance, conversions, null, Collections.emptyMap(), Collections.emptyList(), null);
+        }
+        private Report(String kit, int rate, Plan plan, List<Source> sources,
+                       Map<String, String> provenance, List<Conversion> conversions,
+                       CustomSelection selection, Map<String, RoleSource> roles,
+                       List<List<SampleOrigin>> origins, Memory memory) {
+            this.selection = selection; this.memory = memory;
+            roleSources = Collections.unmodifiableMap(new LinkedHashMap<>(roles));
+            sampleOrigins = copyList(origins);
             this.kit = kit; sampleRate = rate; encodedBytes = plan.encoded;
             sourceDecodedBytes = plan.decoded; sourceMappedBytes = plan.mapped;
             preparedBytes = plan.prepared;
@@ -184,6 +198,208 @@ public final class NativeDrumBankLoader {
                 definitions.toArray(new LiveDrumPool.Instrument[0]));
         checkInterrupted();
         return new Prepared(bank, new Report(kit, targetRate, plan, sourceReports, provenance, conversions));
+    }
+
+    public static final List<String> CUSTOM_ROLES = copyList(java.util.Arrays.asList("kick", "snare", "hihat", "toms", "cymbal"));
+
+    /** Canonical immutable selector. No procedural/recorded mixtures or paths. */
+    public static final class CustomSelection {
+        public final String baseKit, key;
+        public final Map<String, String> overrides, resolvedKits;
+        private CustomSelection(String base, Map<String, String> overrides, Map<String, String> resolved, String key) {
+            baseKit = base; this.key = key;
+            this.overrides = Collections.unmodifiableMap(new LinkedHashMap<>(overrides));
+            resolvedKits = Collections.unmodifiableMap(new LinkedHashMap<>(resolved));
+        }
+    }
+    public static CustomSelection normalizeCustomSelection(String baseKit, Map<String, String> overrides) {
+        if (!supportedKits().contains(baseKit) || overrides == null) throw new IllegalArgumentException("Custom drum selection");
+        for (Map.Entry<?, ?> entry : overrides.entrySet()) {
+            if (!(entry.getKey() instanceof String) || !CUSTOM_ROLES.contains(entry.getKey()) ||
+                    !(entry.getValue() instanceof String)) throw new IllegalArgumentException("Custom drum role/value");
+        }
+        Map<String, String> normalized = new LinkedHashMap<>(), resolved = new LinkedHashMap<>();
+        StringBuilder key = new StringBuilder("custom-v1|").append(baseKit); boolean changed = false;
+        for (String role : CUSTOM_ROLES) {
+            String value = overrides.containsKey(role) ? overrides.get(role) : "inherit";
+            if (!"inherit".equals(value) && !supportedKits().contains(value)) throw new IllegalArgumentException("Unknown recorded drum kit");
+            if (baseKit.equals(value)) value = "inherit";
+            normalized.put(role, value); resolved.put(role, "inherit".equals(value) ? baseKit : value);
+            changed |= !"inherit".equals(value); key.append('|').append(value);
+        }
+        return new CustomSelection(baseKit, normalized, resolved, changed ? key.toString() : baseKit);
+    }
+    public static String customSelectionKey(String baseKit, Map<String, String> overrides) {
+        return normalizeCustomSelection(baseKit, overrides).key;
+    }
+    public static CustomSelection parseCustomSelection(String key) {
+        if (key == null || key.length() > 160) throw new IllegalArgumentException("Custom drum selection key");
+        if (supportedKits().contains(key)) return normalizeCustomSelection(key, Collections.emptyMap());
+        String[] tokens = key.split("\\|", -1);
+        if (tokens.length != 7 || !"custom-v1".equals(tokens[0])) throw new IllegalArgumentException("Custom drum selection key");
+        Map<String, String> overrides = new LinkedHashMap<>();
+        for (int i = 0; i < CUSTOM_ROLES.size(); i++) overrides.put(CUSTOM_ROLES.get(i), tokens[i + 2]);
+        CustomSelection result = normalizeCustomSelection(tokens[1], overrides);
+        if (!result.key.equals(key)) throw new IllegalArgumentException("Noncanonical custom drum selection key");
+        return result;
+    }
+    public static final class RoleSource {
+        public final String kit, id, manifest, sha256, sourceCommit;
+        private RoleSource(String kit, SourceSpec source) {
+            this.kit = kit; id = source.id; manifest = source.path; sha256 = source.sha256; sourceCommit = source.sourceCommit;
+        }
+    }
+    public static final class SampleOrigin {
+        public final String role, kit, bankId, manifest, manifestSha256, sourceCommit, sampleId, file, sha256;
+        public final int sourceRate, rootNote;
+        private SampleOrigin(String role, String kit, SourceSpec source, SampleSpec sample) {
+            this.role = role; this.kit = kit; bankId = source.id; manifest = source.path;
+            manifestSha256 = source.sha256; sourceCommit = source.sourceCommit;
+            sampleId = sample.id; file = sample.file; sha256 = sample.sha256;
+            sourceRate = sample.rate; rootNote = sample.root;
+        }
+    }
+    /** Live sample-buffer bounds, not total VM heap or GC timing guarantees. */
+    public static final class Memory {
+        public final int peakSourceDecodedBytes, peakSourceMappedBytes;
+        public final int transientPcmBytesUpperBound, transientEncodedBytesUpperBound, publicationCopyBytes;
+        private Memory(int decoded, int mapped, int prepared, int maxWav) {
+            peakSourceDecodedBytes = decoded; peakSourceMappedBytes = mapped;
+            // Native decoding does not make SampleInstrument's JS mapped copies.
+            // Bank construction privately copies prepared PCM once.
+            transientPcmBytesUpperBound = Math.max(prepared + decoded, 2 * prepared);
+            transientEncodedBytesUpperBound = Math.max(128 * 1024, maxWav);
+            publicationCopyBytes = prepared;
+        }
+    }
+    public static Prepared prepareSelection(String key, int rate, AssetReader reader) throws IOException {
+        return prepareSelection(key, rate, reader, DEFAULT_BUDGETS);
+    }
+    public static Prepared prepareSelection(String key, int rate, AssetReader reader, Budgets budgets) throws IOException {
+        CustomSelection selection = parseCustomSelection(key);
+        return prepareCustom(selection.baseKit, selection.overrides, rate, reader, budgets);
+    }
+    public static Prepared prepareCustom(String baseKit, Map<String, String> overrides, int rate, AssetReader reader) throws IOException {
+        return prepareCustom(baseKit, overrides, rate, reader, DEFAULT_BUDGETS);
+    }
+    /** For custom assembly, decoded/mapped budgets apply to one source at a time. */
+    public static Prepared prepareCustom(String baseKit, Map<String, String> overrides, int rate, AssetReader reader, Budgets budgets) throws IOException {
+        CustomSelection selection = normalizeCustomSelection(baseKit, overrides);
+        if (selection.key.equals(baseKit)) return prepare(baseKit, rate, reader, budgets);
+        if (reader == null || budgets == null || rate < 8000 || rate > 192000) throw new IllegalArgumentException("Custom drum reader/budgets/rate");
+        CustomPlan plan = customPreflight(selection, rate, budgets);
+        checkInterrupted();
+        readVerified(reader, "audio-kit/SOURCE_LOCK.json", NativeDrumCatalog.LOCK_BYTES, NativeDrumCatalog.LOCK_SHA256, 128 * 1024);
+        for (SourceSpec source : plan.sources) readVerified(reader, "audio-kit/" + source.path, source.bytes, source.sha256, 128 * 1024);
+        float[][] samples = new float[plan.samples.size()][];
+        Conversion[] converted = new Conversion[samples.length];
+        for (SourceSpec source : plan.sources) {
+            // All WAVs in each selected source remain checksum-verified, including
+            // its unused articulations. Only selected prepared PCM survives.
+            prepareCustomSource(source, plan.samples, rate, reader, samples, converted);
+        }
+        checkInterrupted();
+        LiveDrumPool.Bank bank = new LiveDrumPool.Bank(rate, samples, plan.instruments.toArray(new LiveDrumPool.Instrument[0]));
+        checkInterrupted();
+        List<List<SampleOrigin>> origins = new ArrayList<>();
+        for (CustomSample sample : plan.samples) origins.add(copyList(sample.origins));
+        return new Prepared(bank, new Report(selection.key, rate, plan.budget, plan.sourceReports,
+                plan.provenance, java.util.Arrays.asList(converted), selection, plan.roleSources, origins, plan.memory));
+    }
+    private static void prepareCustomSource(SourceSpec source, List<CustomSample> selected, int rate,
+                                           AssetReader reader, float[][] output, Conversion[] converted) throws IOException {
+        List<float[]> decoded = new ArrayList<>();
+        String directory = source.path.substring(0, source.path.lastIndexOf('/') + 1);
+        for (SampleSpec sample : source.samples) {
+            byte[] bytes = readVerified(reader, "audio-kit/" + directory + sample.file, sample.bytes, sample.sha256, 4 * MIB);
+            decoded.add(decodeWav(bytes, sample, 8 * MIB));
+        }
+        for (int i = 0; i < selected.size(); i++) {
+            CustomSample sample = selected.get(i);
+            if (sample.source != source) continue;
+            float[] pcm = reconstruct(decoded.get(sample.sourceIndex), sample.step);
+            output[i] = pcm;
+            converted[i] = new Conversion(i, pcm, sample.sample.rate, rate, sample.pitch < 0 ? null : sample.pitch, sample.step);
+        }
+    }
+    private static final class CustomSample {
+        final SourceSpec source; final SampleSpec sample; final int sourceIndex, pitch; final double step;
+        final List<SampleOrigin> origins = new ArrayList<>();
+        CustomSample(SourceSpec source, int index, int pitch, double step) {
+            this.source = source; sourceIndex = index; sample = source.samples.get(index); this.pitch = pitch; this.step = step;
+        }
+    }
+    private static final class CustomPlan {
+        final List<SourceSpec> sources = new ArrayList<>();
+        final List<Source> sourceReports = new ArrayList<>();
+        final List<CustomSample> samples = new ArrayList<>();
+        final List<LiveDrumPool.Instrument> instruments = new ArrayList<>();
+        final Map<String, String> provenance = new LinkedHashMap<>();
+        final Map<String, RoleSource> roleSources = new LinkedHashMap<>();
+        Plan budget; Memory memory;
+    }
+    private static CustomPlan customPreflight(CustomSelection selection, int rate, Budgets budgets) throws IOException {
+        CustomPlan plan = new CustomPlan();
+        Map<String, SourceSpec> uniqueSources = new LinkedHashMap<>();
+        Map<String, Integer> identities = new HashMap<>();
+        long preparedBytes = 0;
+        for (int roleIndex = 0; roleIndex < IDS.length; roleIndex++) {
+            String role = CUSTOM_ROLES.get(roleIndex), id = IDS[roleIndex], kit = selection.resolvedKits.get(role);
+            List<SourceSpec> candidates = NativeDrumCatalog.sources(kit);
+            // Validate the closed catalog at a safe rate independently of the
+            // unused whole kit's prepared size at the requested rate.
+            preflight(candidates, 8000, DEFAULT_BUDGETS);
+            SourceSpec source = null; InstrumentSpec instrument = null;
+            for (SourceSpec candidate : candidates) for (InstrumentSpec item : candidate.instruments) {
+                if (item.id.equals(id)) { source = candidate; instrument = item; }
+            }
+            if (source == null || instrument == null || !instrument.oneShot) throw new IOException("Incomplete one-shot custom drum bank");
+            uniqueSources.put(source.path, source);
+            plan.provenance.put(id, source.id); plan.roleSources.put(role, new RoleSource(kit, source));
+            List<LiveDrumPool.Zone> zones = new ArrayList<>();
+            for (ZoneSpec zone : instrument.zones) {
+                if (zone.pitched && zone.high - zone.low + 1 > 16) throw new IOException("Pitched drum key range");
+                int first = zone.pitched ? zone.low : -1, last = zone.pitched ? zone.high : -1;
+                SampleSpec sample = source.samples.get(zone.sample);
+                for (int pitch = first; pitch <= last; pitch++) {
+                    double step = step(sample, rate, pitch);
+                    if (!Double.isFinite(step) || step < .125 || step > 8) throw new IOException("Prepared sample ratio");
+                    String identity = sample.sha256 + '|' + sample.rate + '|' + sample.root + '|' + pitch;
+                    Integer index = identities.get(identity);
+                    if (index == null) {
+                        long frames = (long) StrictMath.ceil(sample.frames / step);
+                        preparedBytes += frames * Float.BYTES;
+                        if (frames < 2 || frames > (long) rate * 10 || plan.samples.size() >= LiveDrumPool.MAX_SAMPLES ||
+                                preparedBytes > budgets.preparedBytes) throw new IOException("Prepared custom drum bank memory");
+                        index = plan.samples.size(); identities.put(identity, index);
+                        plan.samples.add(new CustomSample(source, zone.sample, pitch, step));
+                    }
+                    CustomSample prepared = plan.samples.get(index); boolean known = false;
+                    for (SampleOrigin origin : prepared.origins) if (origin.role.equals(role) && origin.manifest.equals(source.path) && origin.sampleId.equals(sample.id)) known = true;
+                    if (!known) prepared.origins.add(new SampleOrigin(role, kit, source, sample));
+                    if (zones.size() >= LiveDrumPool.MAX_ZONES) throw new IOException("Custom drum zone count");
+                    zones.add(new LiveDrumPool.Zone(index, pitch < 0 ? zone.low : pitch, pitch < 0 ? zone.high : pitch, zone.velocityLow, zone.velocityHigh));
+                }
+            }
+            plan.instruments.add(new LiveDrumPool.Instrument(id, instrument.gain, true, instrument.choke, zones.toArray(new LiveDrumPool.Zone[0])));
+        }
+        long encoded = 0, decoded = 0, mapped = 0; int peakDecoded = 0, peakMapped = 0, maxWav = 0;
+        for (SourceSpec source : uniqueSources.values()) {
+            int localDecoded = 0, localMapped = 0;
+            for (SampleSpec sample : source.samples) { encoded += sample.bytes; localDecoded += sample.frames * Float.BYTES; maxWav = Math.max(maxWav, sample.bytes); }
+            for (InstrumentSpec instrument : source.instruments) {
+                Set<Integer> seen = new HashSet<>();
+                for (ZoneSpec zone : instrument.zones) if (seen.add(zone.sample)) localMapped += source.samples.get(zone.sample).frames * Float.BYTES;
+            }
+            if (encoded > budgets.encodedBytes || localDecoded > Math.min(8 * MIB, budgets.decodedBytes) ||
+                    localMapped > Math.min(8 * MIB, budgets.mappedBytes)) throw new IOException("Custom drum source memory budget");
+            decoded += localDecoded; mapped += localMapped;
+            peakDecoded = Math.max(peakDecoded, localDecoded); peakMapped = Math.max(peakMapped, localMapped);
+            plan.sources.add(source); plan.sourceReports.add(new Source(source));
+        }
+        plan.budget = new Plan(encoded, decoded, mapped, preparedBytes);
+        plan.memory = new Memory(peakDecoded, peakMapped, (int) preparedBytes, maxWav);
+        return plan;
     }
 
     // Package-private immutable catalog descriptions, not an arbitrary public manifest API.

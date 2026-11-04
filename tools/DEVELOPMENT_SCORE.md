@@ -1,5 +1,9 @@
 # SOU1 continuous development score
 
+This document describes the default first-phase behavior, preserved exactly by the
+optional configuration extension. See [DEVELOPMENT_CONFIG.md](DEVELOPMENT_CONFIG.md)
+for manual selectors, harmony policies, independent drum patterns and random locks.
+
 This original score develops music continuously in SOU1's existing ambient instrument
 concept. It does not concatenate rendered excerpts, read MIDI assets or depend on the
 finite cue generators under `tools/composition/`. The older `EventScore` and audio
@@ -8,7 +12,8 @@ renderer are not modified by this module.
 ## Integration contract
 
 - Import `DevelopmentScore` from `docs/development-score.js` and construct it with an
-  integer sample rate from 8000 through 192000 and an unsigned seed.
+  integer sample rate from 8000 through 192000 and an unsigned seed. An optional
+  third immutable configuration argument is described in DEVELOPMENT_CONFIG.md.
 - `advanceTo(frame, parameters, sink)` dispatches every due event through that frame,
   inclusive. `frame` is an integer absolute sample position. `-1` is valid pre-roll.
   `sink.noteOn(frame, layer, MIDI, durationFrames, velocity, pan)` receives only scalar

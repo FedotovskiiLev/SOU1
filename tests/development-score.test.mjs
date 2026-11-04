@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import test from 'node:test';
 const source=await readFile(new URL('../docs/development-score.js',import.meta.url),'utf8');
-const {DevelopmentScore}=await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+const {DevelopmentScore}=await import('../docs/development-score.js');
 const RATE=8000, BASE={ambient:1,counterpoint:0,rhythmic:0,arpeggio:0,density:.5,complexity:.5,evolution:0,swing:0,bpm:72,melodyEnabled:true,drumsEnabled:false,polyphony:16};
 const STYLES=['ambient','counterpoint','rhythmic','arpeggio'];
 const style=(i,extra={})=>({...BASE,ambient:0,counterpoint:0,rhythmic:0,arpeggio:0,[STYLES[i]]:1,...extra});

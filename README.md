@@ -4,7 +4,7 @@ An original ambient instrument for focus, study and quiet work. ASCII interface,
 
 - **PWA:** dependency-free Web Audio / AudioWorklet, local preferences and offline cache after first load.
 - **Android:** the same bundled interface with native AudioTrack synthesis in a foreground media service. Android8+; no Internet, microphone or storage permissions.
-- **Sound:** the original oscillator engine remains the default. This development branch adds optional bundled CC0 recorded drum kits to the PWA and native Android service; original melodic synthesis, effects and weather remain. The new native path still needs APK/device acceptance. No streamed audio. Start quietly.
+- **Sound:** the original oscillator engine remains the default. The 0.3 candidate adds optional bundled CC0 melodic palettes and recorded drum kits to the PWA and native Android service, plus a separate continuously developing score. Original synthesis, effects, weather and saved scenarios remain available. APK/device acceptance is pending. No streamed audio. Start quietly.
 - **Privacy:** no accounts, analytics, recording or uploads.
 
 ## Controls
@@ -123,7 +123,7 @@ Local validation includes actual banks over HTTP, worker cancellation, the real
 AudioWorklet module under a Node host shim, original-event and disabled-drum PCM
 parity, live controls/FX/weather/reseed/stop, packaging and offline-install contracts.
 These checks are not an actual-browser, device, listening or release qualification.
-The current cloud browser cannot reach the available localhost preview.
+The supported cloud-desktop preview is reachable; current browser acceptance results and unresolved checks are recorded in [the 0.3 candidate guide](tools/SOU1_03_INTEGRATION.md).
 
 See [PWA integration, packaging and acceptance details](tools/PWA_RECORDED_DRUMS.md).
 
@@ -142,5 +142,25 @@ recorded native engine matches 2,402,400 JS Float32 samples. These are determini
 software comparisons, not device playback evidence. The aggregate Node suite and
 new JVM tests are now part of the existing Android CI before APK compilation/lint.
 See [native service contract and qualification limits](tools/NATIVE_DRUM_SERVICE.md)
-and [native bank preparation](tests/NATIVE_DRUM_BANKS.md). APK build, genuine browser
+and [native bank preparation](tests/NATIVE_DRUM_BANKS.md). APK build, remaining browser acceptance
 and physical-device checks remain required before any release.
+
+
+## SOU1 0.3 candidate: continuous composition and instrument selection
+
+The original continuous ambient workflow remains, with an explicit **Developing
+phrases** alternative. While stopped, choose tonic, scale, meter, melodic rhythm,
+arpeggio order, drum pattern, harmony policy and drum variation. A manual choice
+locks that field against randomization; presets and New melody preserve it.
+Randomize only unlocked fields to combine settings beyond the four presets.
+
+The Voices panel adds Chamber, Piano Room and range-limited Flute Chamber recorded
+CC0 palettes. Five independent drum-role selectors assemble a kit from different
+recorded banks. Existing layer levels, tempo, shared effects, weather and timer
+remain available. Brightness/modulation/pluck-decay timbre controls continue to
+shape the original oscillator voices, not the natural recorded instrument timbre.
+
+Android candidate metadata is versionCode 3 / versionName 0.3.0. The download
+manifest intentionally still identifies the existing signed 0.2.0 APK until a real
+0.3 artifact is built, signed and verified. No old device result qualifies 0.3.
+See [configuration, preparation, validation and release gates](tools/SOU1_03_INTEGRATION.md).

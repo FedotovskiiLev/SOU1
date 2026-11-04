@@ -1,4 +1,9 @@
-import {NativeDrumSession,nativeDrumCapabilities,nativeDevelopmentCapabilities} from './native-drum-session.js';
+import {loadRecordedMelodies} from './melodic-loader.js';
+import {melodicTransferList} from './live-melodic-pool.js';
+import {normalizeDevelopmentConfig,deterministicRandomConfig,DEVELOPMENT_CONFIG_DEFAULTS} from './development-config.js';
+import {CUSTOM_DRUM_ROLES,customDrumSelectionKey,parseCustomDrumSelection,deterministicRandomDrumOverrides} from './custom-drum-selection.js';
+import {MELODIC_PRESETS,DEVELOPMENT_KEYS,normalizedDrumOverrides,normalizedLocks,isSupportedAudioDrumKey} from './audio-selection.js';
+import {NativeDrumSession,nativeDrumCapabilities,nativeDevelopmentCapabilities,nativeSelectionCapabilities} from './native-drum-session.js';
 import {loadRecordedDrums} from './drum-loader.js';
 import {encodeMidi} from './midi-export.js';
 import {createPianoRoll} from './note-history.js';
@@ -16,6 +21,8 @@ Object.assign(dictionary.ru,{ambient:'ПРОТЯЖНЫЕ ФРАЗЫ',counterpoin
 const extraDefaults={ambient:1,counterpoint:0,rhythmic:0,arpeggio:0,density:.5,complexity:.5,swing:0,bpm:72,polyphony:16,melodyEnabled:true,drumsEnabled:false,kick:.65,snare:.4,hihat:.3,toms:.35,cymbal:.2,warmth:0,strength:0,width:.5,wash:0,pad:.65,pluck:.55,bell:.35,texture:.2,pulse:.15,evolution:0,rainType:0,rain:0,thunder:0,wind:0};
 const presets={focus:{ambient:1,counterpoint:0,rhythmic:0,arpeggio:0,density:.25,complexity:.25,swing:0,bpm:48,polyphony:16,melodyEnabled:false,drumsEnabled:false,intensity:.3,brightness:.4,motion:.25,timbre:.4,pad:.85,pluck:0,bell:0,texture:.35,pulse:0,evolution:0},dusk:{ambient:0,counterpoint:1,rhythmic:0,arpeggio:0,density:.7,complexity:.85,swing:0,bpm:86,polyphony:16,melodyEnabled:true,drumsEnabled:false,intensity:.28,brightness:.25,motion:.35,timbre:.25,pad:.15,pluck:.8,bell:.15,texture:.05,pulse:0,evolution:.7},drift:{ambient:.2,counterpoint:0,rhythmic:0,arpeggio:1,density:.6,complexity:.7,swing:.1,bpm:96,polyphony:24,melodyEnabled:true,drumsEnabled:false,intensity:.4,brightness:.6,motion:.45,timbre:.65,pad:.45,pluck:.5,bell:.65,texture:.2,pulse:0,evolution:.45},bloom:{ambient:.15,counterpoint:.15,rhythmic:1,arpeggio:.3,density:.85,complexity:.65,swing:.2,bpm:112,polyphony:24,melodyEnabled:true,drumsEnabled:true,intensity:.55,brightness:.55,motion:.6,timbre:.5,pad:.5,pluck:.75,bell:.4,texture:.15,pulse:.45,evolution:.8}};
 for(const key of Object.keys(presets))presets[key]=Object.freeze({...extraDefaults,...presets[key]});
+Object.assign(dictionary.en,{advancedComposition:'TONALITY & PHRASES',selectionHint:'Choose developing phrases, then change these settings while stopped. Manual changes lock that choice. Presets and New melody preserve your settings. Modulation visits related keys and returns to your tonic.',lockChoice:'Lock',autoChoice:'Auto',randomUnlocked:'Randomize unlocked',combinationSeed:'Combination seed:',tonic:'TONIC',scale:'SCALE',meter:'METER',rhythmFamily:'MELODIC RHYTHM',arpStrategy:'ARPEGGIO ORDER',drumPattern:'DRUM PATTERN',harmony:'HARMONY OVER TIME',drumVariation:'DRUM VARIATION',customDrums:'ASSEMBLE DRUM KIT',customDrumsHint:'Choose a recorded base kit, then override each role independently. Missing articulations use that kit’s documented VCSL fallback. Your choices survive preset and seed changes.',melodicPalette:'INSTRUMENT PALETTE',melodicHint:'Recorded CC0 cello, harp, piano and strings. Flute lead has a limited pitch range; missing notes use the original oscillator at the same MIDI pitch. Change while stopped.'});
+Object.assign(dictionary.ru,{advancedComposition:'ТОНАЛЬНОСТЬ И ФРАЗЫ',selectionHint:'В режиме развития фраз настройки меняются после остановки. Ручной выбор закрепляет поле. Пресеты и «Новая мелодия» сохраняют ваши настройки. Модуляция уходит в близкие тональности и возвращается к выбранной тонике.',lockChoice:'Закрепить',autoChoice:'Авто',randomUnlocked:'Случайные незакреплённые',combinationSeed:'Сид комбинации:',tonic:'ТОНИКА',scale:'ЛАД',meter:'РАЗМЕР',rhythmFamily:'РИТМ МЕЛОДИИ',arpStrategy:'ПОРЯДОК АРПЕДЖИО',drumPattern:'РИСУНОК УДАРНЫХ',harmony:'ГАРМОНИЯ ВО ВРЕМЕНИ',drumVariation:'ВАРИАЦИИ УДАРНЫХ',customDrums:'СОБРАТЬ НАБОР УДАРНЫХ',customDrumsHint:'Выберите основной набор записанных ударных и замените отдельные роли. Для отсутствующих артикуляций используется указанная в наборе замена VCSL. Пресеты и смена сида сохраняют ваш выбор.',melodicPalette:'ПАЛИТРА ИНСТРУМЕНТОВ',melodicHint:'Записанные CC0 виолончель, арфа, пианино и скрипка. Диапазон флейты ограничен: недостающие ноты играет исходный осциллятор на той же MIDI-высоте. Выбор после остановки.'});
 let saved={};try{saved=JSON.parse(localStorage.getItem('sou1-v1')||'{}')}catch{}
 if(!saved||typeof saved!=='object'||Array.isArray(saved))saved={};
 let language=saved.language==='ru'?'ru':saved.language==='en'?'en':navigator.language.startsWith('ru')?'ru':'en';
@@ -28,14 +35,21 @@ let volume=Number.isFinite(saved.volume)?clamp(saved.volume):.35;
 const drumKits=['procedural','vcsl','fsa-electronic','fsa-distkit','fsa-sdbkit','fsa-synthkit','fsa-x0xproc1','fsa-x0xproc2','guigui-soft','guigui-dynamic'];
 const nativeDrums=native&&nativeDrumCapabilities(window.AndroidBridge,drumKits);
 const nativeDevelopment=nativeDrums&&nativeDevelopmentCapabilities(window.AndroidBridge);
-const nativeSession=nativeDrums?new NativeDrumSession(window.AndroidBridge,drumKits):null;
+const nativeFeatures=nativeDrums?nativeSelectionCapabilities(window.AndroidBridge):{customDrums:false,scoreConfig:false,melodies:false};
+const nativeSession=nativeDrums?new NativeDrumSession(window.AndroidBridge,drumKits,{allowCustom:nativeFeatures.customDrums,allowConfig:nativeFeatures.scoreConfig,allowMelodic:nativeFeatures.melodies}):null;
 let nativePreparing=false;
 let scoreMode=(!native||nativeDevelopment)&&saved.scoreMode==='developing'?'developing':'original';
 let drumKit=(!native||nativeDrums)&&drumKits.includes(saved.drumKit)?saved.drumKit:'procedural',drumLoadAbort=null,audioGeneration=0,rejectPreparation=null;
+let scoreConfig=DEVELOPMENT_CONFIG_DEFAULTS,configLocks=normalizedLocks(),drumOverrides=normalizedDrumOverrides(),drumLocks=normalizedLocks({},CUSTOM_DRUM_ROLES);
+try{if(!native||nativeFeatures.scoreConfig){scoreConfig=normalizeDevelopmentConfig(saved.scoreConfig??{});configLocks=normalizedLocks(saved.configLocks??{});}}catch{}
+try{if(!native||nativeFeatures.customDrums){drumOverrides=normalizedDrumOverrides(saved.drumOverrides??{});drumLocks=normalizedLocks(saved.drumLocks??{},CUSTOM_DRUM_ROLES);}}catch{}
+let melodicPreset=(!native||nativeFeatures.melodies)&&MELODIC_PRESETS.includes(saved.melodicPreset)?saved.melodicPreset:'procedural';
+let configRandomSeed=Number.isInteger(saved.configRandomSeed)?saved.configRandomSeed>>>0:null,drumRandomSeed=Number.isInteger(saved.drumRandomSeed)?saved.drumRandomSeed>>>0:null;
+const selectedDrumKey=()=>drumKit==='procedural'?'procedural':customDrumSelectionKey(drumKit,normalizedDrumOverrides(drumOverrides));
 let context,node,gain,analyser,frequency,timeData,playing=false,busy=false,exportBusy=false,started=0,elapsedBefore=0,timerHandle,timerEndAt=0,installEvent,silentFallback;
 const t=key=>dictionary[language][key]??key;
-function persist(){try{localStorage.setItem('sou1-v1',JSON.stringify({language,parameters,preset,seed,volume,drumKit,scoreMode}))}catch{}}
-function translate(){document.documentElement.lang=language;for(const el of document.querySelectorAll('[data-i18n]')){const key=el.dataset.i18n;if(key==='description')el.innerHTML=t(key);else el.textContent=t(key)}$('play-label').textContent=t(playing?'stop':'begin');$('play').setAttribute('aria-label',t(playing?'stop':'begin'));$('state').textContent=t(playing?'playing':'standby');for(const item of controls){$(item.key+'-label').textContent=t(item.label);$(item.key+'-low').textContent='0';$(item.key+'-high').textContent='100'}if($('apk').href)$('apk').textContent=t('apk');}
+function persist(){try{localStorage.setItem('sou1-v1',JSON.stringify({language,parameters,preset,seed,volume,drumKit,scoreMode,scoreConfig,configLocks,drumOverrides,drumLocks,melodicPreset,configRandomSeed,drumRandomSeed}))}catch{}}
+function translate(){document.documentElement.lang=language;for(const el of document.querySelectorAll('[data-i18n]')){const key=el.dataset.i18n;if(key==='description')el.innerHTML=t(key);else el.textContent=t(key)}$('play-label').textContent=t(playing?'stop':'begin');$('play').setAttribute('aria-label',t(playing?'stop':'begin'));$('state').textContent=t(playing?'playing':'standby');for(const item of controls){$(item.key+'-label').textContent=t(item.label);$(item.key+'-low').textContent='0';$(item.key+'-high').textContent='100'}if($('apk').href)$('apk').textContent=t('apk');syncAudioSelection();}
 const controls=[{key:'intensity',label:'activity',low:'',high:''},{key:'brightness',label:'brightness',low:'',high:''},{key:'motion',label:'motion',low:'',high:''},{key:'timbre',label:'timbre',low:'',high:''}];
 for(const key of ['pad','pluck','bell','texture','pulse','warmth','strength','width','wash','rain','thunder','wind'])controls.push({key,label:key,group:['warmth','strength','width','wash'].includes(key)?'effects':['rain','thunder','wind'].includes(key)?'weather':'layers'});
 for(const key of ['ambient','counterpoint','rhythmic','arpeggio','density','complexity','swing','evolution'])controls.push({key,label:key,group:'structure'});
@@ -47,44 +61,50 @@ function setValue(key,v){parameters[key]=clamp(v);if(key==='rain'&&parameters[ke
 for(const el of document.querySelectorAll('[data-preset]'))el.addEventListener('click',()=>{preset=el.dataset.preset;parameters={...presets[preset]};updateKnobs();sendParameters();persist();syncWeather()});
 $('volume').value=Math.round(volume*100);$('volume-value').value=Math.round(volume*100)+'%';$('volume').addEventListener('input',e=>{volume=clamp(Number(e.target.value)/100);$('volume-value').value=Math.round(volume*100)+'%';if(gain)gain.gain.setTargetAtTime(volume,context.currentTime,.05);sendParameters();persist()});
 function state(value){playing=value;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;document.body.classList.toggle('playing',value);$('play-label').textContent=t(value?'stop':'begin');$('play-icon').textContent=value?'Ⅱ':'▶';$('play').setAttribute('aria-label',t(value?'stop':'begin'));$('play').setAttribute('aria-pressed',String(value));$('state').textContent=t(value?'playing':'standby');$('new-seed').disabled=busy||nativePreparing||exportBusy;syncPreparation();}
-function syncPreparation(){ $('score-mode').disabled=(native&&!nativeDevelopment)||playing||busy||nativePreparing||exportBusy;$('play').disabled=busy||nativePreparing;$('new-seed').disabled=busy||nativePreparing||exportBusy;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;$('cancel-prepare').disabled=!(busy||nativePreparing); }
+function syncPreparation(){ syncAudioSelection(); $('score-mode').disabled=(native&&!nativeDevelopment)||playing||busy||nativePreparing||exportBusy;$('play').disabled=busy||nativePreparing;$('new-seed').disabled=busy||nativePreparing||exportBusy;$('drum-samples').disabled=(native&&!nativeDrums)||playing||busy||nativePreparing||exportBusy;$('cancel-prepare').disabled=!(busy||nativePreparing); }
 function cancelPreparation(){if(nativePreparing){try{nativeSession.cancel();}catch{applyNativeSession();return;}nativePreparing=false;state(false);$('notice').textContent=language==='ru'?'Подготовка отменена.':'Preparation cancelled.';return;}if(!busy)return;audioGeneration++;rejectPreparation?.(Object.assign(new Error('Preparation cancelled'),{name:'AbortError'}));drumLoadAbort?.abort();context?.close().catch(()=>{});}
 async function start(){
  if(busy||playing||nativePreparing)return;
- const generation=++audioGeneration;busy=true;clearTimeout(silentFallback);syncPreparation();let current,cancelReject;
+ const generation=++audioGeneration;busy=true;clearTimeout(silentFallback);syncPreparation();let current,cancelReject,initializationTimer;
  const cancellation=new Promise((_,reject)=>cancelReject=reject);rejectPreparation=cancelReject;
  const wait=task=>Promise.race([task,cancellation]);
  const cancelled=()=>generation!==audioGeneration||(!native&&context!==current);
  const check=()=>{if(cancelled())throw new DOMException('Preparation cancelled','AbortError');};
  try{
-  if(native){if(nativeSession){if(!nativeSession.start({...parameters,volume,seed,drumKit,scoreMode,timerMinutes:Number($('timer').value)||0}))throw Error('Native playback is still active');nativePreparing=true;syncPreparation();$('notice').textContent=language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';return;}if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error('Native playback unavailable');}
+  if(native){if(nativeSession){if(!nativeSession.start({...parameters,volume,seed,drumKit:selectedDrumKey(),scoreMode,...(nativeFeatures.scoreConfig?{scoreConfig}:{}),...(nativeFeatures.melodies?{melodicPreset}:{}),timerMinutes:Number($('timer').value)||0}))throw Error('Native playback is still active');nativePreparing=true;syncPreparation();$('notice').textContent=language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';return;}if(!window.AndroidBridge.play(JSON.stringify({...parameters,volume,seed})))throw Error('Native playback unavailable');}
   else{
    if(!context)context=new AudioContext({latencyHint:'playback'});current=context;
    if(!node){
     await wait(current.resume());check();
     if(!current.audioWorklet)throw Error('AudioWorklet unavailable');
-    const recorded=drumKit!=='procedural';let wireBank;
+    const recorded=drumKit!=='procedural',sampled=melodicPreset!=='procedural';let wireBank,melodicBank;
     if(recorded){
      $('notice').textContent=language==='ru'?'Подготавливаю записанные ударные…':'Preparing recorded drums…';
-     drumLoadAbort=new AbortController();const bank=await wait(loadRecordedDrums(drumKit,current.sampleRate,{signal:drumLoadAbort.signal}));check();drumLoadAbort=null;
+     drumLoadAbort=new AbortController();const bank=await wait(loadRecordedDrums(selectedDrumKey(),current.sampleRate,{signal:drumLoadAbort.signal}));check();drumLoadAbort=null;
      wireBank=bank.wireBank;$('drum-source').textContent=bank.report.banks.map(b=>b.id).join(' + ');
     }
-    const module=scoreMode==='developing'?'./developing-worklet.js':recorded?'./recorded-drum-worklet.js':'./audio-worklet.js';
+    if(sampled){
+     $('notice').textContent=language==='ru'?'Подготавливаю записанные инструменты…':'Preparing recorded instruments…';
+     drumLoadAbort=new AbortController();const bank=await wait(loadRecordedMelodies(melodicPreset,current.sampleRate,{signal:drumLoadAbort.signal}));check();drumLoadAbort=null;melodicBank=bank.wireBank;$('melodic-source').textContent=melodicPreset+' · CC0';
+    }
+    const module=sampled?'./instrument-worklet.js':scoreMode==='developing'?'./developing-worklet.js':recorded?'./recorded-drum-worklet.js':'./audio-worklet.js';
     await wait(current.audioWorklet.addModule(module));check();
-    scorePending=false;node=new AudioWorkletNode(current,scoreMode==='developing'?'sou1-developing':recorded?'sou1-recorded-drums':'sou1-ambient',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{seed,...(recorded?{wireBank}:{})}});
+    scorePending=false;node=new AudioWorkletNode(current,sampled?'sou1-instruments':scoreMode==='developing'?'sou1-developing':recorded?'sou1-recorded-drums':'sou1-ambient',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{seed,scoreMode,scoreConfig,...(!sampled&&recorded?{wireBank}:{})}});
     gain=current.createGain();gain.gain.value=volume;analyser=current.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.8;
     frequency=new Uint8Array(analyser.frequencyBinCount);timeData=new Float32Array(analyser.fftSize);node.connect(gain).connect(analyser).connect(current.destination);
-    const graphNode=node;
+    const graphNode=node;let readyResolve,readyReject;const initialization=sampled?new Promise((resolve,reject)=>{readyResolve=resolve;readyReject=reject;initializationTimer=setTimeout(()=>reject(Error('Instrument initialization timed out')),15000)}):null;
     node.onprocessorerror=async()=>{
-     if(node!==graphNode)return;audioGeneration++;busy=true;state(false);syncPreparation();clearTimeout(timerHandle);clearTimeout(silentFallback);
-     await current.close().catch(()=>{});if(context===current)context=node=gain=analyser=null;
+     if(node!==graphNode)return;readyReject?.(Error('Audio processor failed'));const failureGeneration=++audioGeneration;busy=true;state(false);syncPreparation();clearTimeout(timerHandle);clearTimeout(silentFallback);
+     await current.close().catch(()=>{});if(audioGeneration!==failureGeneration||context!==current)return;context=node=gain=analyser=null;
      busy=false;syncPreparation();$('notice').textContent=t('error');
     };
     node.port.onmessage=e=>{
+     if(node===graphNode&&e.data.requestId===generation){if(e.data.type==='ready')readyResolve?.();else if(e.data.type==='initialization-error')readyReject?.(Error(e.data.message||'Instrument initialization failed'));}
      if(node===graphNode&&e.data.type==='score-export'&&exportRequest?.id===e.data.requestId){const request=exportRequest;exportRequest=null;clearTimeout(request.timer);if((Number(e.data.score?.seed)>>>0)===request.seed)request.resolve(e.data.score);else request.reject(Error('Score seed changed'));}
-     if(node===graphNode&&e.data.type==='score'){scorePending=false;showScore(e.data.score);}
+     if(node===graphNode&&e.data.type==='score'){scorePending=false;showScore(e.data.score);if(e.data.routing&&sampled)$('melodic-source').textContent=melodicPreset+' · CC0 · '+e.data.routing.sampled+' sampled · '+e.data.routing.fallback+' fallback · '+e.data.routing.dropped+' dropped';}
      if(node===graphNode&&e.data.type==='silent'&&!playing&&!busy){clearTimeout(silentFallback);current.suspend();}
     };
+    if(sampled){const transfer=melodicTransferList(melodicBank);if(wireBank)for(const pcm of wireBank.samples)transfer.push(pcm.buffer);node.port.postMessage({type:'initialize',requestId:generation,wireBank,melodicBank},transfer);await wait(initialization);clearTimeout(initializationTimer);check();}
    }
    await wait(current.resume());check();node.port.postMessage({type:'parameters',parameters});node.port.postMessage({type:'start'});
   }
@@ -92,7 +112,7 @@ async function start(){
  }catch(error){
   nativePreparing=false;console.error(error);$('notice').textContent=error.name==='AbortError'?(language==='ru'?'Подготовка отменена.':'Preparation cancelled.'):t('error')+(drumKit!=='procedural'?' '+error.message:'');
   if(current){await current.close().catch(()=>{});if(context===current)context=node=gain=analyser=null;}state(false);
- }finally{if(rejectPreparation===cancelReject)rejectPreparation=null;drumLoadAbort?.abort();drumLoadAbort=null;busy=false;syncPreparation();}
+ }finally{clearTimeout(initializationTimer);if(rejectPreparation===cancelReject)rejectPreparation=null;drumLoadAbort?.abort();drumLoadAbort=null;busy=false;syncPreparation();}
 }
 
 function stop(){if(!playing)return;elapsedBefore+=(performance.now()-started);state(false);clearTimeout(timerHandle);timerEndAt=0;if(native){if(nativeSession){try{nativeSession.cancel();}catch{applyNativeSession();}}else window.AndroidBridge.stop();}else{node?.port.postMessage({type:'stop'});clearTimeout(silentFallback);const stoppingContext=context;silentFallback=setTimeout(()=>{if(context===stoppingContext&&!playing&&!busy)stoppingContext?.suspend()},3000)}}
@@ -112,7 +132,7 @@ $('drum-samples').addEventListener('change',async()=>{
  if(playing||busy||nativePreparing||exportBusy){$('drum-samples').value=drumKit;return;}
  const selected=$('drum-samples').value;if(!drumKits.includes(selected)){ $('drum-samples').value=drumKit;return; }
  busy=true;syncPreparation();audioGeneration++;drumLoadAbort?.abort();const previous=context;
- try{if(previous)await previous.close();if(context===previous)context=node=gain=analyser=null;drumKit=selected;$('drum-source').textContent='';persist();}
+ try{if(previous)await previous.close();if(context===previous)context=node=gain=analyser=null;drumKit=selected;$('drum-source').textContent='';persist();syncAudioSelection();}
  catch(error){$('drum-samples').value=drumKit;$('notice').textContent=t('error');}
  finally{busy=false;syncPreparation();}
 });
@@ -126,7 +146,9 @@ let lastFrame=0,level=0;const reduced=matchMedia('(prefers-reduced-motion: reduc
 function draw(now){requestAnimationFrame(draw);if(now-lastFrame<65)return;lastFrame=now;let energy=0;if(native&&playing){try{wave=JSON.parse(window.AndroidBridge.waveform());energy=Number(window.AndroidBridge.level())||0;if(!nativeSession&&now-started>1500&&!window.AndroidBridge.isPlaying())state(false)}catch{}}else if(analyser&&context?.state==='running'){analyser.getFloatTimeDomainData(timeData);for(let i=0;i<timeData.length;i++)energy+=timeData[i]*timeData[i];energy=Math.sqrt(energy/timeData.length);for(let i=0;i<64;i++)wave[i]=timeData[Math.floor(i*timeData.length/64)]}level=level*.82+energy*.18;const motion=reduced.matches?0:Math.min(1,Math.sqrt(level*35));paint.clearRect(0,0,500,500);paint.beginPath();for(let i=0;i<=128;i++){const a=i/128*Math.PI*2,idx=Math.floor(i/128*64)%64;const normalized=Math.min(2.5,Math.abs(((wave[(idx+63)%64]||0)+(wave[idx]||0)+(wave[(idx+1)%64]||0))/3)/Math.max(.002,energy));const shape=(normalized*12+Math.sin(a*3+now*.00035)*motion*7)*motion;const r=160+shape;const x=250+Math.cos(a)*r,y=250+Math.sin(a)*r;i===0?paint.moveTo(x,y):paint.lineTo(x,y)}paint.closePath();paint.fillStyle='#000000';paint.fill();paint.strokeStyle=playing?'#ffffff':'#999999';paint.lineWidth=2;paint.stroke();paint.beginPath();paint.arc(250,250,175+motion*13,0,Math.PI*2);paint.strokeStyle='#333333';paint.lineWidth=1;paint.stroke();let art='';const chars=' .:·+*x#%@';const rows=34,cols=100;const reactive=reduced.matches?0:motion;for(let y=0;y<rows;y++){for(let x=0;x<cols;x++){const nx=(x-cols/2)/(cols/2),ny=(y-rows/2)/(rows/2),r=Math.sqrt(nx*nx+ny*ny),angle=Math.atan2(ny,nx);const wi=((Math.floor((angle+Math.PI)/(Math.PI*2)*64)%64)+64)%64;const sample=Math.min(2,Math.abs(wave[wi]||0)/Math.max(.002,energy));const ridge=.62+reactive*(sample*.055+Math.sin(angle*6)*.025);const band=Math.max(0,1-Math.abs(r-ridge)*7);const ripple=(Math.cos(r*44-reactive*sample*8)+1)*.5;const texture=(Math.sin(x*.71+y*1.13)+1)*.5;const density=band*(.25+ripple*.4+texture*.15+reactive*.2);art+=chars[Math.min(chars.length-1,Math.floor(density*(chars.length-1)))];}art+='\n'}drawAsciiGrid($('ascii'),art,cols,rows,playing?'#ffffff':'#999999');const secs=Math.floor((elapsedBefore+(playing?now-started:0))/1000);$('elapsed').textContent=String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0');if(playing&&timerEndAt&&Date.now()>=timerEndAt){stop();$('notice').textContent=t('timerEnd')}}requestAnimationFrame(draw);
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('install').hidden=false});$('install').addEventListener('click',async()=>{if(!installEvent)return;await installEvent.prompt();installEvent=null;$('install').hidden=true});
 let pendingWorker,updateRequested=false;
-if(!native&&'serviceWorker'in navigator&&location.protocol==='https:'){
+// Browsers treat loopback origins as trustworthy too; this permits the same
+// offline/install checks locally without changing TLS or browser security.
+if(!native&&'serviceWorker'in navigator&&(location.protocol==='https:'||['localhost','127.0.0.1','[::1]'].includes(location.hostname))){
  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(updateRequested)location.reload()});
  navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>{
   const offer=()=>{if(reg.waiting){pendingWorker=reg.waiting;$('update-app').hidden=false}};
@@ -143,7 +165,10 @@ function applyNativeSession(restore=false){
  const result=restore?nativeSession.restore():nativeSession.poll();
  nativePreparing=result.phase==='preparing'||(result.stopFailed&&result.uncertainPhase==='preparing');const value=result.data;
  if(value&&['preparing','playing'].includes(result.phase)&&['original','developing'].includes(value.scoreMode??'original')){scoreMode=value.scoreMode??'original';$('score-mode').value=scoreMode;}
- if(value&&['preparing','playing'].includes(result.phase)&&drumKits.includes(value.drumKit)){drumKit=value.drumKit;$('drum-samples').value=drumKit;$('drum-source').textContent=drumKit==='procedural'?'':drumKit;}
+ if(value&&['preparing','playing'].includes(result.phase)&&isSupportedAudioDrumKey(value.drumKit)){
+  if(value.drumKit!==selectedDrumKey()){if(value.drumKit==='procedural')drumKit='procedural';else{const selected=parseCustomDrumSelection(value.drumKit);drumKit=selected.baseKit;drumOverrides=selected.overrides;}}$('drum-samples').value=drumKit;$('drum-source').textContent=value.drumKit==='procedural'?'':value.drumKit;
+  if(nativeFeatures.scoreConfig)scoreConfig=normalizeDevelopmentConfig(value.scoreConfig??{});if(nativeFeatures.melodies)melodicPreset=value.melodicPreset??'procedural';syncAudioSelection();
+ }
  if(nativePreparing){state(false);$('notice').textContent=result.stopFailed?result.error:language==='ru'?'Подготавливаю звук на устройстве…':'Preparing audio on the device…';}
  else if(result.phase==='playing'){if(!playing){started=performance.now();elapsedBefore=0;state(true);$('notice').textContent=t('quiet');}}
  else {state(!!(result.stopFailed&&result.uncertainPhase==='playing'));if(result.phase==='error')$('notice').textContent=result.error;}
@@ -211,3 +236,40 @@ if(native&&typeof window.AndroidBridge.midiExportStatus==='function'){
  },250);
 }
 
+
+// Explicit stopped-session choices. Presets and New melody never overwrite them.
+function audioSelectionBusy(){return playing||busy||nativePreparing||exportBusy;}
+function syncAudioSelection(){
+ const blocked=audioSelectionBusy(),canConfig=(!native||nativeFeatures.scoreConfig)&&scoreMode==='developing';
+ $('development-controls').hidden=!canConfig;$('custom-drums-controls').hidden=native&&!nativeFeatures.customDrums;$('melodic-controls').hidden=native&&!nativeFeatures.melodies;
+ for(const key of DEVELOPMENT_KEYS){const e=$('config-'+key);if(key==='drumVariation'){$('config-drumVariation-auto').checked=scoreConfig[key]==='auto';$('config-drumVariation-auto').disabled=blocked||!canConfig;e.value=String(Math.round((scoreConfig[key]==='auto'?.5:scoreConfig[key])*100));$('config-drumVariation-value').textContent=scoreConfig[key]==='auto'?t('autoChoice'):String(e.value)+'%';e.disabled=blocked||!canConfig||scoreConfig[key]==='auto';}else{e.value=String(scoreConfig[key]);e.disabled=blocked||!canConfig;}$('lock-'+key).checked=configLocks[key];$('lock-'+key).disabled=blocked||!canConfig;}
+ $('random-composition').disabled=blocked||!canConfig;$('config-seed').textContent=configRandomSeed===null?'':t('combinationSeed')+' '+configRandomSeed.toString(16).padStart(8,'0');
+ for(const role of CUSTOM_DRUM_ROLES){$('drum-role-'+role).value=drumOverrides[role];$('drum-role-'+role).disabled=blocked||drumKit==='procedural'||(native&&!nativeFeatures.customDrums);$('drum-lock-'+role).checked=drumLocks[role];$('drum-lock-'+role).disabled=$('drum-role-'+role).disabled;}
+ $('random-drums').disabled=blocked||drumKit==='procedural'||(native&&!nativeFeatures.customDrums);$('drum-config-seed').textContent=drumRandomSeed===null?'':t('combinationSeed')+' '+drumRandomSeed.toString(16).padStart(8,'0');
+ $('melodic-preset').value=melodicPreset;$('melodic-preset').disabled=blocked||(native&&!nativeFeatures.melodies);
+}
+async function changeAudioSelection(apply){
+ if(audioSelectionBusy()){syncAudioSelection();return;}
+ busy=true;syncPreparation();const previous=context;
+ try{if(previous)await previous.close();if(context===previous)context=node=gain=analyser=null;apply();persist();}
+ catch(error){$('notice').textContent=t('error');console.error(error);}
+ finally{busy=false;syncPreparation();}
+}
+for(const key of DEVELOPMENT_KEYS){
+ $('config-'+key).addEventListener(key==='drumVariation'?'change':'change',()=>{
+  if((native&&!nativeFeatures.scoreConfig)||scoreMode!=='developing'){syncAudioSelection();return;}
+  const raw=$('config-'+key).value,value=key==='harmony'?raw:raw==='seed'?'seed':key==='drumVariation'?Number(raw)/100:Number(raw);
+  let next;try{next=normalizeDevelopmentConfig({...scoreConfig,[key]:value});}catch{syncAudioSelection();return;}
+  changeAudioSelection(()=>{scoreConfig=next;configLocks=normalizedLocks({...configLocks,[key]:true});});
+ });
+ $('lock-'+key).addEventListener('change',()=>{if(audioSelectionBusy()){syncAudioSelection();return;}configLocks=normalizedLocks({...configLocks,[key]:$('lock-'+key).checked});persist();});
+}
+$('config-drumVariation-auto').addEventListener('change',()=>{const value=$('config-drumVariation-auto').checked?'auto':Number($('config-drumVariation').value)/100;changeAudioSelection(()=>{scoreConfig=normalizeDevelopmentConfig({...scoreConfig,drumVariation:value});configLocks=normalizedLocks({...configLocks,drumVariation:true});});});
+$('random-composition').addEventListener('click',()=>{if(audioSelectionBusy()||scoreMode!=='developing'||(native&&!nativeFeatures.scoreConfig))return;const randomSeed=crypto.getRandomValues(new Uint32Array(1))[0];changeAudioSelection(()=>{scoreConfig=deterministicRandomConfig(randomSeed,scoreConfig,configLocks);configRandomSeed=randomSeed;});});
+for(const role of CUSTOM_DRUM_ROLES){
+ $('drum-role-'+role).addEventListener('change',()=>{if(drumKit==='procedural'||(native&&!nativeFeatures.customDrums)){syncAudioSelection();return;}let next;try{next=normalizedDrumOverrides({...drumOverrides,[role]:$('drum-role-'+role).value});}catch{syncAudioSelection();return;}changeAudioSelection(()=>{drumOverrides=next;drumLocks=normalizedLocks({...drumLocks,[role]:true},CUSTOM_DRUM_ROLES);$('drum-source').textContent='';});});
+ $('drum-lock-'+role).addEventListener('change',()=>{if(audioSelectionBusy()){syncAudioSelection();return;}drumLocks=normalizedLocks({...drumLocks,[role]:$('drum-lock-'+role).checked},CUSTOM_DRUM_ROLES);persist();});
+}
+$('random-drums').addEventListener('click',()=>{if(audioSelectionBusy()||drumKit==='procedural'||(native&&!nativeFeatures.customDrums))return;const randomSeed=crypto.getRandomValues(new Uint32Array(1))[0];changeAudioSelection(()=>{drumOverrides=deterministicRandomDrumOverrides(randomSeed,drumKit,normalizedDrumOverrides(drumOverrides),normalizedLocks(drumLocks,CUSTOM_DRUM_ROLES));drumRandomSeed=randomSeed;$('drum-source').textContent='';});});
+$('melodic-preset').addEventListener('change',()=>{const selected=$('melodic-preset').value;if(!MELODIC_PRESETS.includes(selected)||(native&&!nativeFeatures.melodies)){syncAudioSelection();return;}changeAudioSelection(()=>{melodicPreset=selected;$('melodic-source').textContent='';});});
+syncAudioSelection();

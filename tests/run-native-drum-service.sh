@@ -11,5 +11,5 @@ else
     java -m jdk.compiler/com.sun.tools.javac.Main -source 17 -target 17 -Xlint:all,-options -Werror -d "$OUT" "$ROOT/app/src/main/java/org/sou1/DrumPreparation.java" "$ROOT/tests/DrumPreparationTest.java" "$ROOT/tests/NativeServiceSyntaxTest.java"
 fi
 java -cp "$OUT" org.sou1.DrumPreparationTest
-java -cp "$OUT" org.sou1.NativeServiceSyntaxTest "$ROOT/app/src/main/java/org/sou1/PlaybackService.java" "$ROOT/app/src/main/java/org/sou1/MainActivity.java" "$ROOT/app/src/main/java/org/sou1/DrumPreparation.java"
+java -cp "$OUT" org.sou1.NativeServiceSyntaxTest "$ROOT/app/src/main/java/org/sou1/PlaybackService.java" "$ROOT/app/src/main/java/org/sou1/MainActivity.java" "$ROOT/app/src/main/java/org/sou1/DrumPreparation.java" "$ROOT/app/src/main/java/org/sou1/NativeAudioSelection.java"
 node "$ROOT/tests/native-drum-service-contract.test.mjs"

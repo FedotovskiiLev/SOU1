@@ -1,0 +1,82 @@
+{
+  "schema": "sou1.local-validation.v1",
+  "date": "2026-11-04",
+  "scope": "Combined SOU1 0.3 development candidate. Not public deployment, SDK build, physical-device, listening or release acceptance.",
+  "sourceSha256": {
+    "docs/app.js": "45a1846b6781eadde9f37e73262fa68b5bb81fea2c34a27ba5c3677ea75868ef",
+    "docs/development-score.js": "39b7d92160a3f04c7a33ba9d18ea1c3322832ad6b99965fde9298a9f2686aa03",
+    "docs/instrument-engine.js": "c1311e41d3918c6052f4193d50e370f486ee4d796d58404fb9165eda0dae2611",
+    "docs/instrument-worklet.js": "9aa5ec885f5bff54ed6a0b1477001edd795459013d25675b75d3dd878d6ee8f3",
+    "docs/live-melodic-pool.js": "6cba73c27622394c3280332ead1f57d4ec14a0ff1c1c4e27167b259f5644f83a",
+    "docs/sw.js": "8449436fd2a666215837727c765b3d0829b83a21f18ae781cee5d65ae3920779",
+    "app/src/main/java/org/sou1/audio/AmbientEngine.java": "6db3a4bd377348fea9e7956de9bac5c991c2b44308d76ac514e010376b18c5f5"
+  },
+  "node": {
+    "tests": 388,
+    "pass": 388,
+    "fail": 0,
+    "skipped": 0
+  },
+  "native": {
+    "configuredCases": 1310,
+    "configuredEventsExactlyMatched": 6878942,
+    "realBankPcmSamplesExactlyMatched": 4420800,
+    "realBankPcmCases": 6,
+    "rates": [
+      44100,
+      48000
+    ],
+    "hotPathMeasuredAllocations": 0,
+    "apkCompiled": false,
+    "deviceTested": false
+  },
+  "browser": {
+    "actual": "Cloud Chromium via supported desktop UI; real Worker/AudioWorklet on loopback preview",
+    "palettesPlayed": [
+      "chamber",
+      "piano-room",
+      "chamber-flute"
+    ],
+    "customDrumRoles": true,
+    "lockedRandomization": true,
+    "liveReseed": true,
+    "preparationCancellation": true,
+    "stoppedReloadPreservedSettings": true,
+    "autoplayAfterReload": false,
+    "serviceWorkerUpdate": true,
+    "offlineServerProbeExit": 7,
+    "offlineReloadAndRecordedPlayback": true,
+    "publicHttpsDeploymentTested": false,
+    "installPromptTested": false,
+    "listeningJudgment": false,
+    "chamberRerun": {
+      "seconds": 194,
+      "sampled": 2977,
+      "fallback": 0,
+      "dropped": 0
+    },
+    "fluteObservation": {
+      "seconds": 167,
+      "sampled": 2161,
+      "fallback": 345,
+      "dropped": 0
+    },
+    "offlinePianoObservation": {
+      "cumulativeSessionSeconds": 309,
+      "previousFluteSessionSeconds": 69,
+      "sampled": 3565,
+      "fallback": 0,
+      "dropped": 0
+    },
+    "midiSavedViaSystemDialog": {
+      "bytes": 5038,
+      "tracks": 10,
+      "ppq": 960,
+      "balancedNotePairs": 504,
+      "seconds": 25.471,
+      "independentJavaParserPassed": true
+    },
+    "anomaly": "One renderer error 9 around initial export/automation attempt. Cause unestablished. Later sustained runs and real system-dialog save did not reproduce it. CPU tests do not establish browser crash cause."
+  },
+  "githubCI": "Not claimed by this report"
+}

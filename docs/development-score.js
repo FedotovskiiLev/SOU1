@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+import {DEVELOPMENT_CONFIG_DEFAULTS,normalizeDevelopmentConfig} from './development-config.js';
 // Original, continuously developing score. No recordings, MIDI files or finite clips.
 const SCALE = [
   0,2,4,5,7,9,11,  // Ionian
@@ -36,9 +37,10 @@ function hash(n) { n=Math.imul(n^(n>>>16),0x7feb352d);n=Math.imul(n^(n>>>15),0x8
  * No score time elapses when only beatNext is shifted. next is its rounded view.
  */
 export class DevelopmentScore {
-  constructor(sampleRate,seed=1) {
+  constructor(sampleRate,seed=1,config=DEVELOPMENT_CONFIG_DEFAULTS) {
     if(!Number.isInteger(sampleRate)||sampleRate<8000||sampleRate>192000)throw new RangeError('sampleRate must be an integer in 8000..192000');
     this.rate=sampleRate;this.seed=Number.isFinite(seed)?seed>>>0:1;
+    Object.defineProperty(this,'config',{value:normalizeDevelopmentConfig(config),enumerable:true});
     this.motif=new Int8Array(12);this.leadGrid=new Uint8Array(72);this.replyGrid=new Uint8Array(72);
     this.grooveGrid=new Uint8Array(72);this.arpGrid=new Uint8Array(72);
     this.voicing=new Int16Array(4);this.busyUntil=new Float64Array(44);
@@ -48,10 +50,15 @@ export class DevelopmentScore {
   reseed(seed) { if(Number.isFinite(seed)){this.seed=seed>>>0;this.reset();} }
   reset() {
     this.variant=hash(this.seed^0x9e3779b9);this.state=hash(this.seed^0x243f6a88);
-    this.root=48+(this.variant%12);this.mode=Math.floor(this.variant/16)%7;
-    this.meterTicks=METERS[Math.floor(this.variant/128)%6];this.phraseBars=PHRASES[Math.floor(this.variant/1024)%5];
-    this.motifLength=LENGTHS[Math.floor(this.variant/8192)%6];this.family=Math.floor(this.variant/65536)%8;
-    this.harmonicFamily=Math.floor(this.variant/524288)%4;this.arpStrategy=Math.floor(this.variant/2097152)%8;
+    this.root=48+(this.config.tonic==='seed'?this.variant%12:this.config.tonic);
+    this.anchorRoot=this.root;this.mode=this.config.mode==='seed'?Math.floor(this.variant/16)%7:this.config.mode;
+    this.meterTicks=METERS[this.config.meter==='seed'?Math.floor(this.variant/128)%6:this.config.meter];this.phraseBars=PHRASES[Math.floor(this.variant/1024)%5];
+    this.motifLength=LENGTHS[Math.floor(this.variant/8192)%6];this.seedFamily=Math.floor(this.variant/65536)%8;
+    this.family=this.config.rhythmFamily==='seed'?this.seedFamily:this.config.rhythmFamily;
+    this.harmonicFamily=Math.floor(this.variant/524288)%4;
+    this.arpStrategy=this.config.arpStrategy==='seed'?Math.floor(this.variant/2097152)%8:this.config.arpStrategy;
+    this.drumFamily=this.config.drumPattern==='seed'?this.seedFamily:this.config.drumPattern;
+    this.modulationPhrase=0;this.modulationChanges=0;
     this.beatNext=0;this.elapsedFrames=0;this.tick=0;this.step=0;this.bar=0;this.barTick=0;this.phrase=0;this.phraseBar=0;
     this.chord=0;this.ambientChord=0;this.chordChanges=0;this.harmonyAt=0;this.harmonyTick=0;this.harmonicStep=0;
     this.eventCount=0;this.suppressedEvents=0;this.eventsThisTick=0;this.melodicLimit=16;
@@ -94,8 +101,16 @@ export class DevelopmentScore {
     this.inversion=complexity>.5&&((this.plan>>>4)&1)!==0?-1:1;
     this.retrograde=complexity>.65?((this.plan>>>5)&1):0;
     this.transpose=complexity>.35?((this.plan>>>6)%5)-2:0;
-    this.rhythmFamily=complexity>.35?(this.family+((this.plan>>>9)%3))%8:this.family;
-    this.arpKind=complexity>.4?(this.arpStrategy+((this.plan>>>12)%4))%8:this.arpStrategy;
+    this.rhythmFamily=this.config.rhythmFamily==='seed'&&complexity>.35?(this.family+((this.plan>>>9)%3))%8:this.family;
+    const variation=this.config.drumVariation==='auto'?1:this.config.drumVariation;
+    this.drumFamily=this.config.drumPattern==='seed'?(complexity*variation>.35?(this.seedFamily+((this.plan>>>9)%3))%8:this.seedFamily):this.config.drumPattern;
+    this.arpKind=this.config.arpStrategy==='seed'&&complexity>.4?(this.arpStrategy+((this.plan>>>12)%4))%8:this.arpStrategy;
+    const modulationSpan=4+Math.floor((1-evolution)*12);
+    if(this.config.harmony==='modulating'&&this.phrase-this.modulationPhrase>=modulationSpan){
+      this.root=this.root===this.anchorRoot?48+mod(this.anchorRoot-48+(((this.plan>>>3)&1)!==0?5:7),12):this.anchorRoot;
+      this.modulationPhrase=this.phrase;this.modulationChanges++;this.chordChanges++;
+      this.padAt=this.elapsedFrames;this.textureAt=this.elapsedFrames;
+    }
     this.phraseEnergy=.72+((this.plan>>>16)%25)/100;
     this.restBar=this.phrase>0&&(this.plan>>>21)%3===0?this.phraseBars-1:-1;
     // Develop one cell only at a long-form boundary. The motif retains its identity.
@@ -151,6 +166,43 @@ export class DevelopmentScore {
     return true;
   }
   allowed(rank,density) { return rank>0&&density>=(100-rank)/100; }
+  emitDrums(sink,at,t,density,complexity,energy) {
+    const variation=this.config.drumVariation==='auto'?1:this.config.drumVariation;
+    const drumEnergy=variation===1?energy:(variation===0?1:1+variation*(energy-1));
+    const family=this.drumFamily,half=Math.floor(this.meterTicks/2/3)*3;
+    if(this.config.drumPattern==='seed'){
+      // Exact legacy percussion by default, independently of manual melodic rhythm.
+      if(t===0||(t===half&&(family%3!==1||density>.6))||(complexity*variation>.6&&density>.6&&t===this.meterTicks-9))
+        this.emit(sink,at,5,36,.22,(t===0?.79:.57)*drumEnergy,.48);
+      if(t===(this.meterTicks>=48?12:half)||(this.meterTicks>=48&&t===this.meterTicks-12))
+        this.emit(sink,at,6,38,.19,.61*drumEnergy,.53);
+      const hatStep=family===1||family===4?4:(density>.8&&complexity>.7?3:6);
+      if(t%hatStep===0&&(t%12===0||density>.3)&&!(variation>0&&this.phraseBar===this.restBar&&t%12!==0))
+        this.emit(sink,at,7,42,.075,(t%12===0?.36:.2)*drumEnergy,.64);
+    }else{
+      // Concrete patterns do not read the melodic rhythm grid or its family.
+      const x=t%48;let kick=false,snare=false;
+      if(family===0){kick=t%12===0;snare=t%24===12;}
+      else if(family===1){kick=t===0||(density>.55&&t===half-6);snare=t===half;}
+      else if(family===2){kick=t%24===0||t%24===9||t%24===18;snare=t===12||t===this.meterTicks-6;}
+      else if(family===3){kick=x===0||x===18||x===36;snare=x===9||x===30||x===42;}
+      else if(family===4){kick=t%24===0||t%24===16;snare=t%24===12;}
+      else if(family===5){kick=t===0;snare=t===half;}
+      else if(family===6){kick=t%24===6||t%24===18;snare=t%24===12;}
+      else{kick=t===0;snare=t===half;}
+      if(variation>0&&complexity*variation>.6&&density>.6&&t===this.meterTicks-9)kick=true;
+      if(kick)this.emit(sink,at,5,36,.22,(t===0?.79:.57)*drumEnergy,.48);
+      if(snare)this.emit(sink,at,6,38,.19,.61*drumEnergy,.53);
+      const hatStep=family===4?4:(family===5||family===7?12:(density>.8&&complexity>.7?3:6));
+      const hatOffset=family===6?3:0;
+      if(mod(t-hatOffset,hatStep)===0&&(t%12===0||density>.3)&&!(variation>0&&this.phraseBar===this.restBar&&t%12!==0))
+        this.emit(sink,at,7,42,.075,(t%12===0?.36:.2)*drumEnergy,.64);
+      if(family===7&&t%12===6)this.emit(sink,at,8,45+2*(Math.floor(t/12)%3),.25,.4*drumEnergy,.35);
+    }
+    if(variation>0&&complexity*variation>.55&&density>.45&&this.phraseBar===this.phraseBars-1&&t>=this.meterTicks-9&&t%3===0)
+      this.emit(sink,at,8,45+2*((this.meterTicks-t)/3%3),.25,.4*drumEnergy,.35+(t%3)*.1);
+    if(variation>.25&&this.phraseBar===0&&t===0&&this.phrase%2===0)this.emit(sink,at,9,49,1.4,.32*drumEnergy,.66);
+  }
   advanceTo(frame,p,sink) {
     if(!Number.isSafeInteger(frame)||frame< -1)throw new RangeError('finite nonnegative integer sample frame required');
     if(!Number.isFinite(this.beatNext)||this.beatNext<0)throw new RangeError('invalid score clock');
@@ -171,8 +223,8 @@ export class DevelopmentScore {
       const at=Math.round(this.beatNext),t=this.barTick;
       this.eventsThisTick=0;
       if(t===0){if(this.phraseBar===0)this.planPhrase(complexity,evolution);this.planBar(complexity);}
-      if((drive===0&&this.elapsedFrames-this.harmonyAt>=ambientSpan)||
-         (drive>0&&t===0&&this.tick-this.harmonyTick>=this.meterTicks*harmonicSpan))this.changeHarmony(drive===0&&evolution===0);
+      if(this.config.harmony!=='fixed'&&((drive===0&&this.elapsedFrames-this.harmonyAt>=ambientSpan)||
+         (drive>0&&t===0&&this.tick-this.harmonyTick>=this.meterTicks*harmonicSpan)))this.changeHarmony(drive===0&&evolution===0);
       const strength=Math.max(ambient,drive*.55),energy=this.phraseEnergy*(this.phraseBar===this.restBar?.72:1);
       if(this.elapsedFrames>=this.padAt){
         const gate=drive===0?22-6*evolution:(this.meterTicks/12)*seconds*(.82+ratio*1.5);
@@ -241,19 +293,7 @@ export class DevelopmentScore {
         const n=this.pitch(d,-1,33,52,this.lastBass);this.lastBass=n;
         this.emit(sink,at,4,n,seconds*(rhythmic>counter?.45:1.25),.65*drive*energy,.48);
       }
-      if(drums){
-        const family=this.rhythmFamily,half=Math.floor(this.meterTicks/2/3)*3;
-        if(t===0||(t===half&&(family%3!==1||density>.6))||(complexity>.6&&density>.6&&t===this.meterTicks-9))
-          this.emit(sink,at,5,36,.22,(t===0?.79:.57)*energy,.48);
-        if(t===(this.meterTicks>=48?12:half)||(this.meterTicks>=48&&t===this.meterTicks-12))
-          this.emit(sink,at,6,38,.19,.61*energy,.53);
-        const hatStep=family===1||family===4?4:(density>.8&&complexity>.7?3:6);
-        if(t%hatStep===0&&(t%12===0||density>.3)&&!(this.phraseBar===this.restBar&&t%12!==0))
-          this.emit(sink,at,7,42,.075,(t%12===0?.36:.2)*energy,.64);
-        if(complexity>.55&&density>.45&&this.phraseBar===this.phraseBars-1&&t>=this.meterTicks-9&&t%3===0)
-          this.emit(sink,at,8,45+2*((this.meterTicks-t)/3%3),.25,.4*energy,.35+(t%3)*.1);
-        if(this.phraseBar===0&&t===0&&this.phrase%2===0)this.emit(sink,at,9,49,1.4,.32*energy,.66);
-      }
+      if(drums)this.emitDrums(sink,at,t,density,complexity,energy);
       // Swing stretches the first six sub-ticks and shortens the next six equally.
       // BPM changes affect only the next interval: no rewinding or catch-up burst.
       const delta=this.rate*seconds/12*(1+(this.tick%12<6?1:-1)*.44*swing);

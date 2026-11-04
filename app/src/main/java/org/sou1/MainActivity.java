@@ -11,6 +11,7 @@ import android.webkit.*;
 import android.graphics.Color;
 import org.json.*;
 import org.sou1.audio.NativeDrumBankLoader;
+import org.sou1.audio.DevelopmentConfig;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -99,11 +100,28 @@ public final class MainActivity extends Activity {
                 throw new JSONException("Unsupported score mode");
             intent.putExtra(PlaybackService.EXTRA_SCORE_MODE, (String) mode);
         }
+        if (json.has("scoreConfig")) {
+            intent.putExtra(PlaybackService.EXTRA_SCORE_CONFIG,
+                    PlaybackService.scoreConfigFromJson(json.get("scoreConfig")).canonicalKey());
+        }
+        if (json.has("melodicPreset")) {
+            Object preset = json.get("melodicPreset");
+            if (!(preset instanceof String) || !PlaybackService.isSupportedMelodicPreset((String) preset))
+                throw new JSONException("Unsupported melodic preset");
+            intent.putExtra(PlaybackService.EXTRA_MELODIC_PRESET, (String) preset);
+        }
         if (json.has("drumKit")) {
             Object kit = json.get("drumKit");
             if (!(kit instanceof String) || !PlaybackService.isSupportedDrumKit((String) kit))
                 throw new JSONException("Unsupported drum kit");
             intent.putExtra(PlaybackService.EXTRA_DRUM_KIT, (String) kit);
+        }
+        // A legacy bridge PLAY must not inherit settings it cannot acknowledge.
+        // MediaSession Play intentionally uses the service's restored selection instead.
+        if (PlaybackService.ACTION_PLAY.equals(action)) {
+            if (!json.has("scoreMode")) intent.putExtra(PlaybackService.EXTRA_SCORE_MODE, "original");
+            if (!json.has("scoreConfig")) intent.putExtra(PlaybackService.EXTRA_SCORE_CONFIG, DevelopmentConfig.DEFAULT.canonicalKey());
+            if (!json.has("melodicPreset")) intent.putExtra(PlaybackService.EXTRA_MELODIC_PRESET, "procedural");
         }
         if (PlaybackService.ACTION_PLAY.equals(action) && json.has("requestId")) {
             Object rawId = json.get("requestId");
@@ -152,7 +170,10 @@ public final class MainActivity extends Activity {
                 JSONArray kits = new JSONArray().put("procedural");
                 for (String kit : NativeDrumBankLoader.supportedKits()) kits.put(kit);
                 return new JSONObject().put("schema", "sou1.native-audio.v1").put("drumKits", kits)
-                        .put("scoreModes", new JSONArray().put("original").put("developing")).toString();
+                        .put("scoreModes", new JSONArray().put("original").put("developing"))
+                        .put("scoreConfigSchema", "sou1.development-config.v1").put("customDrums", "custom-v1")
+                        .put("melodicPresets", new JSONArray().put("procedural").put("chamber")
+                                .put("piano-room").put("chamber-flute")).toString();
             } catch (JSONException impossible) { return "{}"; }
         }
         @JavascriptInterface public String midiExportStatus() { return midiStatus; }

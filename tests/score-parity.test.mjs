@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 const root=fileURLToPath(new URL('..',import.meta.url)),out=await mkdtemp(join(tmpdir(),'sou1-parity-'));
 try {
- const files=['app/src/main/java/org/sou1/audio/DevelopmentScore.java','app/src/main/java/org/sou1/audio/LiveDrumPool.java','app/src/main/java/org/sou1/audio/AmbientEngine.java','app/src/main/java/org/sou1/audio/EnvironmentAudio.java','tests/EventScoreTest.java'].map(p=>resolve(root,p));
+ const files=['app/src/main/java/org/sou1/audio/DevelopmentConfig.java','app/src/main/java/org/sou1/audio/LiveMelodicPool.java','app/src/main/java/org/sou1/audio/DevelopmentScore.java','app/src/main/java/org/sou1/audio/LiveDrumPool.java','app/src/main/java/org/sou1/audio/AmbientEngine.java','app/src/main/java/org/sou1/audio/EnvironmentAudio.java','tests/EventScoreTest.java'].map(p=>resolve(root,p));
  execFileSync('java',['-m','jdk.compiler/com.sun.tools.javac.Main','-d',out,...files]);
  const java=execFileSync('java',['-cp',out,'EventScoreTest','trace'],{encoding:'utf8'}).trim().split('\n').map(line=>line.split(',').map(Number));
  const weather=await readFile(resolve(root,'docs/environment-audio.js'),'utf8');

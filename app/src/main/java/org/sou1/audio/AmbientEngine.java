@@ -2,7 +2,7 @@
 package org.sou1.audio;
 
 /**
- * Original event-scored ambient synthesis, optionally using a prepared drum bank.
+ * Original event-scored ambient synthesis, optionally using prepared acoustic banks.
  * The original constructors retain the sample-free path unchanged. One rendering thread
  * owns DSP state; start/stop/setParameters may be called by a control thread.
  * Rendering allocates no objects. Equal seed, rate, controls and render schedule
@@ -316,6 +316,7 @@ public final class AmbientEngine {
     private final DrumVoice[] drumVoices = new DrumVoice[12];
     // Constructor-only bank selection. Never publish the mutable, render-owned pool.
     private final LiveDrumPool recordedDrums;
+    private final LiveMelodicPool recordedMelodies;
     private final EventScore score;
     private final DevelopmentScore developmentScore;
     private final EnvironmentAudio environment;
@@ -355,6 +356,7 @@ public final class AmbientEngine {
     private final NoteSink noteSink = this::noteOn;
     private final double[] layerGains = {.65, .55, .35, .20, .15};
     private final double[] drumGains = {.65, .4, .3, .35, .2};
+    private final double[] melodicGains = new double[5];
     private final double smoothing, drumSmoothing, dcPole;
     private volatile Parameters parameters = Parameters.DEFAULT;
     private volatile boolean requestedPlaying;
@@ -367,6 +369,8 @@ public final class AmbientEngine {
     private int drumState;
     private double fade, previousL, previousR, dcL, dcR, outputL, outputR;
     private long frame, noteOnCount, noteOffCount, droppedNotes;
+    // Lifetime routing totals survive pool tail resets/reseeds; engine.reset clears them.
+    private long recordedMelodicAccepted, recordedMelodicDropped, recordedMelodicUnmapped, melodicFallbacks;
 
     private static final class Voice {
         boolean active, off;
@@ -398,14 +402,38 @@ public final class AmbientEngine {
 
     /** Score selection is fixed for the session; existing constructors preserve the original score. */
     public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank, boolean developing) {
+        this(sampleRate, seed, drumBank, null, developing, null);
+    }
+
+    /** Prepared bank selection is fixed per session. Null melody keeps the old PCM path. */
+    public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank,
+                         LiveMelodicPool.Bank melodicBank, boolean developing) {
+        this(sampleRate, seed, drumBank, melodicBank, developing, null);
+    }
+
+    /** New native sessions use the developing score, with default configuration when null. */
+    public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank,
+                         LiveMelodicPool.Bank melodicBank, DevelopmentConfig developmentConfig) {
+        this(sampleRate, seed, drumBank, melodicBank, true, developmentConfig);
+    }
+
+    /** No decode, PCM copy or table preparation occurs here or during rendering. */
+    public AmbientEngine(int sampleRate, long seed, LiveDrumPool.Bank drumBank,
+                         LiveMelodicPool.Bank melodicBank, boolean developing,
+                         DevelopmentConfig developmentConfig) {
         if (sampleRate < 8000 || sampleRate > 192000)
             throw new IllegalArgumentException("sampleRate must be 8000..192000");
         this.sampleRate = sampleRate;
+        if (melodicBank != null && melodicBank.sampleRate != sampleRate)
+            throw new IllegalArgumentException("melodic bank sampleRate must match engine");
+        recordedMelodies = melodicBank == null ? null : new LiveMelodicPool(melodicBank, 32);
+        if (recordedMelodies != null) recordedMelodies.setVoiceLimit(voiceLimit);
         recordedDrums = drumBank == null ? null : new LiveDrumPool(sampleRate, drumBank);
         if (recordedDrums != null) recordedDrums.setEnabled(parameters.drumsEnabled);
         macros = new MacroBus(sampleRate);
         score = new EventScore(sampleRate, seed);
-        developmentScore = developing ? new DevelopmentScore(sampleRate, seed) : null;
+        developmentScore = developing ? new DevelopmentScore(sampleRate, seed,
+                developmentConfig == null ? DevelopmentConfig.DEFAULT : developmentConfig) : null;
         noteHistory.clear(seed);
         environment = new EnvironmentAudio(sampleRate, seed);
         smoothing = 1.0 - StrictMath.exp(-1.0 / (sampleRate * 1.5));
@@ -432,7 +460,19 @@ public final class AmbientEngine {
     public long getDroppedNotes() { return droppedNotes; }
     public EventScore getScore() { return score; }
     public DevelopmentScore getDevelopmentScore() { return developmentScore; }
-    public int getActiveVoiceCount() { int n = 0; for (Voice v : voices) if (v.active) n++; return n; }
+    public int getActiveVoiceCount() {
+        int n = recordedMelodies == null ? 0 : recordedMelodies.getActiveVoices();
+        for (Voice v : voices) if (v.active) n++;
+        return n;
+    }
+    public int getActiveRecordedMelodicVoiceCount() { return recordedMelodies == null ? 0 : recordedMelodies.getActiveVoices(); }
+    public long getRecordedMelodicAcceptedCount() { return recordedMelodicAccepted; }
+    /** Muted/disabled/full-pool events, never oscillator fallbacks. */
+    public long getRecordedMelodicDroppedCount() { return recordedMelodicDropped; }
+    /** Missing pitch/velocity mappings only. */
+    public long getRecordedMelodicUnmappedCount() { return recordedMelodicUnmapped; }
+    /** Missing mappings successfully admitted to the legacy oscillator pool. */
+    public long getMelodicFallbackCount() { return melodicFallbacks; }
     public int getActiveDrumVoiceCount() {
         if (recordedDrums != null) return recordedDrums.getActiveVoices();
         int n = 0; for (DrumVoice v : drumVoices) if (v.active) n++; return n;
@@ -453,6 +493,7 @@ public final class AmbientEngine {
         for (Voice v : voices) { if (v.active && !v.off) noteOffCount++; v.active = false; }
         for (DrumVoice v : drumVoices) { if (v.active && !v.off) noteOffCount++; v.active = false; }
         clearRecordedDrums();
+        clearRecordedMelodies();
         drumState = (int) pendingSeed ^ 0x7f4a7c15;
         // Weather clocks and the shared space tail continue across musical reseeds.
         reseeding = false;
@@ -475,6 +516,13 @@ public final class AmbientEngine {
             recordedDrums.reset();
             recordedDrums.setEnabled(parameters.drumsEnabled);
         }
+        if (recordedMelodies != null) {
+            recordedMelodies.reset();
+            recordedMelodies.setEnabled(false);
+            recordedMelodies.setMelodyEnabled(parameters.melodyEnabled);
+            recordedMelodies.setVoiceLimit(parameters.polyphony);
+        }
+        recordedMelodicAccepted = recordedMelodicDropped = recordedMelodicUnmapped = melodicFallbacks = 0;
         drumState = (int) score.seed ^ 0x7f4a7c15;
         reseeding = false;
         seedGain = 1;
@@ -514,6 +562,11 @@ public final class AmbientEngine {
     private void prepareEnvironment(Parameters target, boolean playing) {
         environment.setParameters(target.environment);
         if (playing) environment.start(); else environment.stop();
+        if (recordedMelodies != null) {
+            recordedMelodies.setEnabled(playing);
+            recordedMelodies.setMelodyEnabled(target.melodyEnabled);
+            recordedMelodies.setVoiceLimit(target.polyphony);
+        }
         if (recordedDrums != null) {
             // Control calls only publish volatile targets; pool writes stay here.
             recordedDrums.setEnabled(target.drumsEnabled);
@@ -536,8 +589,23 @@ public final class AmbientEngine {
             else droppedNotes++;
             return;
         }
+        if (recordedMelodies != null) {
+            // Sampler and missing-range oscillator fallbacks share one melodic budget.
+            if (getActiveVoiceCount() >= voiceLimit) {
+                recordedMelodicDropped++; droppedNotes++; return;
+            }
+            long unmappedBefore = recordedMelodies.unmapped;
+            if (recordedMelodies.trigger(instrument, pitch, duration / (double) sampleRate, velocity, pan)) {
+                recordedMelodicAccepted++; noteOnCount++; return;
+            }
+            if (recordedMelodies.unmapped == unmappedBefore) {
+                recordedMelodicDropped++; droppedNotes++; return;
+            }
+            recordedMelodicUnmapped++;
+            // Only an actual missing mapping can take the original-pitch fallback.
+        }
         Voice v = null;
-        int active = 0;
+        int active = recordedMelodies == null ? 0 : recordedMelodies.getActiveVoices();
         for (int i = 0; i < voices.length; i++) {
             if (voices[i].active) active++;
             else if (v == null) v = voices[i];
@@ -557,6 +625,7 @@ public final class AmbientEngine {
         v.panL = StrictMath.sqrt(1 - pan);
         v.panR = StrictMath.sqrt(pan);
         noteOnCount++;
+        if (recordedMelodies != null) melodicFallbacks++;
     }
 
     private void drumOn(int instrument, long duration, double velocity, double pan) {
@@ -588,7 +657,7 @@ public final class AmbientEngine {
         drumsGain += muteSmooth * ((target.drumsEnabled ? 1 : 0) - drumsGain);
         if (voiceLimit != target.polyphony) {
             voiceLimit = target.polyphony;
-            int allowed = voiceLimit;
+            int allowed = voiceLimit - (recordedMelodies == null ? 0 : recordedMelodies.getActiveVoices());
             for (Voice v : voices) if (v.active && v.retire == 0 && --allowed < 0)
                 v.retire = Math.max(1, (int) (sampleRate * .08));
         }
@@ -691,6 +760,16 @@ public final class AmbientEngine {
             v.phaseB = wrap(v.phaseB + frequency * 1.413 / sampleRate);
             v.age++;
         }
+        if (recordedMelodies != null) {
+            for (int i = 0; i < melodicGains.length; i++)
+                melodicGains[i] = layerGains[i] * ((i == 1 || i == 2) ? melodyGain : 1);
+            int before = recordedMelodies.getActiveVoices();
+            recordedMelodies.next(melodicGains, playing);
+            // Sample release/finite tails retire independently of the exported gate.
+            noteOffCount += before - recordedMelodies.getActiveVoices();
+            left += recordedMelodies.outputL;
+            right += recordedMelodies.outputR;
+        }
         left *= 1 + intensity * 1.4;
         right *= 1 + intensity * 1.4;
         environment.next();
@@ -721,8 +800,16 @@ public final class AmbientEngine {
             // Even a one-frame start/stop must not freeze a sample tail that
             // could return on restart after the transport has become silent.
             if (recordedDrums != null && recordedDrums.getActiveVoices() != 0) clearRecordedDrums();
+            if (recordedMelodies != null && recordedMelodies.getActiveVoices() != 0) clearRecordedMelodies();
         }
         frame++;
+    }
+
+    private void clearRecordedMelodies() {
+        if (recordedMelodies != null) {
+            noteOffCount += recordedMelodies.getActiveVoices();
+            recordedMelodies.reset(); // Keeps this block's enable, melody and limit states.
+        }
     }
 
     private void clearRecordedDrums() {
